@@ -5,6 +5,9 @@ import { makeStyles, styled, withStyles, WithStyles } from "@material-ui/styles"
 import { NextPage } from "next"
 import { useRouter } from "next/router"
 import { FC } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "src/store"
+import { decrement, increment, incrementByAmount } from "src/store/test"
 
 
 // hooks api
@@ -33,18 +36,21 @@ const HOCButton = withStyles(styles)(HigherOrderComponent)
 
 const DemoPage: NextPage = (props) => {
 	const {query} = useRouter()
+	const count = useSelector((state: RootState) => state.test.value)
+	const dispatch = useDispatch()
 	const theme = useTheme()
 	const classes = useStyles()
 	const {pair} = query
 	return <div className={classes.root}>
 		{pair}
 		{theme.palette.primary.main}
-		<Button color="primary" variant="contained">demo</Button>
+		<Button color="primary" variant="contained" onClick={() => dispatch(increment())}>demo: increment</Button>
+		<Button color="primary" variant="contained" onClick={() => dispatch(incrementByAmount(3))}>demo: increment + 3</Button>
+		<Button color="primary" variant="contained" onClick={() => dispatch(decrement())}>demo: decrement</Button>
 		<MyComponents>My styled Components</MyComponents>
 		<HOCButton>HOCButton</HOCButton>
+		<Button variant="contained">redux-value: {count}</Button>
 	</div>
 }
-
-
 
 export default DemoPage
