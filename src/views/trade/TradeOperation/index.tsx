@@ -1,15 +1,11 @@
-import { Box, Theme } from "@material-ui/core";
-import { makeStyles, styled, withStyles, WithStyles } from "@material-ui/styles"
-import { FC } from "react";
+import { Box } from '@material-ui/core';
+import { FC } from 'react';
 import Image from 'next/image'
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  
-	
-}))
+
 export const TradeOperation: FC = () => {
-  const classes = useStyles()
-	return (
+  
+  return (
     <Box py="12px" width={324} height={47} borderBottom='1px solid #2d2d3d'>
       <Box display="flex" alignItems="center" justifyContent="space-between" px="20px">
         <Box display="flex" alignItems="center">
