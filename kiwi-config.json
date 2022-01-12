@@ -1,0 +1,23 @@
+{
+  "kiwiDir": "./.kiwi",
+  "srcLang": "zh-CN",
+  "distLangs": [
+    "en-US",
+    "zh-TW"
+  ],
+  "baiduApiKey": {
+    "appId": "20200918000568419",
+    "appKey": "sKdVt5kWp59oEPr6NW34"
+  },
+  "baiduLangMap": {
+    "en-US": "en",
+    "zh-TW": "cht"
+  },
+  "translateOptions": {
+    "concurrentLimit": 10,
+    "requestOptions": {}
+  },
+  "importI18N": "import I18N from 'src/utils/I18N'",
+  "ignoreDir": "",
+  "ignoreFile": ""
+}

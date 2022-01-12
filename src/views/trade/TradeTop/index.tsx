@@ -1,5 +1,6 @@
 import { FC, useMemo } from "react"
 import { Box, BoxProps, useTheme } from "@material-ui/core"
+import I18N from "src/utils/I18N"
 
 export const TradeTop: FC = () => {
 	const theme = useTheme()
@@ -12,5 +13,5 @@ export const TradeTop: FC = () => {
 		} as BoxProps
 	}, [theme])
 
-	return <Box {...BoxPropsRest}>TradeTop</Box>
+	return <Box {...BoxPropsRest}>{I18N.common.test}</Box>
 }
