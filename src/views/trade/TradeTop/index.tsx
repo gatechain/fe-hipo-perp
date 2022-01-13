@@ -9,7 +9,7 @@ export const TradeTop: FC = () => {
   const BoxPropsRest: BoxProps = useMemo(() => {
     return {
       height: 48,
-      borderBottom: `1px solid ${theme.palette.secondary.main}`,
+      // borderBottom: `1px solid ${theme.palette.secondary.main}`,
       color: theme.palette.secondary.main,
     } as BoxProps
   }, [theme])
