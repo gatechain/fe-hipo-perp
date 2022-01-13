@@ -11,12 +11,11 @@ export interface SelectMarketsProps {
 
 export const SelectMarkets: FC<SelectMarketsProps> = props => {
   const [showSymbolList, setShowSymbolList] = useState(false)
-  console.log(props)
   return (
     <Box py="12px" width={324} height={47} borderBottom='1px solid #2d2d3d' >
       <Box sx={{
         '&:hover': {
-          cursor:'pointer',
+          cursor: 'pointer',
         },
       }} onClick={() => setShowSymbolList(!showSymbolList)} display="flex" alignItems="center" justifyContent="space-between" borderRight='1px solid #2d2d3d' px="20px">
         <Box display="flex" alignItems="center">
@@ -24,17 +23,17 @@ export const SelectMarkets: FC<SelectMarketsProps> = props => {
             <Box mr={1} width={24} height={24}>
               <Image width={24} height={24} src={props.imgUrl} alt=""></Image>
             </Box>
-            <span>{ props.symbol }</span>
+            <span>{props.symbol}</span>
           </Box>
-          <Box  display={showSymbolList ? 'flex' : 'none'} alignItems="center">
+          <Box display={showSymbolList ? 'flex' : 'none'} alignItems="center">
             选择市场
           </Box>
         </Box>
-        <Box  display="flex">
+        <Box display="flex">
           <span>{showSymbolList ? '点击可平仓' : '交易对'}</span>
         </Box>
       </Box>
     </Box>
-    
+
   )
 };

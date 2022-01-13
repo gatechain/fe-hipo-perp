@@ -1,13 +1,17 @@
 
-import { Button, Theme, useTheme } from '@material-ui/core'
+import { Box, Button, Theme, useTheme } from '@material-ui/core'
 import { blue } from '@material-ui/core/colors'
 import { makeStyles, styled, withStyles, WithStyles } from '@material-ui/styles'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'src/store'
 import { decrement, increment, incrementByAmount } from 'src/store/test'
+
+import { useWeb3React } from '@web3-react/core'
+import { connectorsByName } from 'src/web3React/connector'
+import ConnectWallet from 'src/components/ConnectWallet'
 
 
 // hooks api
@@ -41,15 +45,44 @@ const DemoPage: NextPage = () => {
   const theme = useTheme()
   const classes = useStyles()
   const { pair } = query
+  // test metamask
+  const { connector, activate, active, error, account } = useWeb3React()
+  const [activatingConnector, setActivatingConnector] = useState<any>()
+  useEffect(() => {
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined)
+    }
+  }, [activatingConnector, connector])
+  // test metamask --- end
+
   return <div className={classes.root}>
     {pair}
     {theme.palette.primary.main}
+    <h1 style={{ margin: '1rem', textAlign: 'right' }}>{active ? '🟢' : error ? '🔴' : '🟠'}</h1>
+    <Box color="#fff">
+      account : {account || window.ethereum.selectedAddress}
+      {
+        Object.keys(connectorsByName).map((name, index) => {
+          const currentConnector = connectorsByName[name]
+          return <Button variant="contained" key={index}
+            onClick={() => {
+              setActivatingConnector(currentConnector)
+              activate(connectorsByName[name])
+            }}
+          >{name}</Button>
+        })
+      }
+    </Box>
+
     <Button color="primary" variant="contained" onClick={() => dispatch(increment())}>demo: increment</Button>
     <Button color="primary" variant="contained" onClick={() => dispatch(incrementByAmount(3))}>demo: increment + 3</Button>
     <Button color="primary" variant="contained" onClick={() => dispatch(decrement())}>demo: decrement</Button>
     <MyComponents>My styled Components</MyComponents>
     <HOCButton>HOCButton</HOCButton>
     <Button variant="contained">redux-value: {count}</Button>
+    <Box>
+      <ConnectWallet></ConnectWallet>
+    </Box>
   </div>
 }
 
