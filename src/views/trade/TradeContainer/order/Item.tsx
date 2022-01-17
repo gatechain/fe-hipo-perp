@@ -62,7 +62,7 @@ const useStyles = makeStyles({
     color: '#3fb68b',
   },
   tradeSellColor: {
-    color: '#3fb68b',
+    color: '#ff5353',
   },
 })
 
@@ -70,8 +70,7 @@ export interface ItemProps {
   type: string;
   direction: String;
 }
-export const OrderBookItem: FC<ItemProps> = (props) => {
-  console.log(props)
+export const Item: FC<ItemProps> = (props) => {
   const classes = useStyles()
   return (
     <Box display="flex" position="relative">

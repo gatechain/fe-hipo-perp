@@ -1,7 +1,7 @@
 import { Box } from '@material-ui/core'
 import { FC } from 'react'
 import { makeStyles } from '@material-ui/styles'
-import { OrderBookItem } from './OrderBookItem'
+import { Item } from './Item'
 
 const useStyles = makeStyles({
   amountBox: {
@@ -41,8 +41,8 @@ export const OrderBookBody: FC = () => {
   <Box position="absolute" width="100%" height="100%" sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display:'none' } }}>
     <Box >
       <Box>
-        <OrderBookItem type="book" direction="sell"/>
-        <OrderBookItem type="book" direction="sell"/>
+        <Item type="book" direction="sell"/>
+        <Item type="book" direction="sell"/>
       </Box>
       
       <Box display="flex" justifyContent="space-between" alignItems="center" 
@@ -61,7 +61,7 @@ export const OrderBookBody: FC = () => {
       </Box>
       <Box>
         <Box >
-            <OrderBookItem type="trade" direction="buy"/>
+            <Item type="trade" direction="buy"/>
         </Box>
       </Box>
     </Box>
