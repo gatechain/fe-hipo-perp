@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { Button, Tooltip, Typography, TooltipProps, tooltipClasses } from '@material-ui/core'
 import { makeStyles, styled } from '@material-ui/styles'
 import { Box } from '@material-ui/core'
@@ -68,8 +68,31 @@ const Tool: FC<ToolProps> = (props) => {
   )
 }
 
-export const AccoungInfoSection: FC = () => {
+export enum OperationType {
+  withdraw = 'withdraw', // 提现
+  deposit = 'deposit', // 充值
+}
+
+interface Props {
+  onChange?: (type: OperationType) => void
+}
+
+export const AccoungInfoSection: FC<Props> = ({
+  onChange = () => {},
+}) => {
   const classes = useStyles()
+  const [typeVal, setTypeVal] = useState(null)
+
+  const handlerOperation = (type: OperationType) => {
+    if (typeVal == type) {
+      setTypeVal(null)
+      onChange(null)
+    } else { 
+      setTypeVal(type)
+      onChange(type)
+    }
+  } 
+
   return (
     <Box
       fontSize={14}
@@ -91,6 +114,7 @@ export const AccoungInfoSection: FC = () => {
         账户
         <Box>
           <Button variant="contained"
+            onClick={() => handlerOperation(OperationType.withdraw)}
             sx={{
               fontSize: '13px',
               fontWeight: 500,
@@ -100,9 +124,10 @@ export const AccoungInfoSection: FC = () => {
               borderRadius: '24px',
               padding: '0 10px',
               marginRight: '6px',
-            }}>体现</Button>
+            }}>提现</Button>
           <Button
             variant="contained"
+            onClick={() => handlerOperation(OperationType.deposit)}
             sx={{
               fontSize: '13px',
               fontWeight: 500,
