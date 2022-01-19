@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit'
 import { load, save } from 'redux-localstorage-simple'
 import isBrowser from 'src/utils/isBrowser'
 import TestSliceReducer from './test'
+import TradeSliceReducer from './trade'
 
 export const store = configureStore({
   reducer: {
     test: TestSliceReducer,
+    trade: TradeSliceReducer,
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),

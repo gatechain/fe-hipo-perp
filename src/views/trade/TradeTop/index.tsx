@@ -9,13 +9,13 @@ export const TradeTop: FC = () => {
   const BoxPropsRest: BoxProps = useMemo(() => {
     return {
       height: 48,
-      // borderBottom: `1px solid ${theme.palette.secondary.main}`,
+      borderBottom: '1px solid #2d2d3d',
       color: theme.palette.secondary.main,
     } as BoxProps
   }, [theme])
 
   return (
-    <Box {...BoxPropsRest}>
+    <Box {...BoxPropsRest} >
       <SelectMarkets imgUrl='/images/btc.svg' symbol='BTC-USDT'/>
     </Box>
   )
