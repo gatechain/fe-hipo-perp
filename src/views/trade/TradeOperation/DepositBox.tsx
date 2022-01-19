@@ -2,6 +2,10 @@ import React, { FC, useState } from 'react';
 import { Box, Button, InputBase, styled } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { AssetSelect } from './AssetSelect'
+import { OperationType } from 'src/store/trade/const';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/store';
+import { setOperationType } from 'src/store/trade';
 
 const useStyles = makeStyles({
   close: {
@@ -68,6 +72,15 @@ const Input = styled(InputBase)({
 export const DepositBox: FC = () => {
   const classes = useStyles()  
   const [isConfirm, setIsConfirm] = useState(false)
+  const operationType = useSelector((state: RootState) => state.trade.operationType)
+  const dispatch = useDispatch()
+  const handlerOperation = (type: OperationType) => { 
+    if (operationType == type) {
+      dispatch(setOperationType(null))
+    } else { 
+      dispatch(setOperationType(type))
+    }
+  }
   return (
     <Box display="flex" flexDirection="column" width="100%" height="100%">
       <Box
@@ -81,7 +94,7 @@ export const DepositBox: FC = () => {
         color="#f7f7f7"
       >
         <Box>充值</Box>
-        <div className={classes.close}>X</div>
+        <div  onClick={()=>handlerOperation(OperationType.deposit)} className={classes.close}>X</div>
       </Box>
       <Box position="relative" component="div" width="100%" flexGrow={1}>
         <Box

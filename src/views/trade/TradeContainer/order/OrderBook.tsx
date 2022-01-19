@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 export const OrderBook: FC = () => {
   const classes = useStyles()
   const [isOrderBook, setIsOrderBook] = useState(true)
-  return <Box width={300} height='100%'  display='flex' flexDirection='column' border='1px solid #2d2d3d' component="div">
+  return <Box width={300} height='100%'  display='flex' flexDirection='column' borderRight='1px solid #2d2d3d' component="div">
     <Box display="flex" justifyContent="center" alignItems="center" height={44}
       sx={{
         fontSize: '14px',
@@ -38,7 +38,6 @@ export const OrderBook: FC = () => {
       <div className={isOrderBook == true ? '' : classes.activeBtn} onClick={()=>setIsOrderBook(!isOrderBook)}>交易订单</div>
     </Box>
     <Box display="flex" position="relative" flexDirection='column' flexGrow={1} component="div"  borderTop='1px solid #2d2d3d'>
-      
       <OrderBookTitle />
       {isOrderBook ? <OrderBookBody /> : ''}
       {isOrderBook ? <OrderBookFoot /> : ''}

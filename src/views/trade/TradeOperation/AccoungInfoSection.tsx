@@ -1,7 +1,11 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Button, Tooltip, Typography, TooltipProps, tooltipClasses } from '@material-ui/core'
 import { makeStyles, styled } from '@material-ui/styles'
 import { Box } from '@material-ui/core'
+import { OperationType } from 'src/store/trade/const';
+import { setOperationType } from 'src/store/trade';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/store';
 
 const useStyles = makeStyles(() => ({
   explain: {
@@ -68,28 +72,19 @@ const Tool: FC<ToolProps> = (props) => {
   )
 }
 
-export enum OperationType {
-  withdraw = 'withdraw', // 提现
-  deposit = 'deposit', // 充值
-}
-
-interface Props {
-  onChange?: (type: OperationType) => void
-}
+interface Props {}
 
 export const AccoungInfoSection: FC<Props> = ({
-  onChange = () => {},
 }) => {
   const classes = useStyles()
-  const [typeVal, setTypeVal] = useState(null)
+  const operationType = useSelector((state: RootState) => state.trade.operationType)
+  const dispatch = useDispatch()
 
   const handlerOperation = (type: OperationType) => {
-    if (typeVal == type) {
-      setTypeVal(null)
-      onChange(null)
+    if (operationType == type) {
+      dispatch(setOperationType(null))
     } else { 
-      setTypeVal(type)
-      onChange(type)
+      dispatch(setOperationType(type))
     }
   } 
 

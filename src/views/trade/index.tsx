@@ -5,7 +5,7 @@ import { TradeOperation } from './TradeOperation'
 import { TradeContainer } from './TradeContainer'
 
 export const TradeView: FC = () => {
-  return <Box display="flex" flexDirection="column" height="100%">
+  return <Box display="flex" flexDirection="column" height="100%" bgcolor="#1c1c28">
     <TradeTop />
     <Box flexGrow={1} display="flex">
       <TradeOperation />
