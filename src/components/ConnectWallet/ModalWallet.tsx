@@ -1,5 +1,6 @@
-import { Box, Typography } from '@material-ui/core'
+import { Box, Button, Typography } from '@material-ui/core'
 import Modal, { ModalProps } from '@material-ui/core/Modal'
+import { styled } from '@material-ui/styles'
 import { FC } from 'react'
 
 const style = {
@@ -8,12 +9,22 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: 'background.paper',
-  p: 4,
+  bgcolor: '#232334',
+  borderRadius: '0.5rem',
+  padding: 2,
   '&:focus-visible': {
     outline: 'none',
   },
 }
+
+const Btn = styled(Button)({
+  backgroundColor: '#232334',
+  color: '#fff',
+  '&:hover': {
+    backgroundColor: '#22222d',
+    color: 'var(--color-purple)',
+  },
+})
 
 const ModalWallet: FC<Omit<ModalProps, 'children'>> = ({
   open,
@@ -23,11 +34,11 @@ const ModalWallet: FC<Omit<ModalProps, 'children'>> = ({
   >
     <Box sx={style}>
       <Typography variant='subtitle1'>连接钱包</Typography>
-      <Box>
-
+      <Box mt={1} bgcolor="#171722" padding={2}>
+        <Btn>MetaMask</Btn>
       </Box>
     </Box>
-  </Modal>
+  </Modal >
 }
 
 export default ModalWallet
