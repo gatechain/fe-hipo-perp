@@ -5,17 +5,16 @@ export class MetaMask {
 
 }
 
-
 enum MetaEvents {
   accountsChanged = 'accountsChanged',
 }
 
 export const metaMaskManage = (activate: Web3ReactManagerFunctions['activate']) => {
-  if (!window.ethereum) {
+  if (!window?.ethereum) {
     return false
   }
 
-  window.ethereum.on(MetaEvents.accountsChanged, (accounts) => {
+  window?.ethereum?.on(MetaEvents.accountsChanged, (accounts) => {
     console.log(accounts)
     activate(injected)
   })

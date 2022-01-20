@@ -1,7 +1,9 @@
 import { Box, Button, Typography } from '@material-ui/core'
 import Modal, { ModalProps } from '@material-ui/core/Modal'
 import { styled } from '@material-ui/styles'
-import { FC } from 'react'
+import { useWeb3React } from '@web3-react/core'
+import { FC, useEffect, useState } from 'react'
+import { SupportedWalletsItem, SUPPORTED_WALLETS } from 'src/web3React/connector'
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -29,13 +31,40 @@ const Btn = styled(Button)({
 const ModalWallet: FC<Omit<ModalProps, 'children'>> = ({
   open,
 }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const { activate } = useWeb3React()
+
+  useEffect(() => {
+    setIsOpen(open)
+  }, [open])
+
+  const handleWallet = (walletOption: SupportedWalletsItem) => {
+    activate(walletOption.connector).then(() => {
+      setIsOpen(false)
+    })
+  }
+
+  const walletButtonEles = () => {
+    const ELE = SUPPORTED_WALLETS.map((walletOption) => {
+      return <Btn
+        onClick={() => handleWallet(walletOption)}
+        key={walletOption.key}
+      >
+        {walletOption.name}
+      </Btn>
+    })
+
+    return ELE
+  }
+
+
   return <Modal
-    open={open}
+    open={isOpen}
   >
     <Box sx={style}>
       <Typography variant='subtitle1'>连接钱包</Typography>
       <Box mt={1} bgcolor="#171722" padding={2}>
-        <Btn>MetaMask</Btn>
+        {walletButtonEles()}
       </Box>
     </Box>
   </Modal >
