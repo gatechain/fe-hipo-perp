@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Box, Button, InputBase, styled } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import { HTooltip } from './HTooltips'
+import { HTooltip } from './market/HTooltips'
 import { AssetSelect } from './AssetSelect'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
