@@ -17,7 +17,7 @@ export enum ConnectorNames {
   // Torus = 'Torus',
 }
 
-export const injected = new InjectedConnector({ supportedChainIds: [1, 85] })
+export const injected = new InjectedConnector({ supportedChainIds: [1, 3, 85] })
 
 
 export const connectorsByName: { [connectorName in ConnectorNames]: any } = {
@@ -50,6 +50,25 @@ export function getErrorMessage(error: Error) {
 export function useConnectWallet() {
 
 }
+
+export interface SupportedWalletsItem {
+  connector?: InjectedConnector
+  name: string
+  iconName: string
+  key: string
+  description: string
+}
+
+// 支持的钱包
+export const SUPPORTED_WALLETS: SupportedWalletsItem[] = [
+  {
+    connector: injected,
+    key: 'METAMASK',
+    name: 'MetaMask',
+    iconName: 'metamask.svg',
+    description: 'Easy-to-use browser extension.',
+  },
+]
 
 
 

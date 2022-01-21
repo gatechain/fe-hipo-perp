@@ -15,6 +15,7 @@ function getLibrary(provider) {
 // const Web3ProviderNetwork = isBrowser() ? createWeb3ReactRoot(NetWorkContextName) : defaultWeb3ProviderNetwork
 
 const Web3ReactProvider: FC = ({ children }) => {
+
   return <BaseWeb3ReactProvider getLibrary={getLibrary}>
     {/* <Web3ProviderNetwork getLibrary={getLibrary}> */}
     <Web3ReactManager>

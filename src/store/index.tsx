@@ -5,6 +5,7 @@ import TestSliceReducer from './test'
 import TradeSliceReducer from './trade'
 import MarketTypeReducer from './market'
 import OrderTypeReducer from './order'
+import NetworkSliceReducer from './network'
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     trade: TradeSliceReducer,
     market: MarketTypeReducer,
     order: OrderTypeReducer,
+    network: NetworkSliceReducer,
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),
