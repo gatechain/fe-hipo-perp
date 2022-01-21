@@ -104,10 +104,10 @@ export const TradeBox: FC = () => {
           <Box display="flex" flexDirection="column">
             <Box className={classes.marketTypeBox}>
               <Box
-                className={`${classes.marketTypeItem} ${marketType == 'market' ? classes.marketTypeChoose : ''}`}
+                className={`${classes.marketTypeItem} ${marketType == MarketType.market ? classes.marketTypeChoose : ''}`}
                 onClick={()=>handlerMarket(MarketType.market)}>市场</Box>
               <Box 
-                className={`${classes.marketTypeItem} ${marketType == 'limit' ? classes.marketTypeChoose : ''}`}
+                className={`${classes.marketTypeItem} ${marketType == MarketType.limit ? classes.marketTypeChoose : ''}`}
                 onClick={()=>handlerMarket(MarketType.limit)}
               >限价</Box>
               <Box display="flex" alignItems="center" justifyContent="center"
@@ -117,7 +117,7 @@ export const TradeBox: FC = () => {
                   cursor: 'pointer',
                   position: 'relative',
                 }}
-                className={`${((marketType == 'stopLimit' || marketType == 'trackStop' || marketType == 'profitStop') && isLimitPriceActive == false) ? classes.marketTypeChoose : ''}`}
+                className={`${((marketType == MarketType.stopLimit || marketType == MarketType.trackStop || marketType == MarketType.profitLimit) && isLimitPriceActive == false) ? classes.marketTypeChoose : ''}`}
                 onClick={ ()=>setIsLimitPriceActive(!isLimitPriceActive) }
               >
                 止损
@@ -126,15 +126,15 @@ export const TradeBox: FC = () => {
                   display={isLimitPriceActive == true ? 'flex' : 'none'}
                 >
                   <Box
-                    className={`${classes.stopLimitPriceItem} ${marketType == 'stopLimit' && isLimitPriceActive == true ? classes.marketTypeChoose : ''}`}
+                    className={`${classes.stopLimitPriceItem} ${marketType == MarketType.stopLimit && isLimitPriceActive == true ? classes.marketTypeChoose : ''}`}
                     onClick={ ()=>handlerMarket(MarketType.stopLimit) }
                   >止损限价</Box>
                   <Box
-                    className={`${classes.stopLimitPriceItem} ${marketType == 'trackStop' && isLimitPriceActive == true ? classes.marketTypeChoose : ''}`}
+                    className={`${classes.stopLimitPriceItem} ${marketType == MarketType.trackStop && isLimitPriceActive == true ? classes.marketTypeChoose : ''}`}
                     onClick={ ()=>handlerMarket(MarketType.trackStop) }
                   >追踪止损</Box>
                   <Box
-                    className={`${classes.stopLimitPriceItem} ${marketType == 'profitStop' && isLimitPriceActive == true ? classes.marketTypeChoose : ''}`}
+                    className={`${classes.stopLimitPriceItem} ${marketType == MarketType.profitLimit && isLimitPriceActive == true ? classes.marketTypeChoose : ''}`}
                     onClick={ ()=>handlerMarket(MarketType.profitLimit) }
                   >获利止损</Box>
                 </Box>
