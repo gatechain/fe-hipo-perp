@@ -3,11 +3,13 @@ import { load, save } from 'redux-localstorage-simple'
 import isBrowser from 'src/utils/isBrowser'
 import TestSliceReducer from './test'
 import TradeSliceReducer from './trade'
+import NetworkSliceReducer from './network'
 
 export const store = configureStore({
   reducer: {
     test: TestSliceReducer,
     trade: TradeSliceReducer,
+    network: NetworkSliceReducer,
   },
   middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware(),

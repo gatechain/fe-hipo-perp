@@ -4,15 +4,15 @@ import { blue } from '@material-ui/core/colors'
 import { makeStyles, styled, withStyles, WithStyles } from '@material-ui/styles'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from 'src/store'
+import Web3 from 'web3'
 import { decrement, increment, incrementByAmount } from 'src/store/test'
 
 import { useWeb3React } from '@web3-react/core'
 import { connectorsByName } from 'src/web3React/connector'
 import ConnectWallet from 'src/components/ConnectWallet'
-
 
 // hooks api
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -48,6 +48,11 @@ const DemoPage: NextPage = () => {
   // test metamask
   const { connector, activate, active, error, account } = useWeb3React()
   const [activatingConnector, setActivatingConnector] = useState<any>()
+
+  const web3 = useMemo(() => {
+    return new Web3(Web3.givenProvider || 'ws://localhost:8545')
+  }, [])
+
   useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined)
@@ -83,6 +88,12 @@ const DemoPage: NextPage = () => {
     <Box>
       <ConnectWallet></ConnectWallet>
     </Box>
+    <Button color="primary" variant="contained" onClick={() => {
+      console.log(account)
+      web3.eth.personal.sign('action: dYdX STARK Key', account, 'dydx', console.log).then(data => {
+        console.log(data, '哈哈哈的签名')
+      })
+    }}>授权</Button>
   </div>
 }
 

@@ -57,7 +57,6 @@ const ModalWallet: FC<Omit<ModalProps, 'children'>> = ({
     return ELE
   }
 
-
   return <Modal
     open={isOpen}
   >
