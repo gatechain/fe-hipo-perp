@@ -1,6 +1,7 @@
-import { Box } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import { useWeb3React } from '@web3-react/core'
 import { FC, useEffect, useMemo, useState } from 'react'
+import { showHeadAndEnd } from 'src/utils'
 import { HpButton } from '../HpButton'
 import ModalWallet from './ModalWallet'
 
@@ -17,11 +18,24 @@ const ConnectWallet: FC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [status, setStatus] = useState<StatusType>(StatusType.connect)
 
+  const accountStr: string = useMemo(() => {
+    let selectedAddress = ''
+    if (typeof window !== 'undefined') {
+      selectedAddress = window?.ethereum?.selectedAddress
+    }
+    return account || selectedAddress
+  }, [account]);
+
   const statusEle = useMemo(() => ({
     [StatusType.connect]: <HpButton variant="contained" onClick={() => setIsOpen(true)}>连接钱包</HpButton>,
-    [StatusType.account]: <Box color="#ccc">🟢  已连接  {account}</Box>,
+    [StatusType.account]: <Box color="#ccc">
+      <Box mr={2} component="span">🟢</Box>
+      <Typography variant='caption' mr={2}>
+        {showHeadAndEnd(accountStr)}
+      </Typography>
+    </Box>,
     [StatusType.error]: <Box>🔴 链接失败</Box>,
-  }), [account])
+  }), [accountStr])
 
   useEffect(() => {
     if (active && error) {
@@ -29,7 +43,7 @@ const ConnectWallet: FC = () => {
       return
     }
 
-    if (active) {
+    if (active || error) {
       setStatus(StatusType.account)
       return
     }

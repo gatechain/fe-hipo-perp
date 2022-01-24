@@ -1,18 +1,16 @@
 import { FC, useState } from 'react'
 import { AppBar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core'
 import Link from 'next/link'
-
-
 interface RouterItem {
   name: string
   link: string
 }
 
 const pages: RouterItem[] = [
-  {
-    name: 'Home',
-    link: '/',
-  },
+  // {
+  //   name: 'Home',
+  //   link: '/',
+  // },
   {
     name: 'Trade',
     link: '/trade',
@@ -22,12 +20,13 @@ const pages: RouterItem[] = [
     link: '/demo',
   },
 ]
+
 export const GlobalNav: FC = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>()
 
   const WebNav = () => {
     return <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-      {pages.map((page) => <Link key={page.name} href={page.link} passHref><Button sx={{ my: 2, color: 'white', display: 'block' }}>{page.name}</Button></Link>)}
+      {pages.map((page) => <Link key={page.name} href={page.link} passHref><Button sx={{ color: 'white', display: 'block' }}>{page.name}</Button></Link>)}
     </Box>
   }
 
@@ -50,15 +49,19 @@ export const GlobalNav: FC = () => {
     </Box>
   }
 
-  return <AppBar position="static">
-    <Toolbar>
+  return <AppBar position="static" style={{
+    background: 'none',
+    border: 'none',
+    boxShadow: 'none',
+  }}>
+    <Toolbar style={{ minHeight: 48 }}>
       <Typography
         variant="h6"
         noWrap
         component="div"
         sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
       >
-        Hipo-Perp
+        Hipo Perp
       </Typography>
       <WebNav />
       <MobileNav />
@@ -68,7 +71,7 @@ export const GlobalNav: FC = () => {
         component="div"
         sx={{ flexGrow: 1, mr: 2, display: { xs: 'flex', md: 'none' } }}
       >
-        Hipo-Perp
+        Hipo Perp
       </Typography>
     </Toolbar>
   </AppBar>

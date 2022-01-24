@@ -29,8 +29,7 @@ export const TradeOperation: FC = () => {
       <Box width="100%" flexGrow={1} display="flex" flexDirection="column" >
         {getTypeEle()}
       </Box>
-      
     </Box>
   )
-  
+
 }

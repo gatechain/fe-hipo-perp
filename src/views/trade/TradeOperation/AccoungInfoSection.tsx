@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Button, Tooltip, Typography, TooltipProps, tooltipClasses } from '@material-ui/core'
 import { makeStyles, styled } from '@material-ui/styles'
 import { Box } from '@material-ui/core'
@@ -6,6 +6,8 @@ import { OperationType } from 'src/store/trade/const';
 import { setOperationType } from 'src/store/trade';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
+import { useWeb3React } from '@web3-react/core';
+import ConnectWallet from 'src/components/ConnectWallet';
 
 const useStyles = makeStyles(() => ({
   explain: {
@@ -17,7 +19,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height:'20px',
+    height: '20px',
   },
   itemR: {
     display: 'flex',
@@ -27,7 +29,7 @@ const useStyles = makeStyles(() => ({
       display: 'flex',
       '&>span': {
         display: 'inline',
-        margin:'0 4px',
+        margin: '0 4px',
       },
     },
   },
@@ -40,7 +42,7 @@ const useStyles = makeStyles(() => ({
 
 }))
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} placement="bottom"/>
+  <Tooltip {...props} classes={{ popper: className }} placement="bottom" />
 ))(() => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: '#454258',
@@ -49,7 +51,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     fontSize: '13px',
     lineHeight: '16px',
     margin: '10px 10px 10px 30px',
-    padding:'12px',
+    padding: '12px',
     filter: 'drop-shadow(0 0 44px #171722)',
     overflow: 'hidden',
   },
@@ -63,49 +65,40 @@ const Tool: FC<ToolProps> = (props) => {
     <HtmlTooltip
       title={
         <React.Fragment>
-          <Typography sx={{ fontSize: '13px' }} color="inherit">{ props.title}</Typography>
-          <span>{ props.explain}</span>
+          <Typography sx={{ fontSize: '13px' }} color="inherit">{props.title}</Typography>
+          <span>{props.explain}</span>
         </React.Fragment>
       }>
-      <div style={{ cursor: 'help' }}>{ props.title}</div>
+      <div style={{ cursor: 'help' }}>{props.title}</div>
     </HtmlTooltip>
   )
 }
 
-interface Props {}
+interface Props { }
 
 export const AccoungInfoSection: FC<Props> = ({
 }) => {
   const classes = useStyles()
   const operationType = useSelector((state: RootState) => state.trade.operationType)
   const dispatch = useDispatch()
+  const { active, error } = useWeb3React()
 
   const handlerOperation = (type: OperationType) => {
     if (operationType == type) {
       dispatch(setOperationType(null))
-    } else { 
+    } else {
       dispatch(setOperationType(type))
     }
-  } 
+  }
 
-  return (
-    <Box
-      fontSize={14}
-      display="flex"
-      flexDirection="column"
-      color="#c3c2d4"
-      px="20px"
-      pt="18px"
-      pb="14px"
-      borderBottom="1px solid #2d2d3d"
-      height={180}
-      sx={{
-        '>div:not(:first-child)': {
-          marginTop:'8px',
-        },
-      }}
-    >
-      <div className={classes.accountItem} style={{ height:'18px', marginBottom:'16px' }}>
+  const isWrongChain: boolean = useMemo(() => {
+    return Boolean(!active && error)
+  }, [active, error])
+
+
+  const connectedEle = () => {
+    return <>
+      <div className={classes.accountItem} style={{ height: '18px', marginBottom: '16px' }}>
         账户
         <Box>
           <Button variant="contained"
@@ -184,12 +177,47 @@ export const AccoungInfoSection: FC<Props> = ({
           </div>
         </div>
       </div>
-      {/* <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" width='100%' height='100%' flex="1 1 auto">
-        <div className={classes.explain}>连接您的以太坊钱包，以存入资金和开始交易。</div>
-        <Button variant="contained" >链接钱包</Button>
-      </Box> */}
-      
+    </>
+  }
+
+  return (
+    <Box
+      fontSize={14}
+      display="flex"
+      flexDirection="column"
+      color="#c3c2d4"
+      px="20px"
+      pt="18px"
+      pb="14px"
+      borderBottom="1px solid #2d2d3d"
+      height={180}
+      sx={{
+        '>div:not(:first-child)': {
+          marginTop: '8px',
+        },
+      }}
+    >
+      {
+        active
+          ? connectedEle()
+          :
+          <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" width='100%' height='100%' flex="1 1 auto">
+            <div className={classes.explain}>
+              {
+                isWrongChain
+                  ? <>
+                    要完成dYdX入门培训，请将您的钱包网络设置为“Ropsten测试网络”。
+                  </>
+                  : <>
+                    连接您的以太坊钱包，以存入资金和开始交易。
+                    <ConnectWallet />
+                  </>
+              }
+            </div>
+
+          </Box>
+      }
     </Box>
-    
+
   )
 };
