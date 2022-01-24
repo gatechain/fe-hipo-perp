@@ -1,4 +1,4 @@
-import { Box, Drawer  } from '@material-ui/core'
+import { Box, ButtonBase, Drawer, styled  } from '@material-ui/core'
 import  React, { FC } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import Image from 'next/image'
@@ -42,6 +42,15 @@ const useStyles = makeStyles({
   },
 })
 
+const CancelBtn = styled(ButtonBase)({
+  height: '36px',
+  fontSize: '14px',
+  fontWeight: 500,
+  background: '#303044',
+  borderRadius: '8px',
+  padding: '0 16px',
+  color: '#ff5353',
+})
 
 export const OrderItem: FC = () => {
   const classes = useStyles()
@@ -99,7 +108,7 @@ export const OrderItem: FC = () => {
           onClose={toggleDrawer('right', false)}
         >
           <Box className={classes.drawer}>
-            <Box display="flex" flexDirection="column">
+            <Box display="flex" flexDirection="column" height='100%'>
               <Box
                 display="flex"
                 justifyContent="space-between"
@@ -113,13 +122,15 @@ export const OrderItem: FC = () => {
                   </Box>
                   <Box display="flex">限价订单</Box>
                 </Box>
-                <Box>X</Box>
+                <Box component="div" onClick={toggleDrawer('right', false)} >X</Box>
               </Box>
-              <Box display="flex" flexDirection="column">
-                <Box display="flex" flexDirection="column" padding="0 28px 24px 28px">
-                  <DrawerDetails/>
+              <Box flexGrow={1} display="flex" flexDirection="column" justifyContent="space-between" padding="0 28px 24px 28px">
+                <Box display="flex" flexDirection="column" >
+                  <DrawerDetails k="市场" v="ATOM-USD" />
+                  <DrawerDetails k="direction" v="sell"/>
+                  <DrawerDetails k="状态" v="开仓"/>
                 </Box>
-
+                <CancelBtn>取消订单</CancelBtn>
               </Box>
 
             </Box>

@@ -55,9 +55,9 @@ export const OrderBookBody: FC = () => {
           borderTop: '1px solid #2d2d3d',
           borderBottom:'1px solid #2d2d3d',
         }}>
-          <div className={classes.amountBox}><span className={classes.span}>点差</span></div>
-          <div className={classes.priceBox}><span className={classes.span}>0.04</span></div>
-          <div className={classes.orderBox}><span className={classes.span}>0.11%</span></div>
+          <Box className={classes.amountBox}><span className={classes.span}>点差</span></Box>
+          <Box className={classes.priceBox}><span className={classes.span}>0.04</span></Box>
+          <Box className={classes.orderBox}><span className={classes.span}>0.11%</span></Box>
       </Box>
       <Box>
         <Box >

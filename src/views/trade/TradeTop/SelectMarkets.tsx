@@ -2,6 +2,7 @@ import React, { FC, useState } from 'react';
 import { Box } from '@material-ui/core'
 import Image from 'next/image'
 import { MarketSelectionMenu } from './MarketSelectionMenu'
+
 /**
  * 声明Props类型
  */
@@ -12,6 +13,8 @@ export interface SelectMarketsProps {
 
 export const SelectMarkets: FC<SelectMarketsProps> = props => {
   const [showSymbolList, setShowSymbolList] = useState(false)
+  
+
   return (
     <Box py="12px" width={324} height={47}
       sx={{

@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 export const Order: FC = () => {
   const classes = useStyles()
   return (
-    <Box display="flex" flexDirection="column" bgcolor="#1c1c28" width='100%' height="100%">
+    <Box  display="flex" flexDirection="column" bgcolor="#1c1c28" width='100%' height="100%">
       <Box
         display="flex"
         alignItems="center"
@@ -97,25 +97,47 @@ export const Order: FC = () => {
           </div>
         </div>
       </Box>
-      <Box
-        display="flex"
-        flexDirection="column"
-        height="calc(100% - 40px)"
-        overflow='scroll'>
-        <OrderItem/>
-           {/* <Box
+      <Box flexGrow={1} position="relative">
+         <Box
+          position="absolute"
+          display="flex"
+          flexDirection="column"
+          width="100%"
+          height="100%"
+          sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
+            <OrderItem />
+            <OrderItem />
+            <OrderItem />
+            <OrderItem />
+            <OrderItem/>
+            <OrderItem/>
+            <OrderItem/>
+            <OrderItem />
+            <OrderItem/> 
+
+          
+        </Box>
+        {/* <Box
+          position="absolute"
           display="flex"
           alignItems="center"
           justifyContent="center"
           flex="1 1 auto"
+          width="100%"
+          height="100%"
           fontSize="15px"
           fontWeight="500"
           color="#c3c2d4"
-          lineHeight="20px" >
-          
-       没有订单。
-        </Box> */}
+          lineHeight="20px"
+          paddingTop="50px"
+        >
+        
+          没有订单。
+        </Box>  */}
+
       </Box>
+
+      
     </Box>
   )
   

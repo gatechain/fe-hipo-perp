@@ -11,7 +11,7 @@ export const TradeView: FC = () => {
   useEffect(() => {
     dispatch(fetchIsExists())
   }, [dispatch])
-  return <Box display="flex" flexDirection="column" height="100%" bgcolor="#1c1c28">
+  return <Box display="flex" flexDirection="column" height="100%" bgcolor="#1c1c28" borderBottom="1px solid #2d2d3d">
     <TradeTop />
     <Box flexGrow={1} display="flex">
       <TradeOperation />

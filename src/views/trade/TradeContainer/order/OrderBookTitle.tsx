@@ -29,6 +29,16 @@ const useStyles = makeStyles({
     flex: '0 0 28%',
     paddingRight: '4px',
   },
+  lableUnit: {
+    display: 'inline-flex',
+    fontSize: '12px',
+    padding: '0 3px 0 4px',
+    fontWeight: 500,
+    backgroundColor: '#303044',
+    borderRadius: '2px',
+    color: '#c3c2d4',
+    marginLeft: '2px',
+  },
 })
 
 export const OrderBookTitle: FC = () => {
@@ -43,9 +53,9 @@ export const OrderBookTitle: FC = () => {
         color="#6f6e84"
         px={2}
         height={28}>
-        <div className={classes.amountBox}>数量 <div className={classes.lableUnit}>Atom</div></div>
-        <div className={classes.priceBox}>价格<div className={classes.lableUnit}>usd</div></div>
-        <div className={classes.orderBox}>我的订单</div>
+        <Box className={classes.amountBox}>数量 <Box className={classes.lableUnit}>Atom</Box></Box>
+        <Box className={classes.priceBox}>价格<Box className={classes.lableUnit}>usd</Box></Box>
+        <Box className={classes.orderBox}>我的订单</Box>
       </Box>
   )
 }
