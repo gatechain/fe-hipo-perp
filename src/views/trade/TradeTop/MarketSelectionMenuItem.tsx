@@ -15,10 +15,24 @@ const useStyles = makeStyles({
     lineHeight: '20px',
     height: '20px',
   },
+  spanValue: {
+    fontSize: '13px',
+    lineHeight: '18px',
+    fontWeight: 500,
+    color:'#c3c2d4',
+  },
 })
 
-export const MarketSelectionMenuItem: FC = () => {
-  
+interface MarketSelectionMenuItemProps { 
+  market: string,
+  base_asset: string,
+  base_asset_name: string,
+  index_price: string,
+  volume_24h: string,
+  next_funding_rate: string,
+  open_interest: string,
+}
+export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props) => {
   const classes = useStyles()  
   return (
     <Box sx={{ backgroundColor: '#171722', padding:'0 16px', color:'#f7f7f7', borderBottom:'1px solid #2d2d3d' }}>
@@ -34,7 +48,7 @@ export const MarketSelectionMenuItem: FC = () => {
             }}>
             <Image width={24} height={24} src="/images/btc.svg" alt=""></Image>
           </Box>
-          <span className={classes.coinLeft}>Bitcoin</span>
+          <span className={classes.coinLeft}>{ props.base_asset_name}</span>
           <Box
             sx={{
               marginLeft: '4px',
@@ -48,7 +62,7 @@ export const MarketSelectionMenuItem: FC = () => {
               borderRadius: '2px',
               letterSpacing: '.6px',
             }}>
-            BTC
+            { props.base_asset}
           </Box>
         </Box>
         {/* right */}
@@ -59,13 +73,13 @@ export const MarketSelectionMenuItem: FC = () => {
           gap: '4px',
           boxSizing: 'border-box',
         }} >
-          <span className={classes.price}>$43,682</span>
+          <span className={classes.price}>${ props.index_price}</span>
           <Box display="flex" flexDirection="row" alignItems="center"
             sx={{ 
               fontSize: '13px',
               color:'#3fb68b',
             }}>
-            <span>2.26%</span>
+            {/* <span>2.26%</span> */}
           </Box>
         </Box>
       </Box>
@@ -76,7 +90,7 @@ export const MarketSelectionMenuItem: FC = () => {
           '>:not(:last-child)': {
             borderRight:'1px solid #2d2d3d',
           },
-          '>:nth-child(2)': {
+          '>:nth-of-type(2)': {
             alignItems: 'center',
             flex:'0 0 38%',
           },
@@ -90,13 +104,8 @@ export const MarketSelectionMenuItem: FC = () => {
               marginBottom: '2px',
             }}
           >24小时交易量</Box>
-          <Box
-            sx={{
-              fontSize: '14px',
-              lineHeight: '18px',
-              color:'#c3c2d4',
-            }}>
-            <span>$348,380,315</span>
+          <Box className={classes.spanValue}>
+            <span>${ props.volume_24h}</span>
           </Box>
         </Box>
         <Box display="flex" flexDirection="column" justifyContent="center" >
@@ -108,14 +117,9 @@ export const MarketSelectionMenuItem: FC = () => {
             marginBottom: '2px',
           }}
           >未平仓合约</Box>
-          <Box display="flex" flexDirection="row" alignItems="center"
-            sx={{
-              fontSize: '14px',
-              lineHeight: '18px',
-              color:'#c3c2d4',
-            }}
-          >
-            <span>5,650.8284</span>
+          <Box display="flex" flexDirection="row" alignItems="center" className={classes.spanValue}
+            >
+            <span>{ props.open_interest }</span>
             <Box
               sx={{
                 padding: '0 3px 0 4px',
@@ -125,9 +129,10 @@ export const MarketSelectionMenuItem: FC = () => {
                 height: '16px', 
                 lineHeight: '16px',
                 borderRadius: '2px',
-                marginLeft:'4px',
+                marginLeft: '4px',
+                fontSize:'10px',
               }}
-            >Btc</Box>
+            >{ props.base_asset }</Box>
           </Box>
         </Box>
         <Box display="flex" flexDirection="column" alignItems="flex-end" justifyContent="center" flex="0 0 31%">
@@ -139,14 +144,8 @@ export const MarketSelectionMenuItem: FC = () => {
               marginBottom: '2px',  
             }}
           >资金利率</Box>
-          <Box
-            sx={{
-              fontSize: '14px',
-              lineHeight: '18px',
-              color:'#c3c2d4',
-            }}
-          >
-            <span>0.000717%</span>
+          <Box className={classes.spanValue}>
+            <span>{ props.next_funding_rate }%</span>
           </Box>
         </Box>
       </Box>

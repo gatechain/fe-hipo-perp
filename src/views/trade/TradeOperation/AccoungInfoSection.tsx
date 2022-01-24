@@ -192,7 +192,7 @@ export const AccoungInfoSection: FC<Props> = ({
       borderBottom="1px solid #2d2d3d"
       height={180}
       sx={{
-        '>div:not(:first-child)': {
+        '>div:not(:first-of-type)': {
           marginTop: '8px',
         },
       }}
