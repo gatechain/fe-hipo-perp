@@ -1,6 +1,6 @@
 import { fetch } from './fetch';
 
 export const API = {
-  getExists: (data) => fetch.get('/exists', { data }),
+  getExists: (params: any): any => fetch.get('/exists', { params }),
   getMarkets: () => fetch.get('/markets'),
 }

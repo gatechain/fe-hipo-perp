@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
 import { load, save } from 'redux-localstorage-simple'
 import isBrowser from 'src/utils/isBrowser'
 import TestSliceReducer from './test'
@@ -23,3 +23,4 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispath = typeof store.dispatch
+export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>

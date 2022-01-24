@@ -4,7 +4,6 @@ import { Layout } from 'src/layout'
 import { ThemeProvider } from 'src/theme'
 import { Provider } from 'react-redux'
 import { store } from 'src/store'
-import { NoSsr } from '@material-ui/core'
 import Web3ReactProvider from 'src/web3React/Web3ReactProvider'
 
 function App({ Component, pageProps }: AppProps) {
@@ -12,9 +11,7 @@ function App({ Component, pageProps }: AppProps) {
     <Web3ReactProvider>
       <ThemeProvider>
         <Layout>
-          <NoSsr>
-            <Component {...pageProps} />
-          </NoSsr>
+          <Component {...pageProps} />
         </Layout>
       </ThemeProvider>
     </Web3ReactProvider>
