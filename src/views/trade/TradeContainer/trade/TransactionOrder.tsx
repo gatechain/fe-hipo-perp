@@ -2,6 +2,7 @@ import { Box  } from '@material-ui/core'
 import { FC } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import Image from 'next/image'
+import { TransactionOrderItem } from './TransactionOrderItem';
 const useStyles = makeStyles({
   unit: {
     fontSize: '10px',
@@ -76,22 +77,45 @@ export const TransactionOrder: FC = () => {
           </Box>
         </div>
       </Box>
-      <Box
-        display="flex"
-        flexDirection="column"
-        height="calc(100% - 40px)"
-        overflow= 'scroll'>
-        <Box
+      <Box flexGrow={1} position="relative">
+         <Box
+          position="absolute"
+          display="flex"
+          flexDirection="column"
+          width="100%"
+          height="100%"
+          sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
+          <TransactionOrderItem />
+          <TransactionOrderItem />
+          <TransactionOrderItem />
+          <TransactionOrderItem />
+          <TransactionOrderItem />
+          <TransactionOrderItem />
+          <TransactionOrderItem />
+          <TransactionOrderItem />
+          <TransactionOrderItem />
+            
+
+          
+        </Box>
+        {/* <Box
+          position="absolute"
           display="flex"
           alignItems="center"
           justifyContent="center"
           flex="1 1 auto"
+          width="100%"
+          height="100%"
           fontSize="15px"
           fontWeight="500"
           color="#c3c2d4"
-          lineHeight="20px" >
+          lineHeight="20px"
+          paddingTop="50px"
+        >
+        
           没有订单。
-        </Box>
+        </Box>  */}
+
       </Box>
     </Box>
   )
