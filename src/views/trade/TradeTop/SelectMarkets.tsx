@@ -1,9 +1,12 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import Image from 'next/image'
 import { MarketSelectionMenu } from './MarketSelectionMenu'
 import { IconFont } from 'src/components/IconFont';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'src/store';
+import { setIsShowSymbolList } from 'src/store/market';
 
 const useStyles = makeStyles({
   iconBox: {
@@ -26,13 +29,17 @@ const useStyles = makeStyles({
  */
 export interface SelectMarketsProps {
   imgUrl: string;
-  symbol: string;
 }
 
 export const SelectMarkets: FC<SelectMarketsProps> = props => {
   const classes = useStyles()
-  const [showSymbolList, setShowSymbolList] = useState(false)
- 
+  const symbol = useSelector((state: RootState) => state.market.marketSymbol)
+  const showSymbolList = useSelector((state: RootState) => state.market.isShowSymbolList)
+  const dispatch = useDispatch()
+
+  const handlerIsShowSymbolList = (isShow: boolean) => { 
+    dispatch(setIsShowSymbolList(isShow))
+  }
   
   return (
     <Box py="12px" width={324} height={47}
@@ -44,7 +51,7 @@ export const SelectMarkets: FC<SelectMarketsProps> = props => {
         '&:hover': {
           cursor: 'pointer',
         },
-      }} onClick={() => setShowSymbolList(!showSymbolList)} display="flex" alignItems="center" justifyContent="space-between" borderRight='1px solid #2d2d3d' px="20px">
+      }} onClick={() => handlerIsShowSymbolList(!showSymbolList)} display="flex" alignItems="center" justifyContent="space-between" borderRight='1px solid #2d2d3d' px="20px">
         <Box display="flex" alignItems="center"
           sx={{
             color: '#c3c2d4',
@@ -55,7 +62,7 @@ export const SelectMarkets: FC<SelectMarketsProps> = props => {
             <Box mr={1} width={24} height={24}>
               <Image width={24} height={24} src={props.imgUrl} alt=""></Image>
             </Box>
-            <span >{ props.symbol }</span>
+            <span >{ symbol }</span>
 
           </Box>
           <Box display={showSymbolList ? 'flex' : 'none'} alignItems="center">

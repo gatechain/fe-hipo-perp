@@ -2,8 +2,8 @@ import React, { FC, useState } from 'react';
 import { Box, Button, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
-import { TransactionTypeBox } from './TransactionTypeBox';
-import { TransactionType } from 'src/store/market/const';
+import { DirectionBox } from './DirectionBox';
+import { DirectionType } from 'src/store/market/const';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { IconFont } from 'src/components/IconFont';
@@ -164,7 +164,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
 
 export const TrackStopLimitPriceBox: FC = () => {
   const classes = useStyles()
-  const transactionType = useSelector((state: RootState) => state.market.transactionType)
+  const directionType = useSelector((state: RootState) => state.market.directionType)
   const [isShowClose, setIsShowClose] = useState(true)
   const [isHighRankingOption, setIsHighRankingOption] = useState(true)
   
@@ -176,7 +176,7 @@ export const TrackStopLimitPriceBox: FC = () => {
       }}>
       <Box>
         <Box>
-          <TransactionTypeBox/>
+          <DirectionBox/>
         </Box>
         <Box>
           <Box display="flex" fontSize="13px" fontWeight={500} color="#c3c2d4" marginLeft="4px" marginBottom="8px">
@@ -397,7 +397,7 @@ export const TrackStopLimitPriceBox: FC = () => {
                 <span className={classes.valuation}>$38.28</span>
               </Box>
             </Box>
-            <Btn className={`${classes.placeOrder} ${transactionType == TransactionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}>下止损单</Btn>
+            <Btn className={`${classes.placeOrder} ${directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}>下止损单</Btn>
           </Box>
         </Box>
 

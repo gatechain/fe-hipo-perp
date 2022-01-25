@@ -21,9 +21,7 @@ const useStyles = makeStyles({
     background: '#171722',
     color: '#F7F7F7',
   },
-  box: {
-
-  },
+  
 })
 
 
