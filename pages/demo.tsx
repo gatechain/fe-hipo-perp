@@ -13,6 +13,7 @@ import { decrement, increment, incrementByAmount } from 'src/store/test'
 import { useWeb3React } from '@web3-react/core'
 import { connectorsByName } from 'src/web3React/connector'
 import ConnectWallet from 'src/components/ConnectWallet'
+import { IconFont } from 'src/components/IconFont'
 
 // hooks api
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -88,6 +89,7 @@ const DemoPage: NextPage = () => {
     <Box>
       <ConnectWallet></ConnectWallet>
     </Box>
+    <IconFont name='icon-xiangxia' color='#fff' />
     <Button color="primary" variant="contained" onClick={() => {
       console.log(account)
       web3.eth.personal.sign('action: dYdX STARK Key', account, 'dydx', console.log).then(data => {
