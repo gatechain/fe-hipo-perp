@@ -6,8 +6,8 @@ export const useMarkets = (): [any[], () => void] => {
   const [list, setList] = useState([])
   const fetch = useCallback(async () => {
     try {
-      const { data } = await API.getMarkets()
-      setList(data?.data?.markets || [])
+      const res = await API.getMarkets()
+      setList(res?.markets || [])
     } catch (error) {
       setList([])
     }

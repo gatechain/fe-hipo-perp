@@ -1,6 +1,5 @@
 import { FC, useMemo } from 'react'
 import { Box, BoxProps, useTheme } from '@material-ui/core'
-// import I18N from 'src/utils/I18N'
 import { SelectMarkets } from './SelectMarkets'
 
 export const TradeTop: FC = () => {
@@ -16,7 +15,7 @@ export const TradeTop: FC = () => {
 
   return (
     <Box {...BoxPropsRest} >
-      <SelectMarkets imgUrl='/images/btc.svg' symbol='BTC-USDT'/>
+      <SelectMarkets imgUrl='/images/btc.svg' symbol='BTC-USDT' />
     </Box>
   )
 }

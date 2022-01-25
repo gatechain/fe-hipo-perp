@@ -3745,6 +3745,11 @@ mock-fs@^4.1.0:
   resolved "https://registry.npmmirror.com/mock-fs/download/mock-fs-4.14.0.tgz?cache=0&sync_timestamp=1636402338224&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fmock-fs%2Fdownload%2Fmock-fs-4.14.0.tgz#ce5124d2c601421255985e6e94da80a7357b1b18"
   integrity sha1-zlEk0sYBQhJVmF5ulNqApzV7Gxg=
 
+moment@^2.29.1:
+  version "2.29.1"
+  resolved "https://registry.npmmirror.com/moment/download/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
+  integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
