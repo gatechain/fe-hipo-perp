@@ -3,8 +3,8 @@ import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
-import { TransactionType } from 'src/store/market/const';
-import { setTransactionType } from 'src/store/market';
+import { DirectionType } from 'src/store/market/const';
+import { setDirectionType } from 'src/store/market';
 
 
 const useStyles = makeStyles({
@@ -58,20 +58,20 @@ const useStyles = makeStyles({
 })
 
 
-export const TransactionTypeBox: FC = () => {
+export const DirectionBox: FC = () => {
   const classes = useStyles()  
-  const type = useSelector((state: RootState) => state.market.transactionType)
+  const type = useSelector((state: RootState) => state.market.directionType)
   const dispatch = useDispatch()
-  const handlerTransactionType = (transactionType: TransactionType) => { 
-    dispatch(setTransactionType(transactionType))
+  const handlerdDirectionType = (directionType: DirectionType) => { 
+    dispatch(setDirectionType(directionType))
   }
   return (
     <Box className={classes.typeSelection}>
-      <Box className={`${classes.typeItem} ${type == TransactionType.sell ? classes.sellColor : ''}`}
-        onClick={() => handlerTransactionType(TransactionType.sell)}
+      <Box className={`${classes.typeItem} ${type == DirectionType.sell ? classes.sellColor : ''}`}
+        onClick={() => handlerdDirectionType(DirectionType.sell)}
       >卖出</Box>
-      <Box className={`${classes.typeItem} ${type == TransactionType.buy ? classes.buyColor : ''}`}
-        onClick={() => handlerTransactionType(TransactionType.buy)}
+      <Box className={`${classes.typeItem} ${type == DirectionType.buy ? classes.buyColor : ''}`}
+        onClick={() => handlerdDirectionType(DirectionType.buy)}
       >买入</Box>
     </Box>
     

@@ -2,10 +2,10 @@ import React, { FC, useState } from 'react';
 import { Box, Button, Checkbox, CheckboxProps, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
-import { TransactionTypeBox } from './TransactionTypeBox';
+import { DirectionBox } from './DirectionBox';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
-import { TransactionType } from 'src/store/market/const';
+import { DirectionType } from 'src/store/market/const';
 import { IconFont } from 'src/components/IconFont';
 
 const useStyles = makeStyles({
@@ -190,7 +190,7 @@ function BpCheckbox(props: CheckboxProps) {
 }
 export const LimitPriceBox: FC = () => {
   const classes = useStyles()
-  const transactionType = useSelector((state: RootState) => state.market.transactionType)
+  const directionType = useSelector((state: RootState) => state.market.directionType)
   const [isShowClose, setIsShowClose] = useState(false)
   const [isHighRankingOption, setIsHighRankingOption] = useState(true)
   const [amount, setAmount] = useState(null)
@@ -207,7 +207,7 @@ export const LimitPriceBox: FC = () => {
       }}>
       <Box>
         <Box>
-          <TransactionTypeBox/>
+          <DirectionBox/>
         </Box>
         <Box>
           <Box display="flex" fontSize="13px" fontWeight={500} color="#c3c2d4" marginLeft="4px" marginBottom="8px">
@@ -456,7 +456,7 @@ export const LimitPriceBox: FC = () => {
             <Btn
               disabled={!amount}
               className={`${classes.placeOrder} 
-              ${!amount ? '' : transactionType == TransactionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
+              ${!amount ? '' : directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
             >下限价订单</Btn>
           </Box>
         </Box>

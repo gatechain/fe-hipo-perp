@@ -2,6 +2,8 @@ import React, { FC } from 'react';
 import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import Image from 'next/image'
+import { useDispatch } from 'react-redux';
+import { setIsShowSymbolList, setMarketSymbol } from 'src/store/market';
 
 const useStyles = makeStyles({
   itemBg: {
@@ -19,7 +21,17 @@ const useStyles = makeStyles({
     fontSize: '13px',
     lineHeight: '18px',
     fontWeight: 500,
-    color:'#c3c2d4',
+    color: '#c3c2d4',
+  },
+  box: {
+    backgroundColor: '#171722',
+    padding: '0 16px',
+    color: '#f7f7f7',
+    borderBottom: '1px solid #2d2d3d',
+    '&:hover': {
+      backgroundColor: '#232334',
+      cursor: 'pointer',
+    },
   },
 })
 
@@ -34,8 +46,15 @@ interface MarketSelectionMenuItemProps {
 }
 export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props) => {
   const classes = useStyles()  
+  const dispatch = useDispatch()
+
+  const handlerChangeSymbol = (symbol: string) => {
+    dispatch(setMarketSymbol(symbol))
+    dispatch(setIsShowSymbolList(false))
+  }
+   
   return (
-    <Box sx={{ backgroundColor: '#171722', padding:'0 16px', color:'#f7f7f7', borderBottom:'1px solid #2d2d3d' }}>
+    <Box className={classes.box} onClick={()=>handlerChangeSymbol(props.market)}>
       {/* top */}
       <Box display="flex" alignItems="center" justifyContent="space-between" height={54}>
         {/* left */}

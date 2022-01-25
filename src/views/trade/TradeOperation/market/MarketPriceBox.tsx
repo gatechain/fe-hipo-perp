@@ -2,10 +2,10 @@ import React, { FC, useState } from 'react';
 import { Box, Button, InputBase, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
-import { TransactionTypeBox } from './TransactionTypeBox';
+import { DirectionBox } from './DirectionBox';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
-import { TransactionType } from 'src/store/market/const';
+import { DirectionType } from 'src/store/market/const';
 import { IconFont } from 'src/components/IconFont';
 import { API } from 'src/Api';
 
@@ -137,24 +137,24 @@ const Input = styled(InputBase)({
 })
 export const MarketPriceBox: FC = () => {
   const classes = useStyles()
-  const transactionType = useSelector((state: RootState) => state.market.transactionType)
+  const directionType = useSelector((state: RootState) => state.market.directionType)
   const [isShowClose, setIsShowClose] = useState(false)
   const [amount, setAmount] = useState(null)
+  const marketType = useSelector((state: RootState) => state.market.marketType)
+  
 
-  const changeAmount = (event: Event) => {
-    setAmount(event.target.value)
-  }
   
   const handlerPlaceOrder = async () => { 
     try {
       const result = await API.postPlaceOrder({
         'market': 'ATOM-USD',
-        'side': 'BUY',
-        'type': 'MARKET',
-        'size': '20',
+        'side': directionType.toUpperCase(),
+        'type': marketType.toLocaleUpperCase(),
+        'size': amount.toString(),
         'price': '33',
         'limit_fee': '0.05',
       })
+      
       console.log(result.data)
     } catch (error) {
       console.error(error)
@@ -169,7 +169,7 @@ export const MarketPriceBox: FC = () => {
       }}>
       <Box>
         <Box>
-          <TransactionTypeBox/>
+          <DirectionBox/>
         </Box>
         <Box>
           <Box fontSize="13px" fontWeight={500} color="#c3c2d4" marginLeft="4px" marginBottom="8px">
@@ -196,7 +196,7 @@ export const MarketPriceBox: FC = () => {
               bgcolor="#232334"
               marginRight="6px"
             >
-              <Input placeholder="0.0000" onChange={()=>changeAmount(event)}></Input>
+              <Input placeholder="0.0000" onChange={(event)=> setAmount(event.target.value)}></Input>
               <Box
                 display="grid"
                 alignSelf="center"
@@ -253,9 +253,9 @@ export const MarketPriceBox: FC = () => {
           >
             <Input placeholder="0.0000"></Input>
             <Box className={`${classes.positionType} 
-                ${transactionType == TransactionType.buy ? classes.long : classes.less}`}
+                ${directionType == DirectionType.buy ? classes.long : classes.less}`}
             >
-              {transactionType == TransactionType.buy ? '多头' : '空头'}
+              {directionType == DirectionType.buy ? '多头' : '空头'}
             </Box>
           </Box>
           <LeverageBtn>2×</LeverageBtn>
@@ -380,7 +380,7 @@ export const MarketPriceBox: FC = () => {
             <Btn
               disabled={!amount}
               className={`${classes.placeOrder} 
-              ${!amount ? '' : transactionType == TransactionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
+              ${!amount ? '' : directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
               onClick={() => handlerPlaceOrder()}
             >下市场价订单</Btn>
           </Box>

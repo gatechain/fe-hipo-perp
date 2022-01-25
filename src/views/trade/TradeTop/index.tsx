@@ -15,7 +15,7 @@ export const TradeTop: FC = () => {
 
   return (
     <Box {...BoxPropsRest} >
-      <SelectMarkets imgUrl='/images/btc.svg' symbol='BTC-USDT' />
+      <SelectMarkets imgUrl='/images/btc.svg'/>
     </Box>
   )
 }
