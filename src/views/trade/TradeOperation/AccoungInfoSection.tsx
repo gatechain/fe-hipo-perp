@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, ReactNode, useMemo } from 'react';
 import { Button, Tooltip, Typography, TooltipProps, tooltipClasses } from '@material-ui/core'
 import { makeStyles, styled } from '@material-ui/styles'
 import { Box } from '@material-ui/core'
@@ -6,8 +6,10 @@ import { OperationType } from 'src/store/trade/const';
 import { setOperationType } from 'src/store/trade';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
-import { useWeb3React } from '@web3-react/core';
 import ConnectWallet from 'src/components/ConnectWallet';
+import { ConnectButtonStatus } from 'src/store/network/const';
+import { HpButton } from 'src/components/HpButton';
+import { setOpenSignModal } from 'src/store/network';
 
 const useStyles = makeStyles(() => ({
   explain: {
@@ -20,6 +22,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     height: '20px',
+    marginTop: '4px',
   },
   itemR: {
     display: 'flex',
@@ -75,13 +78,25 @@ const Tool: FC<ToolProps> = (props) => {
 }
 
 interface Props { }
+const buttonStyle = {
+  fontSize: '14px',
+  fontWeight: 500,
+  backgroundColor: '#303044',
+  height: '28px',
+  lineHeight: '16px',
+  borderRadius: '24px',
+  padding: '0 10px',
+  marginRight: '6px',
+}
 
 export const AccoungInfoSection: FC<Props> = ({
 }) => {
   const classes = useStyles()
-  const operationType = useSelector((state: RootState) => state.trade.operationType)
+  const {
+    trade: { operationType },
+    network: { connectButtonStatus, isExists },
+  } = useSelector((state: RootState) => state)
   const dispatch = useDispatch()
-  const { active, error } = useWeb3React()
 
   const handlerOperation = (type: OperationType) => {
     if (operationType == type) {
@@ -91,42 +106,19 @@ export const AccoungInfoSection: FC<Props> = ({
     }
   }
 
-  const isWrongChain: boolean = useMemo(() => {
-    return Boolean(!active && error)
-  }, [active, error])
-
-
-  const connectedEle = () => {
+  const AccountInfoEle = () => {
     return <>
       <div className={classes.accountItem} style={{ height: '18px', marginBottom: '16px' }}>
         账户
         <Box>
-          <Button variant="contained"
+          <Button
+            variant="contained"
             onClick={() => handlerOperation(OperationType.withdraw)}
-            sx={{
-              fontSize: '13px',
-              fontWeight: 500,
-              backgroundColor: '#303044',
-              height: '28px',
-              lineHeight: '16px',
-              borderRadius: '24px',
-              padding: '0 10px',
-              marginRight: '6px',
-            }}>提现</Button>
+            sx={buttonStyle}>提现</Button>
           <Button
             variant="contained"
             onClick={() => handlerOperation(OperationType.deposit)}
-            sx={{
-              fontSize: '13px',
-              fontWeight: 500,
-              backgroundColor: '#303044',
-              height: '28px',
-              lineHeight: '16px',
-              borderRadius: '24px',
-              padding: '0 10px',
-              marginRight: '6px',
-            }}
-          >充值</Button>
+            sx={buttonStyle}>充值</Button>
         </Box>
       </div>
       <div className={classes.accountItem}>
@@ -143,7 +135,7 @@ export const AccoungInfoSection: FC<Props> = ({
       </div>
       <div className={classes.accountItem}>
         <Box display="flex">
-          <Tool title="购买力" explain="增加您ATOM-USD头寸的总可用购买力。您的购买力将根据您选择的市场而变化。"></Tool>
+          <Tool title="账户净值" explain="您的账户总价值。"></Tool>
         </Box>
         <div className={classes.itemR}>
           $123.43
@@ -155,7 +147,7 @@ export const AccoungInfoSection: FC<Props> = ({
       </div>
       <div className={classes.accountItem}>
         <Box display="flex">
-          <Tool title="购买力" explain="增加您ATOM-USD头寸的总可用购买力。您的购买力将根据您选择的市场而变化。"></Tool>
+          <Tool title="杠杆使用" explain="敞口头寸使用的总杠杆百分比。"></Tool>
         </Box>
         <div className={classes.itemR}>
           $123.43
@@ -167,7 +159,7 @@ export const AccoungInfoSection: FC<Props> = ({
       </div>
       <div className={classes.accountItem}>
         <Box display="flex">
-          <Tool title="购买力" explain="增加您ATOM-USD头寸的总可用购买力。您的购买力将根据您选择的市场而变化。"></Tool>
+          <Tool title="账户杠杆" explain="基于您所有敞口头寸的账户杠杆。由于您的账户是交叉杠杆交易账户，因此每个敞口头寸都有其自己的杠杆，同时也会影响您的整体账户杠杆。"></Tool>
         </Box>
         <div className={classes.itemR}>
           $123.43
@@ -180,6 +172,39 @@ export const AccoungInfoSection: FC<Props> = ({
     </>
   }
 
+  const TipBox = (reactNode: ReactNode) => {
+    return <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" width='100%' height='100%' flex="1 1 auto">
+      <div className={classes.explain}>
+        {reactNode}
+      </div>
+    </Box>
+  }
+
+  const handleLogin = () => {
+    dispatch(setOpenSignModal(true))
+  }
+
+  const SwitchEle = {
+    [ConnectButtonStatus.connect]: AccountInfoEle(),
+    [ConnectButtonStatus.chainChanged]: TipBox(<>要完成dYdX入门培训，请将您的钱包网络设置为“Ropsten测试网络”。</>),
+    [ConnectButtonStatus.disconnect]: TipBox(<>连接您的以太坊钱包，以存入资金和开始交易。 <ConnectWallet /></>),
+    authorize: TipBox(
+      <Box display="flex" flexDirection="column" alignItems="center" component="div" >
+        <Typography component="p" mb={2}>
+          欢迎回来！您需要找回一条密钥
+        </Typography>
+        <HpButton onClick={handleLogin}>找回密钥</HpButton>
+      </Box >,
+    ),
+  }
+
+  const Status = useMemo(() => {
+    if (connectButtonStatus === ConnectButtonStatus.connect && !isExists) {
+      return 'authorize'
+    }
+    return connectButtonStatus
+  }, [connectButtonStatus, isExists])
+
   return (
     <Box
       fontSize={14}
@@ -191,33 +216,8 @@ export const AccoungInfoSection: FC<Props> = ({
       pb="14px"
       borderBottom="1px solid #2d2d3d"
       height={180}
-      sx={{
-        '>div:not(:first-of-type)': {
-          marginTop: '8px',
-        },
-      }}
     >
-      {
-        active
-          ? connectedEle()
-          :
-          <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" width='100%' height='100%' flex="1 1 auto">
-            <div className={classes.explain}>
-              {
-                isWrongChain
-                  ? <>
-                    要完成dYdX入门培训，请将您的钱包网络设置为“Ropsten测试网络”。
-                  </>
-                  : <>
-                    连接您的以太坊钱包，以存入资金和开始交易。
-                    <ConnectWallet />
-                  </>
-              }
-            </div>
-
-          </Box>
-      }
+      {SwitchEle[Status]}
     </Box>
-
   )
 };

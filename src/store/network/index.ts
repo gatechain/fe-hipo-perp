@@ -1,18 +1,24 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { API } from 'src/Api'
 import { AppThunk } from '..'
-import { ConnectStatus } from './const'
+import { ConnectButtonStatus, ConnectStatus } from './const'
 
 export interface TradeState {
   connectStatus: ConnectStatus
+  connectButtonStatus: ConnectButtonStatus
   lastWallet: string
   isExists: boolean
+  account: string
+  openSignModal: boolean
 }
 
 const initialState: TradeState = {
   connectStatus: ConnectStatus.connect,
+  connectButtonStatus: ConnectButtonStatus.disconnect,
   lastWallet: '',
-  isExists: true,
+  account: '',
+  isExists: false,
+  openSignModal: false,
 }
 
 export const NetworkSlice = createSlice({
@@ -22,20 +28,30 @@ export const NetworkSlice = createSlice({
     setConnectStatus(state, action: PayloadAction<ConnectStatus>) {
       state.connectStatus = action.payload
     },
+    setConnectButtonStatus(state, action: PayloadAction<ConnectButtonStatus>) {
+      state.connectButtonStatus = action.payload
+    },
+    setAccount(state, action: PayloadAction<string>) {
+      state.account = action.payload
+    },
     setIsExists(state, action: PayloadAction<boolean>) {
       state.isExists = action.payload
+    },
+    setOpenSignModal(state, action: PayloadAction<boolean>) {
+      state.openSignModal = action.payload
     },
   },
 })
 
-export const { setConnectStatus, setIsExists } = NetworkSlice.actions
+export const { setConnectStatus, setIsExists, setConnectButtonStatus, setAccount, setOpenSignModal } = NetworkSlice.actions
 
 export default NetworkSlice.reducer
 
-export const fetchIsExists = (): AppThunk => async dispatch => {
+// 查看地址是否已注册
+export const fetchIsExists = (ethereum_address: string): AppThunk => async dispatch => {
   try {
-    const { data } = await API.getExists({ ethereum_address: '0xD962E24F1630774aba2A77F49E5234E9E903D945' })
-    dispatch(setIsExists(data.data.exists))
+    const res = await API.getExists({ ethereum_address })
+    dispatch(setIsExists(true || res.exists))
   } catch (error) {
     dispatch(setIsExists(false))
   }

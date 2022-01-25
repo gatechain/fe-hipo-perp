@@ -4,3 +4,9 @@ export enum ConnectStatus {
   accountsChanged = 'accountsChanged',
   chainChanged = 'chainChanged',
 }
+
+export enum ConnectButtonStatus {
+  connect,
+  disconnect,
+  chainChanged,
+}
