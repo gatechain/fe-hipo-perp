@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { API } from 'src/Api'
 import { AppThunk } from '..'
-import { ConnectButtonStatus, ConnectStatus } from './const'
+import { ConnectButtonStatus, ConnectStatus, UserInfo } from './const'
 
 export interface TradeState {
   connectStatus: ConnectStatus
@@ -10,6 +10,7 @@ export interface TradeState {
   isExists: boolean
   account: string
   openSignModal: boolean
+  userInfo: UserInfo
 }
 
 const initialState: TradeState = {
@@ -17,8 +18,19 @@ const initialState: TradeState = {
   connectButtonStatus: ConnectButtonStatus.disconnect,
   lastWallet: '',
   account: '',
-  isExists: false,
+  isExists: false, // 是否登录
   openSignModal: false,
+  userInfo: {
+    uid: '7e86c873e50036858c6fd0fae586a78b',
+    name: '',
+    ether_address: '0xD962E24F1630774aba2A77F49E5234E9E903D941',
+    email: '',
+    maker_fee: '400',
+    taker_fee: '0.0005',
+    is_verified: 0,
+    created_at: '2022-01-20 10:29:08',
+    updated_at: '2022-01-20 10:29:08',
+  },
 }
 
 export const NetworkSlice = createSlice({

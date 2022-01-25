@@ -7,7 +7,7 @@ import { setOperationType } from 'src/store/trade';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import ConnectWallet from 'src/components/ConnectWallet';
-import { ConnectButtonStatus } from 'src/store/network/const';
+import { ConnectButtonStatus, UserInfo } from 'src/store/network/const';
 import { HpButton } from 'src/components/HpButton';
 import { setOpenSignModal } from 'src/store/network';
 
@@ -88,13 +88,41 @@ const buttonStyle = {
   padding: '0 10px',
   marginRight: '6px',
 }
+interface AccountInfoItem {
+  title: string
+  explain: string
+  getValue: (value: UserInfo) => any
+}
+
+const accountInfoList: AccountInfoItem[] = [
+  {
+    title: '购买力',
+    explain: '增加您ATOM-USD头寸的总可用购买力。您的购买力将根据您选择的市场而变化。',
+    getValue: (value) => '$' + Number(value.maker_fee) * 20,
+  },
+  {
+    title: '账户净值',
+    explain: '您的账户总价值。',
+    getValue: (value) => '$' + value.maker_fee,
+  },
+  {
+    title: '杠杆使用',
+    explain: '敞口头寸使用的总杠杆百分比。',
+    getValue: () => '--',
+  },
+  {
+    title: '账户杠杆',
+    explain: '基于您所有敞口头寸的账户杠杆。由于您的账户是交叉杠杆交易账户，因此每个敞口头寸都有其自己的杠杆，同时也会影响您的整体账户杠杆。',
+    getValue: () => '--',
+  },
+]
 
 export const AccoungInfoSection: FC<Props> = ({
 }) => {
   const classes = useStyles()
   const {
     trade: { operationType },
-    network: { connectButtonStatus, isExists },
+    network: { connectButtonStatus, isExists, userInfo },
   } = useSelector((state: RootState) => state)
   const dispatch = useDispatch()
 
@@ -104,6 +132,23 @@ export const AccoungInfoSection: FC<Props> = ({
     } else {
       dispatch(setOperationType(type))
     }
+  }
+
+  const accountItem = (item: AccountInfoItem) => {
+    return <div className={classes.accountItem}>
+      <Box display="flex">
+        <Tool title={item.title} explain={item.explain}></Tool>
+      </Box>
+      <div className={classes.itemR}>
+        {
+          operationType && <>
+            {item.getValue(userInfo)}
+            <span>&nbsp;&nbsp;→&nbsp;&nbsp;</span>
+          </>
+        }
+        {item.getValue(userInfo)}
+      </div>
+    </div >
   }
 
   const AccountInfoEle = () => {
@@ -121,54 +166,7 @@ export const AccoungInfoSection: FC<Props> = ({
             sx={buttonStyle}>充值</Button>
         </Box>
       </div>
-      <div className={classes.accountItem}>
-        <Box display="flex">
-          <Tool title="购买力" explain="增加您ATOM-USD头寸的总可用购买力。您的购买力将根据您选择的市场而变化。"></Tool>
-        </Box>
-        <div className={classes.itemR}>
-          $22,123.43
-          <div>
-            <span>{'→'}</span>
-            $123.43
-          </div>
-        </div>
-      </div>
-      <div className={classes.accountItem}>
-        <Box display="flex">
-          <Tool title="账户净值" explain="您的账户总价值。"></Tool>
-        </Box>
-        <div className={classes.itemR}>
-          $123.43
-          <div>
-            <span>{'→'}</span>
-            $123.43
-          </div>
-        </div>
-      </div>
-      <div className={classes.accountItem}>
-        <Box display="flex">
-          <Tool title="杠杆使用" explain="敞口头寸使用的总杠杆百分比。"></Tool>
-        </Box>
-        <div className={classes.itemR}>
-          $123.43
-          <div>
-            <span className={classes.spanGreen}>{'→'}</span>
-            $123.43
-          </div>
-        </div>
-      </div>
-      <div className={classes.accountItem}>
-        <Box display="flex">
-          <Tool title="账户杠杆" explain="基于您所有敞口头寸的账户杠杆。由于您的账户是交叉杠杆交易账户，因此每个敞口头寸都有其自己的杠杆，同时也会影响您的整体账户杠杆。"></Tool>
-        </Box>
-        <div className={classes.itemR}>
-          $123.43
-          <div>
-            <span>{'→'}</span>
-            $123.43
-          </div>
-        </div>
-      </div>
+      {accountInfoList.map(item => accountItem(item))}
     </>
   }
 
@@ -186,8 +184,8 @@ export const AccoungInfoSection: FC<Props> = ({
 
   const SwitchEle = {
     [ConnectButtonStatus.connect]: AccountInfoEle(),
-    [ConnectButtonStatus.chainChanged]: TipBox(<>要完成dYdX入门培训，请将您的钱包网络设置为“Ropsten测试网络”。</>),
-    [ConnectButtonStatus.disconnect]: TipBox(<>连接您的以太坊钱包，以存入资金和开始交易。 <ConnectWallet /></>),
+    [ConnectButtonStatus.chainChanged]: TipBox(<span>要完成dYdX入门培训，请将您的钱包网络设置为“Ropsten测试网络”。</span>),
+    [ConnectButtonStatus.disconnect]: TipBox(<span>连接您的以太坊钱包，以存入资金和开始交易。 <ConnectWallet /></span>),
     authorize: TipBox(
       <Box display="flex" flexDirection="column" alignItems="center" component="div" >
         <Typography component="p" mb={2}>
