@@ -14,6 +14,7 @@ import { DetailsBox } from './DetailsBox'
 import { RootState } from 'src/store'
 import { ChartType } from 'src/store/chart/const'
 import { setChartType } from 'src/store/chart'
+import { IconFont } from 'src/components/IconFont'
 const useStyles = makeStyles({
   item: {
     display: 'flex',
@@ -41,6 +42,24 @@ const useStyles = makeStyles({
     borderRadius: '2px',
     marginLeft: '2px',
     lineHeight: '16px',
+  },
+  iconBox: {
+    display: 'flex',
+    justifyContent:'center',
+    alignItems:'center',
+    width:'28px',
+    height:'28px',
+    cursor: 'pointer',
+    transition: 'all .15s ease-in-out!important',
+    '&:hover': {
+      backgroundColor: '#303044',
+      borderRadius: '14px',
+    },
+  },
+  iconActive: {
+    '&>svg': {
+      transform: 'rotate(180deg)',
+    },
   },
 })
 
@@ -134,14 +153,11 @@ export const Trade: FC = () => {
           </Box>
           <Box >
             <Box
-              sx={{ cursor: 'pointer' }}
-              display="flex" width="28px"
-              height="28px"
-              justifyContent="center"
-              alignItems="center"
+              className={`${classes.iconBox} ${isShowPositionOrder == true ? '' : classes.iconActive}`}
               onClick={() => setIsShowPositionOrder(!isShowPositionOrder)}
             >
-              👆
+              <IconFont name='icon-xiangxia1' color='#6f6e84' />
+              
             </Box>
             
           </Box>

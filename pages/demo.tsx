@@ -89,7 +89,7 @@ const DemoPage: NextPage = () => {
     <Box>
       <ConnectWallet></ConnectWallet>
     </Box>
-    <IconFont name='icon-xiangxia' color='#fff' />
+    <IconFont name='icon-xiangxia1' color='#fff' />
     <Button color="primary" variant="contained" onClick={() => {
       console.log(account)
       web3.eth.personal.sign('action: dYdX STARK Key', account, 'dydx', console.log).then(data => {

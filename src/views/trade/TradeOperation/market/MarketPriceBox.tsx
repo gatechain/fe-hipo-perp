@@ -1,12 +1,13 @@
 import React, { FC, useState } from 'react';
 import { Box, Button, InputBase, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import Image from 'next/image'
 import { HTooltip } from './HTooltips';
 import { TransactionTypeBox } from './TransactionTypeBox';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { TransactionType } from 'src/store/market/const';
+import { IconFont } from 'src/components/IconFont';
+import { API } from 'src/Api';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -56,14 +57,30 @@ const useStyles = makeStyles({
   placeOrder: {
     height: '40px',
     fontSize: '13px',
-    backgroundColor: '#3fb68b',
-    color: '#f7f7f7',
+    color: '#6f6e84',
   },
   doPlaceOrderBuy: {
     backgroundColor: '#3fb68b',
+    color: '#f7f7f7',
   },
   doPlaceOrderSell: {
     backgroundColor: '#ff5353',
+    color: '#f7f7f7',
+  },
+  closeDetailBox: {
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
+    width:'32px',
+    height:'32px',
+    color:'#c3c2d4',
+    cursor: 'pointer',
+    fontWeight: 500,
+    fontSize: '22px',
+    '&:hover': {
+      backgroundColor: '#303044',
+      borderRadius: '8px',
+    },
   },
 })
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -122,7 +139,28 @@ export const MarketPriceBox: FC = () => {
   const classes = useStyles()
   const transactionType = useSelector((state: RootState) => state.market.transactionType)
   const [isShowClose, setIsShowClose] = useState(false)
+  const [amount, setAmount] = useState(null)
+
+  const changeAmount = (event: Event) => {
+    setAmount(event.target.value)
+  }
   
+  const handlerPlaceOrder = async () => { 
+    try {
+      const result = await API.postPlaceOrder({
+        'market': 'ATOM-USD',
+        'side': 'BUY',
+        'type': 'MARKET',
+        'size': '20',
+        'price': '33',
+        'limit_fee': '0.05',
+      })
+      console.log(result.data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <Box display="flex" flexDirection="column"
       sx={{
@@ -158,7 +196,7 @@ export const MarketPriceBox: FC = () => {
               bgcolor="#232334"
               marginRight="6px"
             >
-              <Input placeholder="0.0000"></Input>
+              <Input placeholder="0.0000" onChange={()=>changeAmount(event)}></Input>
               <Box
                 display="grid"
                 alignSelf="center"
@@ -244,8 +282,10 @@ export const MarketPriceBox: FC = () => {
         {
           !isShowClose && <Box display="flex" justifyContent="flex-end" margin="0 8px 12px 8px">
             <Btn>清仓</Btn>
-            <Btn onClick={()=>setIsShowClose(!isShowClose)}>
-              <Image width="6px" height="28px" src="/images/btc.svg" alt=""></Image>
+            <Btn onClick={() => setIsShowClose(!isShowClose)} sx={{ padding:0 }}>
+              <Box display="flex" alignItems="center" justifyContent="center" width="26px" height="28px">
+                <IconFont name='icon-i' color='#fff' />
+              </Box>
             </Btn>
           </Box>
         }
@@ -261,15 +301,11 @@ export const MarketPriceBox: FC = () => {
             padding="10px 8px 0 18px"
             bgcolor="#171722">详情
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              width="32px"
-              height="32px"
-              color="#c3c2d4"
-                sx={{ cursor: 'pointer' }}
-                onClick={()=>setIsShowClose(!isShowClose)}
-            >X</Box>
+              className={classes.closeDetailBox}
+              onClick={()=>setIsShowClose(!isShowClose)}
+              >
+                <IconFont name='icon-guanbi' color='#fff' />
+            </Box>
           </Box>
         }
         
@@ -296,16 +332,19 @@ export const MarketPriceBox: FC = () => {
                 <HTooltip isImg={false} title="价格差" explain="订单与投标方或询价方最佳订单之间预期执行价格的差值。交易量越大，价格影响因素就越大。"></HTooltip>
                 <span className={classes.valuation}>$38.28</span>
               </Box>
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                fontSize="13px"
-                color="#6f6e84"
-                padding="4px 0"
-              >
-                <Box>费率百分比</Box>
-                <span className={classes.valuation}>$38.28</span>
-              </Box>
+              {
+                isShowClose &&
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  fontSize="13px"
+                  color="#6f6e84"
+                  padding="4px 0"
+                >
+                  <Box>费率百分比</Box>
+                  <span className={classes.valuation}>$38.28</span>
+                </Box>
+              }
               <Box
                 display="flex"
                 justifyContent="space-between"
@@ -314,7 +353,7 @@ export const MarketPriceBox: FC = () => {
                 padding="4px 0"
               >
                 <Box display="flex">
-                  <HTooltip isImg={false} title="交易费率" explain="订单与投标方或询价方最佳订单之间预期执行价格的差值。交易量越大，价格影响因素就越大。"></HTooltip>
+                  <HTooltip isImg={false} title="交易费率" explain="dYdX的费用根据流动性类型收取。挂单订单的费用比吃单订单的费用低。"></HTooltip>
                   <Box
                     fontSize="13px"
                     lineHeight="16px"
@@ -338,12 +377,14 @@ export const MarketPriceBox: FC = () => {
                 <span className={classes.valuation}>$38.28</span>
               </Box>
             </Box>
-            <Btn className={`${classes.placeOrder} 
-              ${transactionType == TransactionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
+            <Btn
+              disabled={!amount}
+              className={`${classes.placeOrder} 
+              ${!amount ? '' : transactionType == TransactionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
+              onClick={() => handlerPlaceOrder()}
             >下市场价订单</Btn>
           </Box>
         </Box>
-
       </Box>
     </Box> 
     

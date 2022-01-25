@@ -1,12 +1,12 @@
 import React, { FC, useState } from 'react';
 import { Box, Button, Checkbox, CheckboxProps, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import Image from 'next/image'
 import { HTooltip } from './HTooltips';
 import { TransactionTypeBox } from './TransactionTypeBox';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { TransactionType } from 'src/store/market/const';
+import { IconFont } from 'src/components/IconFont';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -35,14 +35,15 @@ const useStyles = makeStyles({
   placeOrder: {
     height: '40px',
     fontSize: '13px',
-    backgroundColor: '#3fb68b',
-    color: '#f7f7f7',
+    color: '#6f6e84',
   },
   doPlaceOrderBuy: {
     backgroundColor: '#3fb68b',
+    color: '#f7f7f7',
   },
   doPlaceOrderSell: {
     backgroundColor: '#ff5353',
+    color: '#f7f7f7',
   },
   highRanking: {
     display:'flex',
@@ -62,6 +63,30 @@ const useStyles = makeStyles({
     color: '#c3c2d4',
     marginLeft: '4px',
     marginBottom:'8px',
+  },
+  closeDetailBox: {
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
+    width:'32px',
+    height:'32px',
+    color:'#c3c2d4',
+    cursor: 'pointer',
+    fontWeight: 500,
+    fontSize: '22px',
+    '&:hover': {
+      backgroundColor: '#303044',
+      borderRadius: '8px',
+    },
+  },
+  highRankingOptionIcon: {
+    display: 'flex',
+    fontSize: '18px',
+    fontWeight: 500,
+    transition: 'all .15s ease-in-out!important',
+  },
+  highRankingOptionIconAcitve: {
+    transform: 'rotate(180deg)',
   },
 })
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -128,9 +153,6 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
   '& .MuiInputBase-root.MuiInputBase-colorPrimary.MuiSelect-root.MuiInputBase-root': {
     width: '100%',
   },
-  // '& .MuiInputBase-root': {
-  //   width: '100%',
-  // },
 }));
 const BpIcon = styled('span')(() => ({
   borderRadius: 3,
@@ -171,6 +193,11 @@ export const LimitPriceBox: FC = () => {
   const transactionType = useSelector((state: RootState) => state.market.transactionType)
   const [isShowClose, setIsShowClose] = useState(false)
   const [isHighRankingOption, setIsHighRankingOption] = useState(true)
+  const [amount, setAmount] = useState(null)
+
+  const changeAmount = (event: Event) => { 
+    setAmount(event.target.value)
+  }
   
   return (
     <Box display="flex" flexDirection="column"
@@ -191,7 +218,7 @@ export const LimitPriceBox: FC = () => {
                   <span>要买入或卖出的SMBOL金额。这是您在将订单全部成交时头寸将增加或减少的金额，而不是您得到的头寸金额。</span>
                 </React.Fragment>
               }>
-              <Box display="flex" alignItems="center" sx={{ cursor: 'help' }}>金额<span className={classes.amountExplain}>设置订单规模</span></Box>
+              <Box display="flex" alignItems="center" sx={{ cursor: 'help' }}>金额<Box className={classes.amountExplain}>设置订单规模</Box></Box>
             </HtmlTooltip>
           </Box>
           
@@ -208,7 +235,7 @@ export const LimitPriceBox: FC = () => {
               bgcolor="#232334"
               marginRight="6px"
             >
-              <Input placeholder="0.0000"></Input>
+              <Input placeholder="0.0000" onChange={()=>changeAmount(event)}></Input>
               <Box
                 display="grid"
                 alignSelf="center"
@@ -267,8 +294,11 @@ export const LimitPriceBox: FC = () => {
       <Box marginBottom="4px">
         <Box className={classes.highRanking}>
           <Box>高级</Box>
-          <Box display="flex" onClick={()=>setIsHighRankingOption(!isHighRankingOption)}>
-            <Image width="12px" height="10px" src="/images/btc.svg" alt=""></Image>
+          <Box
+            className={`${classes.highRankingOptionIcon} ${isHighRankingOption == true ? classes.highRankingOptionIconAcitve : ''}`}
+            onClick={() => setIsHighRankingOption(!isHighRankingOption)}
+          >
+            <IconFont name="icon-xiangxia1" color="#6f6e84"></IconFont>
           </Box>
         </Box>
         {
@@ -315,8 +345,8 @@ export const LimitPriceBox: FC = () => {
                         <span>要买入或卖出的SMBOL金额。这是您在将订单全部成交时头寸将增加或减少的金额，而不是您得到的头寸金额。</span>
                       </React.Fragment>
                     }>
-                    <Box display="flex" alignItems="center" marginLeft="2px" sx={{ cursor: 'help' }}>
-                      <Image width="16px" height="16px" src="/images/btc.svg" alt=""></Image>
+                    <Box display="flex" alignItems="center" fontSize="16px" fontWeight={500} marginLeft="2px" sx={{ cursor: 'help' }}>
+                      <IconFont name="icon-wenhao-xianxingyuankuang" color="#c3c2d4"></IconFont>
                     </Box>
                   </HtmlTooltip>
                   
@@ -347,7 +377,9 @@ export const LimitPriceBox: FC = () => {
           !isShowClose && <Box display="flex" justifyContent="flex-end" margin="0 8px 12px 8px">
             <Btn>清仓</Btn>
             <Btn onClick={()=>setIsShowClose(!isShowClose)}>
-              <Image width="6px" height="28px" src="/images/btc.svg" alt=""></Image>
+              <Box display="flex" alignItems="center" justifyContent="center" width="26px" height="28px">
+                <IconFont name='icon-i' color='#fff' />
+              </Box>
             </Btn>
           </Box>
         }
@@ -363,15 +395,11 @@ export const LimitPriceBox: FC = () => {
             padding="10px 8px 0 18px"
             bgcolor="#171722">详情
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              width="32px"
-              height="32px"
-              color="#c3c2d4"
-                sx={{ cursor: 'pointer' }}
+                className={`${classes.closeDetailBox}`}
                 onClick={()=>setIsShowClose(!isShowClose)}
-            >X</Box>
+              >
+                <IconFont name='icon-guanbi' color='#fff' />
+            </Box>
           </Box>
         }
         
@@ -425,7 +453,11 @@ export const LimitPriceBox: FC = () => {
                 <span className={classes.valuation}>$38.28</span>
               </Box>
             </Box>
-            <Btn className={`${classes.placeOrder} ${transactionType == TransactionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}>下限价订单</Btn>
+            <Btn
+              disabled={!amount}
+              className={`${classes.placeOrder} 
+              ${!amount ? '' : transactionType == TransactionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
+            >下限价订单</Btn>
           </Box>
         </Box>
 

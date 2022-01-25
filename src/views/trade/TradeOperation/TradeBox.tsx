@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { MarketType } from 'src/store/market/const';
 import { setMarketType } from 'src/store/market';
+import { IconFont } from 'src/components/IconFont';
 
 const useStyles = makeStyles({
   marketTypeBox: {
@@ -37,6 +38,7 @@ const useStyles = makeStyles({
   marketTypeChoose: {
     backgroundColor: '#171722 !important', 
     color: '#f7f7f7 !important',
+    borderBottom: '1px solid #2d2d3d',
   },
   stopLimitPriceItem: {
     display: 'flex',
@@ -65,6 +67,18 @@ const useStyles = makeStyles({
     flex: '1 1 50%',
     height: '1px',
     backgroundColor: '#2d2d3d',
+  },
+  iconBox: {
+    display: 'flex',
+    width:'10px',
+    height:'10px',
+    marginLeft: '10px',
+    transition: 'all .15s ease-in-out!important',
+  },
+  iconActive: {
+    '&>svg': {
+      transform: 'rotate(180deg)',
+    },
   },
 })
 
@@ -121,6 +135,10 @@ export const TradeBox: FC = () => {
                 onClick={ ()=>setIsLimitPriceActive(!isLimitPriceActive) }
               >
                 止损
+                <Box className={`${classes.iconBox} ${isLimitPriceActive == true ? classes.iconActive : ''}`}>
+                  <IconFont name='icon-xiangxia' color='#6f6e84' />
+                </Box>
+                
                 <Box component="div"
                   className={`${classes.stopLimitPriceBox}`}
                   display={isLimitPriceActive == true ? 'flex' : 'none'}

@@ -1,7 +1,25 @@
 import React, { FC, useState } from 'react';
 import { Box } from '@material-ui/core'
+import { makeStyles } from '@material-ui/styles'
 import Image from 'next/image'
 import { MarketSelectionMenu } from './MarketSelectionMenu'
+import { IconFont } from 'src/components/IconFont';
+
+const useStyles = makeStyles({
+  iconBox: {
+    display: 'flex',
+    width:'10px',
+    height:'10px',
+    marginLeft: '10px',
+    transition: 'all .15s ease-in-out!important',
+  },
+  iconActive: {
+    '&>svg': {
+      transform: 'rotate(180deg)',
+    },
+  },
+})
+
 
 /**
  * 声明Props类型
@@ -12,9 +30,10 @@ export interface SelectMarketsProps {
 }
 
 export const SelectMarkets: FC<SelectMarketsProps> = props => {
+  const classes = useStyles()
   const [showSymbolList, setShowSymbolList] = useState(false)
+ 
   
-
   return (
     <Box py="12px" width={324} height={47}
       sx={{
@@ -48,16 +67,17 @@ export const SelectMarkets: FC<SelectMarketsProps> = props => {
             color: '#6f6e84',
             fontSize: '14px',
             fontWeight: 500,
-          }}
-        >
-          <span>{showSymbolList ? '点击可平仓' : '交易对'}</span>
+          }}>
+          <Box display="flex" alignItems="center">
+            <Box>{showSymbolList == true ? '点击可平仓' : '交易对'}</Box>
+            <Box className={`${classes.iconBox} ${showSymbolList == true ? classes.iconActive : ''}`}>
+              <IconFont name='icon-xiangxia' color='#6f6e84' />
+            </Box>
+          </Box>
         </Box>
       </Box>
 
       <Box display={showSymbolList ? 'flex' : 'none'}
-        sx={{
-          transition: 'all ease-out .7',
-        }}
       >
         <MarketSelectionMenu></MarketSelectionMenu>
       </Box>

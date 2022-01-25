@@ -1,12 +1,12 @@
 import React, { FC, useState } from 'react';
-import { Box, Button, Checkbox, CheckboxProps, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
+import { Box, Button, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import Image from 'next/image'
 import { HTooltip } from './HTooltips';
 import { TransactionTypeBox } from './TransactionTypeBox';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { TransactionType } from 'src/store/market/const';
+import { IconFont } from 'src/components/IconFont';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -62,6 +62,30 @@ const useStyles = makeStyles({
     color: '#c3c2d4',
     marginLeft: '4px',
     marginBottom:'8px',
+  },
+  highRankingOptionIcon: {
+    display: 'flex',
+    fontSize: '18px',
+    fontWeight: 500,
+    transition: 'all .15s ease-in-out!important',
+  },
+  highRankingOptionIconAcitve: {
+    transform: 'rotate(180deg)',
+  },
+  closeDetailBox: {
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
+    width:'32px',
+    height:'32px',
+    color:'#c3c2d4',
+    cursor: 'pointer',
+    fontWeight: 500,
+    fontSize: '22px',
+    '&:hover': {
+      backgroundColor: '#303044',
+      borderRadius: '8px',
+    },
   },
 })
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -129,41 +153,8 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     width: '100%',
   },
 }));
-const BpIcon = styled('span')(() => ({
-  borderRadius: 3,
-  width: '20px',
-  height: '20px',
-  backgroundColor: '#171722',
-  position: 'relative',
-}));
-const BpCheckedIcon = styled(BpIcon)({
-  '&:before': {
-    display: 'block',
-    content: '""',
-    width: '8px',
-    height: '12px',
-    border: 'solid #f7f7f7',
-    borderWidth: '0 2px 2px 0',
-    borderRadius: '1px',
-    transform: 'rotate(40deg) scale(1)',
-    position: 'absolute',
-    left: '6px',
-    top: '2px',
-  },
-});
-function BpCheckbox(props: CheckboxProps) {
-  return (
-    <Checkbox
-     
-      disableRipple
-      color="default"
-      checkedIcon={<BpCheckedIcon />}
-      icon={<BpIcon />}
-      inputProps={{ 'aria-label': 'Checkbox demo' }}
-      {...props}
-    />
-  );
-}
+
+
 export const StopLimitPriceBox: FC = () => {
   const classes = useStyles()
   const transactionType = useSelector((state: RootState) => state.market.transactionType)
@@ -292,26 +283,17 @@ export const StopLimitPriceBox: FC = () => {
       <Box marginBottom="4px">
         <Box className={classes.highRanking}>
           <Box>高级</Box>
-          <Box display="flex" onClick={()=>setIsHighRankingOption(!isHighRankingOption)}>
-            <Image width="12px" height="10px" src="/images/btc.svg" alt=""></Image>
+          <Box 
+            className={`${classes.highRankingOptionIcon} ${isHighRankingOption == true ? classes.highRankingOptionIconAcitve : ''}`}
+            onClick={() => setIsHighRankingOption(!isHighRankingOption)}>
+            <IconFont name="icon-xiangxia1" color="#6f6e84"></IconFont>
           </Box>
         </Box>
         {
           isHighRankingOption && 
           <Box display="flex" flexDirection="column" sx={{ transition:'all 2s ease' }}>
             <Box display="flex" flexDirection="column" className={classes.effectiveTimeBox}>
-              <Box marginBottom="8px">有效时间</Box>
-              <Select
-                labelId="demo-customized-select-label"
-                id="demo-customized-select"
-                value="1"
-                input={<BootstrapInput />}
-              >
-                <MenuItem value="1">有效时间截止</MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
+              <Box marginBottom="8px">有效截止时间</Box>
             </Box>
             <Box display="flex" justifyContent="space-between">
               <Box width="calc(50% - 5px)">
@@ -330,22 +312,26 @@ export const StopLimitPriceBox: FC = () => {
             </Box>
             <Box display="flex" flexDirection="column" marginTop="16px" className={classes.effectiveTimeBox}>
               <Box marginBottom="8px">执行</Box>
-              <Box display="flex">
-                <BpCheckbox sx={{ padding:'0' }}/>
-                <Box paddingLeft="10px" display="flex">仅挂单
+              <Box display="grid" gridTemplateColumns="1fr auto" gap="8px">
+                <Select
+                  labelId="demo-customized-select-label"
+                  id="demo-customized-select"
+                  value="1"
+                  input={<BootstrapInput />}
+                >
+                  <MenuItem value={1}>默认</MenuItem>
+                  </Select>
                   <HtmlTooltip
                     title={
                       <React.Fragment>
-                        <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">仅挂单</Typography>
-                        <span>要买入或卖出的SMBOL金额。这是您在将订单全部成交时头寸将增加或减少的金额，而不是您得到的头寸金额。</span>
+                        <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">默认执行</Typography>
+                        <span>您的订单将在开盘时填写任何交叉订单。如果您的订单未完整填写，它将保持未结状态，直至填妥、取消或过期。</span>
                       </React.Fragment>
                     }>
-                    <Box display="flex" alignItems="center" marginLeft="2px" sx={{ cursor: 'help' }}>
-                      <Image width="16px" height="16px" src="/images/btc.svg" alt=""></Image>
+                    <Box display="flex" alignItems="center" fontSize="16px" sx={{ cursor: 'help' }}>
+                      <IconFont name="icon-wenhao-xianxingyuankuang" color="#fff"></IconFont>
                     </Box>
                   </HtmlTooltip>
-                  
-                </Box>
               </Box>
             </Box>
 
@@ -371,8 +357,10 @@ export const StopLimitPriceBox: FC = () => {
         {
           !isShowClose && <Box display="flex" justifyContent="flex-end" margin="0 8px 12px 8px">
             <Btn>清仓</Btn>
-            <Btn onClick={()=>setIsShowClose(!isShowClose)}>
-              <Image width="6px" height="28px" src="/images/btc.svg" alt=""></Image>
+            <Btn onClick={() => setIsShowClose(!isShowClose)} sx={{ padding:0 }}>
+              <Box display="flex" alignItems="center" justifyContent="center" width="26px" height="28px">
+                <IconFont name='icon-i' color='#fff' />
+              </Box>
             </Btn>
           </Box>
         }
@@ -388,15 +376,11 @@ export const StopLimitPriceBox: FC = () => {
             padding="10px 8px 0 18px"
             bgcolor="#171722">详情
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              width="32px"
-              height="32px"
-              color="#c3c2d4"
-                sx={{ cursor: 'pointer' }}
-                onClick={()=>setIsShowClose(!isShowClose)}
-            >X</Box>
+              className={classes.closeDetailBox}
+              onClick={()=>setIsShowClose(!isShowClose)}
+            >
+              <IconFont name='icon-guanbi' color='#fff' />
+            </Box>
           </Box>
         }
         

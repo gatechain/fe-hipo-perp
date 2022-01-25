@@ -1,12 +1,12 @@
 import React, { FC, useState } from 'react';
 import { Box, Button, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
-import Image from 'next/image'
 import { HTooltip } from './HTooltips';
 import { TransactionTypeBox } from './TransactionTypeBox';
 import { TransactionType } from 'src/store/market/const';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
+import { IconFont } from 'src/components/IconFont';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -68,6 +68,30 @@ const useStyles = makeStyles({
     color: '#c3c2d4',
     marginLeft: '4px',
     marginBottom:'8px',
+  },
+  highRankingOptionIcon: {
+    display: 'flex',
+    fontSize: '18px',
+    fontWeight: 500,
+    transition: 'all .15s ease-in-out!important',
+  },
+  highRankingOptionIconAcitve: {
+    transform: 'rotate(180deg)',
+  },
+  closeDetailBox: {
+    display:'flex',
+    alignItems:'center',
+    justifyContent:'center',
+    width:'32px',
+    height:'32px',
+    color:'#c3c2d4',
+    cursor: 'pointer',
+    fontWeight: 500,
+    fontSize: '22px',
+    '&:hover': {
+      backgroundColor: '#303044',
+      borderRadius: '8px',
+    },
   },
 })
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -239,8 +263,10 @@ export const TrackStopLimitPriceBox: FC = () => {
       <Box marginBottom="4px">
         <Box className={classes.highRanking}>
           <Box>高级</Box>
-          <Box display="flex" onClick={()=>setIsHighRankingOption(!isHighRankingOption)}>
-            <Image width="12px" height="10px" src="/images/btc.svg" alt=""></Image>
+          <Box 
+            className={`${classes.highRankingOptionIcon} ${isHighRankingOption == true ? classes.highRankingOptionIconAcitve : ''}`}
+            onClick={() => setIsHighRankingOption(!isHighRankingOption)}>
+            <IconFont name="icon-xiangxia1" color="#6f6e84"></IconFont>
           </Box>
         </Box>
         {
@@ -282,8 +308,10 @@ export const TrackStopLimitPriceBox: FC = () => {
         {
           !isShowClose && <Box display="flex" justifyContent="flex-end" margin="0 8px 12px 8px">
             <Btn>清仓</Btn>
-            <Btn onClick={()=>setIsShowClose(!isShowClose)}>
-              <Image width="6px" height="28px" src="/images/btc.svg" alt=""></Image>
+            <Btn onClick={() => setIsShowClose(!isShowClose)} sx={{ padding:0 }}>
+              <Box display="flex" alignItems="center" justifyContent="center" width="26px" height="28px">
+                <IconFont name='icon-i' color='#fff' />
+              </Box>
             </Btn>
           </Box>
         }
@@ -299,15 +327,11 @@ export const TrackStopLimitPriceBox: FC = () => {
             padding="10px 8px 0 18px"
             bgcolor="#171722">详情
             <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              width="32px"
-              height="32px"
-              color="#c3c2d4"
-                sx={{ cursor: 'pointer' }}
-                onClick={()=>setIsShowClose(!isShowClose)}
-            >X</Box>
+              className={classes.closeDetailBox}
+              onClick={()=>setIsShowClose(!isShowClose)}
+            >
+              <IconFont name='icon-guanbi' color='#fff' />
+            </Box>
           </Box>
         }
         
