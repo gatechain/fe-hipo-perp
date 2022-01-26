@@ -1,10 +1,12 @@
 import axios, { AxiosInstance } from 'axios'
+import { transfromFromData } from 'src/utils'
 
 
 export function setHeaderAuthorization() {
   let headers = {}
   if (typeof window !== 'undefined') {
     const token = localStorage?.getItem('token')
+    console.log(token)
     if (token) {
       headers = {
         Authorization: 'Bearer ' + token,
@@ -20,11 +22,8 @@ export class Axios {
   init() {
 
     this.instance = axios.create({
-      baseURL: 'http://www.hipo.com/trade/',
+      baseURL: '//www.hipo.com/trade/',
       timeout: 1000,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
     })
     this.interceptors()
     return this.instance
@@ -39,18 +38,18 @@ export class Axios {
     }, (error) => {
       return Promise.reject(error)
     })
-    // this.instance.interceptors.request.use((config) => {
-    //   if (typeof window !== 'undefined') {
-    //     const token = localStorage?.getItem('token')
-    //     if (token) {
-    //       config.headers = {
-    //         ...config.headers,
-    //         Authorization: 'Bearer ' + token,
-    //       }
-    //     }
-    //   }
-    //   return config
-    // }, (error) => Promise.reject(error))
+    this.instance.interceptors.request.use((config) => {
+      if (typeof window !== 'undefined') {
+        const token = localStorage?.getItem('token')
+        if (token) {
+          config.headers = {
+            Authorization: 'Bearer ' + token,
+          }
+        }
+        config.data = transfromFromData(config.data)
+      }
+      return config
+    }, (error) => Promise.reject(error))
   }
 
   getInstance(): AxiosInstance {

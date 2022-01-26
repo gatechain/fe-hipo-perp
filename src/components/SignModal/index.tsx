@@ -27,21 +27,25 @@ export const SignModal: FC = () => {
   const dispatch = useDispatch()
 
   const web3 = useMemo(() => {
+    API.getUser()
     return new Web3(Web3.givenProvider || 'ws://localhost:8545')
   }, [])
 
   const handleSubmit = () => {
     const timestamp = moment().unix()
-    const signData = { action: 'HIPO-ONBOARDING', timestamp }
+    const signData = { action: 'HIPO-ONBOARDING', timestamp: timestamp.toString() }
+    const dataString = web3.utils.utf8ToHex(JSON.stringify(signData))
 
-    web3.eth.personal.sign(JSON.stringify(signData), account, '').then(data => {
-      const fd = new FormData()
-      fd.append('signature', data)
-      fd.append('timestamp', timestamp.toString())
-      fd.append('ethereum_address', account)
-      API.postOnboarding(fd as any).then(() => {
+    web3.eth.personal.sign(dataString, account, '').then(data => {
+      const params = {
+        signature: data,
+        timestamp: timestamp.toString(),
+        ethereum_address: account,
+      }
+      API.postOnboarding(params).then((res: any) => {
         dispatch(setOpenSignModal(false))
-        localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDMxODI4MzQsImlhdCI6MTY0MzA5NjQzNCwidWlkIjoiN2U4NmM4NzNlNTAwMzY4NThjNmZkMGZhZTU4NmE3OGIifQ.c0qBzX14fuDVPItxKKzFL1q2Eshkgm60OAFvxOHaRR8');
+        localStorage.setItem('token', res.jwt_token);
+        localStorage.setItem('uid', res.uid);
       })
     })
   }
