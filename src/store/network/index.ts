@@ -63,7 +63,7 @@ export default NetworkSlice.reducer
 export const fetchIsExists = (ethereum_address: string): AppThunk => async dispatch => {
   try {
     const res = await API.getExists({ ethereum_address })
-    dispatch(setIsExists(false && res.exists))
+    dispatch(setIsExists(res.exists))
   } catch (error) {
     dispatch(setIsExists(false))
   }
