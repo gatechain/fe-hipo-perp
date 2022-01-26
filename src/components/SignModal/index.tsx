@@ -6,7 +6,7 @@ import { HpButton } from '../HpButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { API } from 'src/Api';
-import { setOpenSignModal } from 'src/store/network';
+import { fetchIsExists, setOpenSignModal } from 'src/store/network';
 
 
 const style = {
@@ -46,6 +46,7 @@ export const SignModal: FC = () => {
         dispatch(setOpenSignModal(false))
         localStorage.setItem('token', res.jwt_token);
         localStorage.setItem('uid', res.uid);
+        dispatch(fetchIsExists(account))
       })
     })
   }

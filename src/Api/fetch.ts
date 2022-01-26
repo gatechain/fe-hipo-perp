@@ -6,7 +6,6 @@ export function setHeaderAuthorization() {
   let headers = {}
   if (typeof window !== 'undefined') {
     const token = localStorage?.getItem('token')
-    console.log(token)
     if (token) {
       headers = {
         Authorization: 'Bearer ' + token,
@@ -23,7 +22,7 @@ export class Axios {
 
     this.instance = axios.create({
       baseURL: '//www.hipo.com/trade/',
-      timeout: 1000,
+      timeout: 5000,
     })
     this.interceptors()
     return this.instance
