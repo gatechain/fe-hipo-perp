@@ -6,6 +6,8 @@ import { OperationType } from 'src/store/trade/const';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { setOperationType } from 'src/store/trade';
+import { API } from 'src/Api';
+import { useSign } from 'src/web3React/hooks';
 
 const useStyles = makeStyles({
   close: {
@@ -14,8 +16,8 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     width: '32px',
     height: '32px',
-    fontSize:'12px',
-    cursor :'point',
+    fontSize: '12px',
+    cursor: 'point',
     '&:hover': {
       width: '32px',
       height: '32px',
@@ -53,10 +55,11 @@ const useStyles = makeStyles({
     margin: '1px 0',
     padding: '0 5px',
     marginRight: '8px',
-    borderRadius:'16px',
+    borderRadius: '16px',
   },
- 
+
 })
+
 const Input = styled(InputBase)({
   marginLeft: '12px',
   fontSize: '16px',
@@ -70,23 +73,40 @@ const Input = styled(InputBase)({
 })
 
 export const DepositBox: FC = () => {
-  const classes = useStyles()  
-  const [isConfirm, setIsConfirm] = useState(false)
-  const operationType = useSelector((state: RootState) => state.trade.operationType)
+  const classes = useStyles()
+  const sign = useSign()
+  const [amount, setAmount] = useState('')
+  const {
+    trade: { operationType },
+  } = useSelector((state: RootState) => state)
   const dispatch = useDispatch()
-  const handlerOperation = (type: OperationType) => { 
+  const handlerOperation = (type: OperationType) => {
     if (operationType == type) {
       dispatch(setOperationType(null))
-    } else { 
+    } else {
       dispatch(setOperationType(type))
     }
+  }
+
+  const handleSubmit = () => {
+    sign((data) => {
+      API.postDeposit({
+        ethereum_address: data.ethereum_address,
+        signature: data.signature,
+        txn_hash: '0x768dc15ab064e2139e6d150ab830d77e1dadeeb3eda18e4913e43454ffd69688',
+        amount,
+        timestamp: data.timestamp,
+      })
+      API.getUser()
+    })
+
   }
   return (
     <Box display="flex" flexDirection="column" width="100%" height="100%">
       <Box
         display="flex"
         justifyContent="space-between"
-        alignItems= "center"
+        alignItems="center"
         fontWeight={500}
         fontSize="20px"
         lineHeight="24px"
@@ -94,7 +114,7 @@ export const DepositBox: FC = () => {
         color="#f7f7f7"
       >
         <Box>充值</Box>
-        <div  onClick={()=>handlerOperation(OperationType.deposit)} className={classes.close}>X</div>
+        <div onClick={() => handlerOperation(OperationType.deposit)} className={classes.close}>X</div>
       </Box>
       <Box position="relative" component="div" width="100%" flexGrow={1}>
         <Box
@@ -121,7 +141,7 @@ export const DepositBox: FC = () => {
               <Box display="flex" flexDirection="column" width='100%' marginBottom="10px">
                 <div className={classes.itemK}>金额</div>
                 <div className={classes.itemV} style={{ backgroundColor: '#232334' }}>
-                  <Input placeholder="0.0000"></Input>
+                  <Input placeholder="0.0000" onChange={(e) => setAmount(e.target.value)}></Input>
                 </div>
               </Box>
               <Box
@@ -153,23 +173,23 @@ export const DepositBox: FC = () => {
               fontWeight={500}
               color="#c3c2d4"
             >
-            <Box
-              width="100%"
-              color="#6f6e84">
-              <Button
-                onClick={()=>setIsConfirm(!isConfirm)}
-                variant="contained"
-                sx={{
-                  width: '100%',
-                  backgroundColor: '#5973fe',
-                  borderRadius: '8px',
-                }}>确认充值</Button>
+              <Box
+                width="100%"
+                color="#6f6e84">
+                <Button
+                  onClick={handleSubmit}
+                  variant="contained"
+                  sx={{
+                    width: '100%',
+                    backgroundColor: '#5973fe',
+                    borderRadius: '8px',
+                  }}>确认充值</Button>
               </Box>
             </Box>
-          </Box> 
+          </Box>
         </Box>
       </Box>
     </Box>
-    
+
   )
 };

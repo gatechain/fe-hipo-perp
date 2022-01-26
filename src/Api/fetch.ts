@@ -19,9 +19,8 @@ export class Axios {
   private instance: AxiosInstance
 
   init() {
-
     this.instance = axios.create({
-      baseURL: '//www.hipo.com/trade/',
+      baseURL: 'http://www.hipo.com/trade/',
       timeout: 5000,
     })
     this.interceptors()
@@ -33,7 +32,7 @@ export class Axios {
       if (response.status === 200 && response.data.code === 0) {
         return response.data.data
       }
-      return response.data
+      return Promise.reject(response.data)
     }, (error) => {
       return Promise.reject(error)
     })

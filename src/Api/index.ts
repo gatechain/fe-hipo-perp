@@ -1,4 +1,4 @@
-import { OnboardingParams } from './const';
+import { DepositParams, OnboardingParams } from './const';
 import { fetch } from './fetch';
 
 export const API = {
@@ -7,4 +7,6 @@ export const API = {
   postPlaceOrder: (params: any): any => fetch.post('/order', { data: params }),
   getUser: (): any => fetch.get('/user'),
   postOnboarding: (data: OnboardingParams) => fetch.post('/onboarding', data),
+  postDeposit: (data: DepositParams): any => fetch.post('/deposit', data),
+  postWithdraw: (data: { amount: string }): any => fetch.post('/withdraw', data),
 }

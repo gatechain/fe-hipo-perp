@@ -812,6 +812,13 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.4.tgz#fcf7205c25dff795ee79af1e30da2c9790808f11"
   integrity sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==
 
+"@types/react-dom@^17.0.11":
+  version "17.0.11"
+  resolved "https://registry.npmmirror.com/@types/react-dom/download/@types/react-dom-17.0.11.tgz#e1eadc3c5e86bdb5f7684e00274ae228e7bcc466"
+  integrity sha512-f96K3k+24RaLGVu/Y2Ng3e1EbZ8/cVJvypZWd7cy0ofCBaf2lcM46xNhycMZ2xGwbBjRql7hOlZ+e2WlJ5MH3Q==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-is@^16.7.1 || ^17.0.0":
   version "17.0.3"
   resolved "https://registry.npmmirror.com/@types/react-is/download/@types/react-is-17.0.3.tgz?cache=0&sync_timestamp=1637279176012&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40types%2Freact-is%2Fdownload%2F%40types%2Freact-is-17.0.3.tgz#2d855ba575f2fc8d17ef9861f084acc4b90a137a"
@@ -3560,6 +3567,11 @@ lodash.sortby@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.npmmirror.com/lodash/download/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"

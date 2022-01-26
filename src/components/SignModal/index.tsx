@@ -1,12 +1,11 @@
 import { Box, Modal, Typography } from '@material-ui/core';
-import { FC, useMemo } from 'react';
-import Web3 from 'web3';
-import moment from 'moment';
+import { FC } from 'react';
 import { HpButton } from '../HpButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { API } from 'src/Api';
 import { fetchIsExists, setOpenSignModal } from 'src/store/network';
+import { useSign } from 'src/web3React/hooks';
 
 
 const style = {
@@ -22,26 +21,14 @@ const style = {
   outline: 0,
 };
 
+
 export const SignModal: FC = () => {
+  const sign = useSign()
   const { account, openSignModal } = useSelector((state: RootState) => state.network)
   const dispatch = useDispatch()
 
-  const web3 = useMemo(() => {
-    API.getUser()
-    return new Web3(Web3.givenProvider || 'ws://localhost:8545')
-  }, [])
-
   const handleSubmit = () => {
-    const timestamp = moment().unix()
-    const signData = { action: 'HIPO-ONBOARDING', timestamp: timestamp.toString() }
-    const dataString = web3.utils.utf8ToHex(JSON.stringify(signData))
-
-    web3.eth.personal.sign(dataString, account, '').then(data => {
-      const params = {
-        signature: data,
-        timestamp: timestamp.toString(),
-        ethereum_address: account,
-      }
+    sign((params) => {
       API.postOnboarding(params).then((res: any) => {
         dispatch(setOpenSignModal(false))
         localStorage.setItem('token', res.jwt_token);
@@ -50,6 +37,7 @@ export const SignModal: FC = () => {
       })
     })
   }
+
   const body = (
     <>
       <Typography id="modal-modal-title" variant="h6" component="h2">

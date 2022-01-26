@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { OperationType } from 'src/store/trade/const';
 import { setOperationType } from 'src/store/trade';
+import { API } from 'src/Api';
+// import { Alert } from 'src/components/Alert';
 
 const useStyles = makeStyles({
   close: {
@@ -124,6 +126,19 @@ export const WithDrawBox: FC = () => {
       dispatch(setOperationType(type))
     }
   }
+
+  const handleSubmit = () => {
+    // Alert.error('err: asdf')
+
+    API.postWithdraw({ amount }).then(() => {
+      setIsConfirm(false)
+      dispatch(setOperationType(null))
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+
   return (
     <Box display="flex" flexDirection="column" width="100%" height="100%">
       <Box
@@ -353,6 +368,7 @@ export const WithDrawBox: FC = () => {
                     </div>
                     <Button
                       variant="contained"
+                      onClick={handleSubmit}
                       sx={{
                         width: '100%',
                         backgroundColor: '#5973fe',
