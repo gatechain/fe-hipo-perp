@@ -141,20 +141,21 @@ export const MarketPriceBox: FC = () => {
   const [isShowClose, setIsShowClose] = useState(false)
   const [amount, setAmount] = useState(null)
   const marketType = useSelector((state: RootState) => state.market.marketType)
-  
-
+  const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
   
   const handlerPlaceOrder = async () => { 
     try {
       const result = await API.postPlaceOrder({
-        'market': 'ATOM-USD',
-        'side': directionType.toUpperCase(),
-        'type': marketType.toLocaleUpperCase(),
-        'size': amount.toString(),
-        'price': '33',
-        'limit_fee': '0.05',
+        market: marketSymbol,
+        side: directionType.toUpperCase(),
+        type: marketType.toLocaleUpperCase(),
+        size: amount.toString(),
+        post_only: false,
+        expiration: '2022-02-01T08:07:04.805Z',
+        time_in_force: 'GTT',
+        price: '0',
+        limit_fee: '0.05',
       })
-      
       console.log(result.data)
     } catch (error) {
       console.error(error)
