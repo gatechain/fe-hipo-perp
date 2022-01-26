@@ -1,10 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Box, ButtonBase } from '@material-ui/core'
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import { Box, ButtonBase, InputBase } from '@material-ui/core'
 import { makeStyles, styled } from '@material-ui/styles'
-import Image from 'next/image'
 import { MarketSelectionMenuItem } from './MarketSelectionMenuItem';
 import { useMarkets } from 'src/Api/hooks';
 import { formatNumber } from 'src/utils';
+import { IconFont } from 'src/components/IconFont';
 
 const Btn = styled(ButtonBase)({
   height: '28px',
@@ -16,12 +16,53 @@ const Btn = styled(ButtonBase)({
   color: '#C3C2D4',
 })
 
+const Input = styled(InputBase)({
+  marginLeft: '12px',
+  textAlign: 'center',
+  fontSize: '16px',
+  lineHeight: '32px',
+  fontWeight: 400,
+  backgroundColor: '#232334',
+  padding: '0px',
+  paddingLeft: '38px',
+  height: '32px',
+  width: '100%',
+  borderRadius: '16px',
+})
+
 const useStyles = makeStyles({
   btnChoose: {
     background: '#171722',
     color: '#F7F7F7',
   },
-  
+  searchBox: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '20px',
+    width: '32px',
+    height: '32px',
+    borderRadius: '50%',
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#303044',
+    },
+  },
+  closeSearch: {
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
+    width:'32px',
+    fontSize:'20px',
+    height:'32px',
+    borderRadius:'50%',
+    backgroundColor: '#303044',
+    position: 'absolute',
+    left: '11px',
+    top: '0px',
+    zIndex: 1,
+    cursor: 'pointer',
+  },
 })
 
 
@@ -29,11 +70,17 @@ export const MarketSelectionMenu: FC = () => {
   const [btnValue, setBtnValue] = useState('ALL');
   const classes = useStyles()
   const [markets, fetchMakets] = useMarkets()
-
+  const [word, setWord] = useState('')
+  const [isSearch, setIsSearch] = useState(false)
 
   useEffect(() => {
     fetchMakets()
   }, [fetchMakets]);
+
+  const filterMarkets = useMemo(() => {
+    const regWord = new RegExp(word, 'gi')
+    return markets.filter(item => regWord.test(item.base_asset))
+  }, [markets, word])
   
   return (
     <Box
@@ -53,21 +100,40 @@ export const MarketSelectionMenu: FC = () => {
           '>:not(:first-of-type)': { marginLeft: '12px' },
         }}
       >
-        <Box display="flex" marginRight="auto"
-          sx={{
-            '>:not(:first-of-type)': { marginLeft: '12px' },
-          }}
-        >
-          <Btn className={btnValue == 'ALL' ? classes.btnChoose : ''} onClick={() => setBtnValue('ALL')}>全部</Btn>
-          <Btn className={btnValue == 'FIRST' ? classes.btnChoose : ''} onClick={() => setBtnValue('FIRST')}>第一层</Btn>
-          <Btn className={btnValue == 'DEFI' ? classes.btnChoose : ''} onClick={() => setBtnValue('DEFI')}>Defi</Btn>
-        </Box>
-        <Box>
-          <Image width={32} height={32} src="/images/btc.svg" alt=""></Image>
-        </Box>
-        <Box>
-          <Image width={32} height={32} src="/images/btc.svg" alt=""></Image>
-        </Box>
+        { !isSearch &&
+          <Box display="flex" marginRight="auto"
+            sx={{
+              '>:not(:first-of-type)': { marginLeft: '12px' },
+            }}
+          >
+            <Btn className={btnValue == 'ALL' ? classes.btnChoose : ''} onClick={() => setBtnValue('ALL')}>全部</Btn>
+            <Btn className={btnValue == 'FIRST' ? classes.btnChoose : ''} onClick={() => setBtnValue('FIRST')}>第一层</Btn>
+            <Btn className={btnValue == 'DEFI' ? classes.btnChoose : ''} onClick={() => setBtnValue('DEFI')}>Defi</Btn>
+          </Box>
+        }
+        { isSearch &&
+          <Box display="flex" width="100%">
+            <Box display="flex" width="100%" position="relative">
+              <Box
+                className={classes.closeSearch}
+                onClick={()=>setIsSearch(!isSearch)}
+              >
+                <IconFont name="icon-guanbi" color="#c3c2d4"></IconFont>
+              </Box>
+              <Input placeholder="例如：‘ETH’" onChange={(e) => setWord(e.target.value)}></Input>
+            </Box>
+          </Box>
+        }
+        
+        { !isSearch &&
+          <Box
+            className={classes.searchBox}
+            onClick={()=>setIsSearch(!isSearch)}
+          >
+            <IconFont name="icon-sousuo" color="#C3C2D4"></IconFont>
+          </Box>
+        }
+        
       </Box>
       {/* list */}
       <Box sx={{ 
@@ -78,7 +144,7 @@ export const MarketSelectionMenu: FC = () => {
         },
       }}>
         {
-          markets.map(item => {
+          filterMarkets.map(item => {
             return (
               <MarketSelectionMenuItem
                 key={item.base_asset}

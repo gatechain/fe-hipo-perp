@@ -13,7 +13,6 @@ const useStyles = makeStyles({
   },
 })
 
-
 interface DetailItemProps { 
   k: string,
   v: string,
@@ -53,7 +52,6 @@ export const DetailsItem: FC<DetailItemProps> = (props) => {
             Atom
           </Box>
         }
-       
       </Box>    
       
     </Box>

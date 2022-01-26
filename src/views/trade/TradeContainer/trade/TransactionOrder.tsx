@@ -1,7 +1,6 @@
 import { Box  } from '@material-ui/core'
 import { FC } from 'react'
 import { makeStyles } from '@material-ui/styles'
-import Image from 'next/image'
 import { TransactionOrderItem } from './TransactionOrderItem';
 const useStyles = makeStyles({
   unit: {
@@ -53,29 +52,26 @@ export const TransactionOrder: FC = () => {
         borderBottom="1px solid #2d2d3d"
         component="div"
       >
-        <div className={classes.titleBox} style={{ flexBasis: '7%', width: '7%' }}>
+        <Box className={classes.titleBox} style={{ flexBasis: '7%', width: '7%' }}>
           时间
-        </div>
-        <div className={classes.titleBox} style={{ flexBasis: '14%', width: '14%' }}>
+        </Box>
+        <Box className={classes.titleBox} style={{ flexBasis: '14%', width: '14%' }}>
           订单类型
-        </div>
-        <div className={ classes.titleBox} style={{ flexBasis: '11%', width: '11%' }}>
+        </Box>
+        <Box className={ classes.titleBox} style={{ flexBasis: '11%', width: '11%' }}>
           买/卖
-        </div>
-        <div className={classes.titleBox} style={{ flexBasis: '20%', width: '20%' }}>
+        </Box>
+        <Box className={classes.titleBox} style={{ flexBasis: '20%', width: '20%' }}>
           <Box display="flex">金额</Box>
-          <div className={ classes.unit }>Atom</div>
-        </div>
-        <div className={classes.titleBox} style={{ flexBasis: '20%', width: '20%' }}>
+          <Box className={ classes.unit }>Atom</Box>
+        </Box>
+        <Box className={classes.titleBox} style={{ flexBasis: '20%', width: '20%' }}>
           价格
-        </div>
-        <div className={ classes.titleBox} style={{ flexBasis: '15%', width: '15%' }}>合计/交易费率</div>
-        <div className={classes.titleBox} style={{ flexBasis: '13%', width: '13%' }}>
+        </Box>
+        <Box className={ classes.titleBox} style={{ flexBasis: '15%', width: '15%' }}>合计/交易费率</Box>
+        <Box className={classes.titleBox} style={{ flexBasis: '13%', width: '13%' }}>
           挂单/吃单
-          <Box display="flex" marginLeft="5px" >
-            <Image width="10px" height="10px" src="/images/btc.svg" alt=""></Image>
-          </Box>
-        </div>
+        </Box>
       </Box>
       <Box flexGrow={1} position="relative">
          <Box
@@ -94,9 +90,6 @@ export const TransactionOrder: FC = () => {
           <TransactionOrderItem />
           <TransactionOrderItem />
           <TransactionOrderItem />
-            
-
-          
         </Box>
         {/* <Box
           position="absolute"

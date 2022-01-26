@@ -15,6 +15,7 @@ import { RootState } from 'src/store'
 import { ChartType } from 'src/store/chart/const'
 import { setChartType } from 'src/store/chart'
 import { IconFont } from 'src/components/IconFont'
+import { PayOrder } from './PayOrder'
 const useStyles = makeStyles({
   item: {
     display: 'flex',
@@ -77,7 +78,8 @@ export const Trade: FC = () => {
     const actions = {
       [OrderType.position]:<Position />,
       [OrderType.order]: <Order />,
-      [OrderType.allSuccess]: <TransactionOrder/>,
+      [OrderType.allSuccess]: <TransactionOrder />,
+      [OrderType.pay]: <PayOrder/>,
     }
     return actions[type]
   }, [orderType])

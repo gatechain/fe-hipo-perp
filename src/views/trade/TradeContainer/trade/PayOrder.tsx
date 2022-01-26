@@ -1,7 +1,7 @@
 import { Box  } from '@material-ui/core'
 import { FC } from 'react'
 import { makeStyles } from '@material-ui/styles'
-import { OrderItem } from './OrderItem'
+import { PayOrderItem } from './PayOrderItem'
 const useStyles = makeStyles({
   unit: {
     fontSize: '10px',
@@ -30,7 +30,7 @@ const useStyles = makeStyles({
   },
 })
 
-export const Order: FC = () => {
+export const PayOrder: FC = () => {
   const classes = useStyles()
   return (
     <Box  display="flex" flexDirection="column" bgcolor="#1c1c28" width='100%' height="100%">
@@ -46,22 +46,23 @@ export const Order: FC = () => {
         borderBottom="1px solid #2d2d3d"
         component="div"
       >
-        <Box className={classes.titleBox} style={{ flexBasis: '15%', width: '15%' }}>
-          状态
+        <Box className={classes.titleBox} style={{ flexBasis: '7%', width: '7%' }}>
+          时间
         </Box>
-        <Box className={classes.titleBox} style={{ flexBasis: '10%', width: '10%' }}>
-          买/卖
+        <Box className={classes.titleBox} style={{ flexBasis: '23%', width: '23%' }}>
+          市场
         </Box>
-        <Box className={ classes.titleBox} style={{ flexBasis: '28%', width: '28%' }}>
-          <Box display="flex">金额/已全部成交</Box>
-          <Box className={ classes.unit }>Atom</Box>
+        <Box className={ classes.titleBox} style={{ flexBasis: '15%', width: '15%' }}>
+          支付
         </Box>
-        <Box className={classes.titleBox} style={{ flexBasis: '18%', width: '18%' }}>
-          价格
+        <Box className={classes.titleBox} style={{ flexBasis: '20%', width: '20%' }}>
+          资金费率
         </Box>
-        <Box className={ classes.titleBox} style={{ flexBasis: '17%', width: '17%' }}>触发器</Box>
+        <Box className={classes.titleBox} style={{ flexBasis: '20%', width: '20%' }}>
+          当前持仓
+        </Box>
         <Box className={classes.titleBox} style={{ flexBasis: '12%', width: '12%' }}>
-          有效至
+          预言机价格
         </Box>
       </Box>
       <Box flexGrow={1} position="relative">
@@ -72,18 +73,8 @@ export const Order: FC = () => {
           width="100%"
           height="100%"
           sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
-            <OrderItem />
-            <OrderItem />
-            <OrderItem />
-            <OrderItem />
-            <OrderItem/>
-            <OrderItem/>
-            <OrderItem/>
-            <OrderItem />
-            <OrderItem/> 
-
-          
-        </Box>
+            <PayOrderItem />
+          </Box>
         {/* <Box
           position="absolute"
           display="flex"
@@ -95,9 +86,10 @@ export const Order: FC = () => {
           fontSize="15px"
           fontWeight="500"
           color="#c3c2d4"
-          lineHeight="20px">
-        
-          没有订单。
+          lineHeight="20px"
+          
+        >
+          您没有资金支付记录。
         </Box>  */}
 
       </Box>

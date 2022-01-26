@@ -3,6 +3,7 @@ import React, { FC } from 'react'
 import Image from 'next/image'
 import { makeStyles } from '@material-ui/styles'
 import { DetailsItem } from './DetailsItem'
+import { IconFont } from 'src/components/IconFont'
 
 const useStyles = makeStyles({
   btnBox: {
@@ -52,8 +53,18 @@ export const DetailsBox: FC = () => {
               Cosmos应用程序和服务使用跨链通信(IBC)协议进行连接。这一创新使您能够在完全独立的去中心化区块链中自由交易资产和数据。
             </Box>
             <Box className={classes.btnBox}>
-              <CancelBtn>白皮书</CancelBtn>
-              <CancelBtn>网站</CancelBtn>
+              <CancelBtn>
+                白皮书
+                <Box display="flex" fontSize="13px" marginLeft="3px">
+                  <IconFont name="icon-tiaozhuan-zhuanqu" color="#c3c2d4"></IconFont>
+                </Box>
+              </CancelBtn>
+              <CancelBtn>
+                网站
+                <Box display="flex" fontSize="13px" marginLeft="3px">
+                  <IconFont name="icon-tiaozhuan-zhuanqu" color="#c3c2d4"></IconFont>
+                </Box>
+              </CancelBtn>
             </Box>
 
           </Box>
