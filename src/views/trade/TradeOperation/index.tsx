@@ -24,7 +24,7 @@ export const TradeOperation: FC = () => {
   }, [operationType])
 
   return (
-    <Box width={324} height="calc(100vh - 69px - 47px)" display="flex" flexDirection="column" borderRight="1px solid #2d2d3d">
+    <Box width={324} height="100%" display="flex" flexDirection="column" borderRight="1px solid #2d2d3d">
       <AccoungInfoSection />
       <Box width="100%" flexGrow={1} display="flex" flexDirection="column" >
         {getTypeEle()}

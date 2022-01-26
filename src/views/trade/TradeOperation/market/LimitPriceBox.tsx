@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { Box, Button, Checkbox, CheckboxProps, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { DirectionType } from 'src/store/market/const';
 import { IconFont } from 'src/components/IconFont';
+import { API } from 'src/Api';
+import moment from 'moment';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -188,17 +190,59 @@ function BpCheckbox(props: CheckboxProps) {
     />
   );
 }
+
 export const LimitPriceBox: FC = () => {
   const classes = useStyles()
   const directionType = useSelector((state: RootState) => state.market.directionType)
   const [isShowClose, setIsShowClose] = useState(false)
   const [isHighRankingOption, setIsHighRankingOption] = useState(true)
-  const [amount, setAmount] = useState(null)
+  const [price, setPirce] = useState(null)
+  const [timeInForce, setTimeInForce] = useState('GTT')
+  const [expiration, setExpiration] = useState('day')
+  const [inputValue, setInputValue] = useState(28)
+  const [postOnly, setPostOnly] = useState(false)
 
-  const changeAmount = (event: Event) => { 
-    setAmount(event.target.value)
-  }
+  const [amount, setAmount] = useState(null)
+  const marketType = useSelector((state: RootState) => state.market.marketType)
+  const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
+
+  const expirationUTC = useMemo(() => {
+    if (expiration == 'day') { 
+      return moment().add(inputValue, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'week') { 
+      return moment().add( Number(inputValue) * 7, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'hour') { 
+      return moment().add(inputValue, 'hours').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'minute') { 
+      return moment().add(inputValue, 'minutes').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+  }, [expiration, inputValue])
   
+  
+  const handlerPlaceOrder = async () => { 
+    try {
+      const result = await API.postPlaceOrder({
+        market: marketSymbol,
+        side: directionType.toUpperCase(),
+        type: marketType.toLocaleUpperCase(),
+        size: amount.toString(),
+        post_only: postOnly.toString(),
+        expiration: expirationUTC + 'Z',
+        time_in_force: timeInForce.toString(),
+        price: price.toString(),
+        limit_fee: '0.05',
+      })
+      if (result.code == 0) { 
+
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <Box display="flex" flexDirection="column"
       sx={{
@@ -235,7 +279,7 @@ export const LimitPriceBox: FC = () => {
               bgcolor="#232334"
               marginRight="6px"
             >
-              <Input placeholder="0.0000" onChange={()=>changeAmount(event)}></Input>
+              <Input placeholder="0.0000" onChange={(e)=>setAmount(e.target.value)}></Input>
               <Box
                 display="grid"
                 alignSelf="center"
@@ -286,7 +330,7 @@ export const LimitPriceBox: FC = () => {
             bgcolor="#232334"
             marginRight="6px"
           >
-            <Input placeholder="0.0000"></Input>
+            <Input placeholder="0.0000" value={price} onChange={(e)=>setPirce(e.target.value)}></Input>
           </Box>
         </Box>
       </Box>
@@ -305,38 +349,41 @@ export const LimitPriceBox: FC = () => {
           isHighRankingOption && 
           <Box display="flex" flexDirection="column" sx={{ transition:'all 2s ease' }}>
             <Box display="flex" flexDirection="column" className={classes.effectiveTimeBox}>
-              <Box marginBottom="8px">有效时间</Box>
+              <Box marginBottom="8px">有效时间截止</Box>
               <Select
                 labelId="demo-customized-select-label"
                 id="demo-customized-select"
-                value="1"
+                value={timeInForce}
                 input={<BootstrapInput />}
+                onChange={(e)=>setTimeInForce(e.target.value)}
               >
-                <MenuItem value="1">有效时间截止</MenuItem>
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value="GTT">有效时间截止</MenuItem>
+                <MenuItem value="FOK">全部成交否则取消指令</MenuItem>
+                <MenuItem value="IOC">立即否则取消</MenuItem>
               </Select>
             </Box>
             <Box display="flex" justifyContent="space-between">
               <Box width="calc(50% - 5px)">
-                <Input value="28" style={{ paddingLeft:'12px' }}></Input>
+                  <Input value={ inputValue } style={{ paddingLeft:'12px' }} onChange={(e)=>setInputValue(e.target.value)}></Input>
               </Box>
               <Select
                 sx={{ width:'50%' }}
                 labelId="demo-customized-select-label"
                 id="demo-customized-select"
-                value="1"
+                value={expiration }
                 input={<BootstrapInput />}
+                onChange={(e)=>setExpiration(e.target.value)}
               >
-                <MenuItem value={1}>天</MenuItem>
-
+                  <MenuItem value='minute'>分钟</MenuItem>
+                  <MenuItem value='hour'>小时</MenuItem>
+                  <MenuItem value='day'>天</MenuItem>
+                  <MenuItem value='week'>周</MenuItem>
               </Select>
             </Box>
             <Box display="flex" flexDirection="column" marginTop="16px" className={classes.effectiveTimeBox}>
               <Box marginBottom="8px">执行</Box>
               <Box display="flex">
-                <BpCheckbox sx={{ padding:'0' }}/>
+                  <BpCheckbox sx={{ padding: '0' }} onChange={ (e)=> setPostOnly(e.target.checked) }/>
                 <Box paddingLeft="10px" display="flex">仅挂单
                   <HtmlTooltip
                     title={
@@ -457,6 +504,7 @@ export const LimitPriceBox: FC = () => {
               disabled={!amount}
               className={`${classes.placeOrder} 
               ${!amount ? '' : directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
+              onClick={() =>handlerPlaceOrder()}
             >下限价订单</Btn>
           </Box>
         </Box>
