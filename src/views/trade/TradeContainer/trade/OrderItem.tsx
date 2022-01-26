@@ -1,8 +1,9 @@
-import { Box, ButtonBase, Drawer, styled  } from '@material-ui/core'
+import { Box, ButtonBase, Drawer, styled, Tooltip  } from '@material-ui/core'
 import  React, { FC } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import Image from 'next/image'
 import { DrawerDetails } from './DrawerDetails'
+import { IconFont } from 'src/components/IconFont'
 
 const useStyles = makeStyles({
   itemBox: {
@@ -38,7 +39,34 @@ const useStyles = makeStyles({
     width: '300px',
     height: '100%',
     backgroundColor: '#1c1c28',
-    borderLeft:'1px solid #2d2d3d',
+    borderLeft: '1px solid #2d2d3d',
+  },
+  clearPosition: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: '13px',
+    width: '32px',
+    height: '32px',
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#303044',
+      borderRadius: '8px',
+    },
+  },
+  closeDrawer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: '20px',
+    fontWeight: 700,
+    width: '32px',
+    height: '32px',
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#303044',
+      borderRadius: '8px',
+    },
   },
 })
 
@@ -76,7 +104,7 @@ export const OrderItem: FC = () => {
         <Box className={classes.itemBox} onClick={toggleDrawer('right', true)}>
           <Box display="flex" alignItems="center" flexBasis="15%" width="15%" >
             <Box width="16px" height="16px" display="flex" >
-              <Image width="16px" height="16px" src="/images/btc.svg" alt=""></Image>
+              <IconFont name="icon-yuanquankong" color='#fff'></IconFont>
             </Box>
             <Box display="flex" alignItems="center" fontSize="14px" marginLeft="10px">限价</Box>
           </Box>
@@ -99,7 +127,11 @@ export const OrderItem: FC = () => {
             <Box display="flex" fontSize="13px" >4周</Box>
           </Box>
           <Box display="flex" alignItems="center" flexBasis="4%" width="4%" >
-            <Box display="flex" fontSize="13px" >4周</Box>
+            <Tooltip title="清仓" placement="left-start">
+              <Box className={classes.clearPosition}>
+                <IconFont name="icon-guanbi" color="#C3C2D3"></IconFont>
+              </Box>
+            </Tooltip>
           </Box>
         </Box>
         <Drawer
@@ -122,7 +154,10 @@ export const OrderItem: FC = () => {
                   </Box>
                   <Box display="flex">限价订单</Box>
                 </Box>
-                <Box component="div" onClick={toggleDrawer('right', false)} >X</Box>
+                <Box className={classes.closeDrawer} fontSize="20px"
+                  onClick={toggleDrawer('right', false)} >
+                  <IconFont name='icon-guanbi'></IconFont>
+                </Box>
               </Box>
               <Box flexGrow={1} display="flex" flexDirection="column" justifyContent="space-between" padding="0 28px 24px 28px">
                 <Box display="flex" flexDirection="column" >

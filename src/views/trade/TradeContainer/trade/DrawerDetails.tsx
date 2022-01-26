@@ -1,7 +1,6 @@
 import { Box } from '@material-ui/core'
 import  React, { FC } from 'react'
 import { makeStyles } from '@material-ui/styles'
-// import Image from 'next/image'
 const useStyles = makeStyles({
   itemK: {
     color:'rgb(111, 110, 132)',
@@ -21,7 +20,6 @@ const useStyles = makeStyles({
     color: '#ff5353',
     backgroundColor: 'rgba(255,83,83,.1)',
   },
-  
 })
 
 
