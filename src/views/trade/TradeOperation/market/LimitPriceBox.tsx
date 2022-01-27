@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Box, Button, Checkbox, CheckboxProps, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
@@ -9,6 +9,7 @@ import { DirectionType } from 'src/store/market/const';
 import { IconFont } from 'src/components/IconFont';
 import { API } from 'src/Api';
 import moment from 'moment';
+import { Alert } from 'src/components/Alert';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -221,24 +222,34 @@ export const LimitPriceBox: FC = () => {
     }
   }, [expiration, inputValue])
   
+  useEffect(() => {
+    Alert.error('result')
+  }, [])
   
   const handlerPlaceOrder = async () => { 
     try {
       const result = await API.postPlaceOrder({
-        market: marketSymbol,
+        market: marketSymbol.replace('-', '_'),
         side: directionType.toUpperCase(),
         type: marketType.toLocaleUpperCase(),
         size: amount.toString(),
         post_only: postOnly.toString(),
         expiration: expirationUTC + 'Z',
         time_in_force: timeInForce.toString(),
-        price: price.toString(),
+        price: '1500',
         limit_fee: '0.05',
       })
-      if (result.code == 0) { 
-
-      }
+      setIsShowClose(false)
+      setIsHighRankingOption(true)
+      setPirce(null)
+      setTimeInForce('GTT')
+      setExpiration('day')
+      setInputValue(28)
+      setPostOnly(false)
+      console.log(result)
+      Alert.error('result')
     } catch (error) {
+      console.log('error')
       console.error(error)
     }
   }

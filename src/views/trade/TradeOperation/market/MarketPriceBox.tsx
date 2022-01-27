@@ -8,6 +8,7 @@ import { RootState } from 'src/store';
 import { DirectionType } from 'src/store/market/const';
 import { IconFont } from 'src/components/IconFont';
 import { API } from 'src/Api';
+import { Alert } from 'src/components/Alert';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -146,7 +147,7 @@ export const MarketPriceBox: FC = () => {
   const handlerPlaceOrder = async () => { 
     try {
       const result = await API.postPlaceOrder({
-        market: marketSymbol,
+        market: marketSymbol.replace('-', '_'),
         side: directionType.toUpperCase(),
         type: marketType.toLocaleUpperCase(),
         size: amount.toString(),
@@ -156,7 +157,7 @@ export const MarketPriceBox: FC = () => {
         price: '0',
         limit_fee: '0.05',
       })
-      console.log(result.data)
+      Alert.info(result)
     } catch (error) {
       console.error(error)
     }

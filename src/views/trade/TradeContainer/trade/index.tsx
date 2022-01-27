@@ -73,6 +73,7 @@ export const Trade: FC = () => {
     dispatch(setOrderType(type))
   }
   const chartType = useSelector((state: RootState) => state.chart.chartType)
+  const orderList = useSelector((state: RootState) => state.order.orderList)
   const getTypeEle = useCallback(() => { 
     const type = orderType 
     const actions = {
@@ -143,7 +144,7 @@ export const Trade: FC = () => {
             <Box
               className={`${classes.item} ${OrderType.order == orderType ? classes.active : ''}`}
               onClick={()=>handlerType(OrderType.order)}
-            >订单<Box className={classes.itemCount}>0</Box></Box>
+            >订单<Box className={classes.itemCount}>{ orderList.length }</Box></Box>
             <Box
               className={`${classes.item} ${OrderType.allSuccess == orderType ? classes.active : ''}`}
               onClick={()=>handlerType(OrderType.allSuccess)}

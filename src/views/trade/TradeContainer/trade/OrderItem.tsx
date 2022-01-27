@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/styles'
 import Image from 'next/image'
 import { DrawerDetails } from './DrawerDetails'
 import { IconFont } from 'src/components/IconFont'
+import { OrderTypeForC } from 'src/store/order/const'
 
 const useStyles = makeStyles({
   itemBox: {
@@ -79,8 +80,18 @@ const CancelBtn = styled(ButtonBase)({
   padding: '0 16px',
   color: '#ff5353',
 })
-
-export const OrderItem: FC = () => {
+interface OrderItemProps { 
+  status: string,
+  side: string,
+  size: string, //数量
+  remaining_size: string, //剩余
+  price: string,
+  created_at: string,
+  type: string,
+  trigger_price: string,
+  expire_at: string,
+}
+export const OrderItem: FC<OrderItemProps> = (props) => {
   const classes = useStyles()
   
   const [state, setState] = React.useState({ right: false });
@@ -104,27 +115,32 @@ export const OrderItem: FC = () => {
         <Box className={classes.itemBox} onClick={toggleDrawer('right', true)}>
           <Box display="flex" alignItems="center" flexBasis="15%" width="15%" >
             <Box width="16px" height="16px" display="flex" >
-              <IconFont name="icon-yuanquankong" color='#fff'></IconFont>
+              { props.side.toLowerCase() == 'buy' &&
+                <IconFont name="icon-yuanquankong" color='#3fb68b'></IconFont>
+              }
+              { props.side.toLowerCase() == 'sell' &&
+                <IconFont name="icon-yuanquankong" color='#ff5353'></IconFont>
+              }
             </Box>
-            <Box display="flex" alignItems="center" fontSize="14px" marginLeft="10px">限价</Box>
+            <Box display="flex" alignItems="center" fontSize="14px" marginLeft="10px">{ OrderTypeForC[props.type] }</Box>
           </Box>
           <Box display="flex" alignItems="center" flexBasis="10%" width="10%" >
-            <Box className={`${classes.direction} ${classes.buy}`}>买入</Box>
+            <Box className={`${classes.direction} ${props.side.toLowerCase() == 'buy' ? classes.buy : classes.sell}`}>{ props.side }</Box>
           </Box>
           <Box display="flex" alignItems="center" flexBasis="28%" width="28%" >
             <Box display="flex" flexDirection="column" justifyContent="center" fontSize="12px">
-              <Box height="19px" lineHeight="16px">100.000</Box>
-              <Box height="19px" lineHeight="16px" color="#6f6e84">0.000</Box>
+              <Box height="19px" lineHeight="16px">{ props.size}</Box>
+              <Box height="19px" lineHeight="16px" color="#6f6e84">{ Number(props.size) - Number(props.remaining_size)}</Box>
             </Box>
           </Box>
           <Box display="flex" alignItems="center" flexBasis="18%" width="18%" >
-            <Box display="flex" fontSize="13px" >$33.00</Box>
+            <Box display="flex" fontSize="13px" >{ `$${props.price}` }</Box>
           </Box>
-          <Box display="flex" alignItems="center" flexBasis="17%" width="17%" >
-            <Box display="flex" fontSize="13px" >-</Box>
+          <Box display="flex" alignItems="center" flexBasis="12%" width="12%" >
+            <Box display="flex" fontSize="13px" >{ props.trigger_price }</Box>
           </Box>
-          <Box display="flex" alignItems="center" flexBasis="8%" width="8%" >
-            <Box display="flex" fontSize="13px" >4周</Box>
+          <Box display="flex" alignItems="center" flexBasis="13%" width="13%" >
+            <Box display="flex" fontSize="13px" >{ props.expire_at }</Box>
           </Box>
           <Box display="flex" alignItems="center" flexBasis="4%" width="4%" >
             <Tooltip title="清仓" placement="left-start">
@@ -161,9 +177,18 @@ export const OrderItem: FC = () => {
               </Box>
               <Box flexGrow={1} display="flex" flexDirection="column" justifyContent="space-between" padding="0 28px 24px 28px">
                 <Box display="flex" flexDirection="column" >
-                  <DrawerDetails k="市场" v="ATOM-USD" />
-                  <DrawerDetails k="direction" v="sell"/>
-                  <DrawerDetails k="状态" v="开仓"/>
+                  {
+                    Object.keys(props).map((item, index) => { 
+                      return (
+                        <DrawerDetails
+                          key={index}
+                          k={ item }
+                          v={props[item]}
+                        />
+                      )
+                    })
+                  }
+                  
                 </Box>
                 <CancelBtn>取消订单</CancelBtn>
               </Box>
