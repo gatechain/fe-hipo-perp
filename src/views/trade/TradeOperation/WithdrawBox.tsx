@@ -8,7 +8,7 @@ import { RootState } from 'src/store';
 import { OperationType } from 'src/store/trade/const';
 import { setOperationType } from 'src/store/trade';
 import { API } from 'src/Api';
-// import { Alert } from 'src/components/Alert';
+import { Alert } from 'src/components/Alert';
 
 const useStyles = makeStyles({
   close: {
@@ -128,13 +128,12 @@ export const WithDrawBox: FC = () => {
   }
 
   const handleSubmit = () => {
-    // Alert.error('err: asdf')
 
     API.postWithdraw({ amount }).then(() => {
       setIsConfirm(false)
       dispatch(setOperationType(null))
     }).catch(err => {
-      console.log(err)
+      Alert.error(err.msg)
     })
   }
 
