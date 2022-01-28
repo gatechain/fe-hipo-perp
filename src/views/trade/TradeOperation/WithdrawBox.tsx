@@ -10,6 +10,7 @@ import { setOperationType } from 'src/store/trade';
 import { API } from 'src/Api';
 import { Alert } from 'src/components/Alert';
 import { fetchUser } from 'src/store/network';
+import { formatNumber } from 'src/utils';
 
 const useStyles = makeStyles({
   close: {
@@ -116,7 +117,7 @@ export const WithDrawBox: FC = () => {
   const [amount, setAmount] = useState('')
   const {
     trade: { operationType },
-    network: { userInfo },
+    network: { accountInfo },
   } = useSelector((state: RootState) => state)
   const dispatch = useDispatch()
 
@@ -237,11 +238,11 @@ export const WithDrawBox: FC = () => {
                   {/* <Box display="flex" alignItems="center">可用质押品</Box> */}
                   <div className={classes.itemR}>
                     $
-                    {userInfo.maker_fee}
+                    {formatNumber(accountInfo.free_collateral)}
                     <div>
                       <span>{'→'}</span>
                       $
-                      {Number(userInfo.maker_fee) - Number(amount)}
+                      {formatNumber((Number(accountInfo.free_collateral) - Number(amount)).toString())}
                     </div>
                   </div>
 
@@ -325,10 +326,12 @@ export const WithDrawBox: FC = () => {
                     >USDC</Box>
                   </Box>
                   <div className={classes.itemR}>
-                    $22,123.43
+                    $
+                    {formatNumber(accountInfo.free_collateral)}
                     <div>
                       <span>{'→'}</span>
-                      $123.43
+                      $
+                      {formatNumber((Number(accountInfo.free_collateral) - Number(amount)).toString())}
                     </div>
                   </div>
                 </Box>
@@ -361,7 +364,7 @@ export const WithDrawBox: FC = () => {
                   </Box>
                   <Box display="flex" justifyContent="space-between" padding="0 28px 24px" flexDirection="column" flex="1 1 100%" overflow="scroll" width='100%'>
                     <p className={classes.feeExplain}>将对此笔快速提现收取
-                      <strong>$6.03</strong>
+                      <strong>$--</strong>
                       的费用。您的资金将立即发送，并会在提现交易确认后出现在您的钱包中。
                     </p>
                     <div className={classes.errorMsg}>

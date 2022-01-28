@@ -4,6 +4,7 @@ import { styled } from '@material-ui/styles'
 import { useWeb3React } from '@web3-react/core'
 import { FC, useEffect, useState } from 'react'
 import { SupportedWalletsItem, SUPPORTED_WALLETS } from 'src/web3React/connector'
+import { IconFont } from '../IconFont'
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -50,6 +51,7 @@ const ModalWallet: FC<Omit<ModalProps, 'children'>> = ({
         onClick={() => handleWallet(walletOption)}
         key={walletOption.key}
       >
+        <IconFont name={walletOption.iconName} style={{ marginRight: 8 }} />
         {walletOption.name}
       </Btn>
     })

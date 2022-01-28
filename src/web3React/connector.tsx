@@ -65,7 +65,7 @@ export const SUPPORTED_WALLETS: SupportedWalletsItem[] = [
     connector: injected,
     key: 'METAMASK',
     name: 'MetaMask',
-    iconName: 'metamask.svg',
+    iconName: 'icon-metamask',
     description: 'Easy-to-use browser extension.',
   },
 ]

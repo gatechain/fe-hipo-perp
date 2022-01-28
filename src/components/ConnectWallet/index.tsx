@@ -7,6 +7,7 @@ import { setAccount, setConnectButtonStatus } from 'src/store/network'
 import { ConnectButtonStatus } from 'src/store/network/const'
 import { showHeadAndEnd } from 'src/utils'
 import { HpButton } from '../HpButton'
+import { IconFont } from '../IconFont'
 import ModalWallet from './ModalWallet'
 
 const ConnectWallet: FC = () => {
@@ -29,7 +30,7 @@ const ConnectWallet: FC = () => {
 
   const connectEle = useMemo(() => {
     return <Box color="#ccc">
-      <Box mr={2} component="span">🟢</Box>
+      <Box mr={2} component="span"><IconFont name='icon-metamask' /></Box>
       <Typography variant='caption' mr={2}>
         {showHeadAndEnd(accountStr)}
       </Typography>
