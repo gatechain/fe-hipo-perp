@@ -14,6 +14,8 @@ import { useWeb3React } from '@web3-react/core'
 import { connectorsByName } from 'src/web3React/connector'
 import ConnectWallet from 'src/components/ConnectWallet'
 import { IconFont } from 'src/components/IconFont'
+import { Ether } from 'src/sdk/ether'
+import { BigNumber } from '@ethersproject/bignumber'
 
 // hooks api
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -96,6 +98,19 @@ const DemoPage: NextPage = () => {
         console.log(data, '哈哈哈的签名')
       })
     }}>授权</Button>
+
+    <Button color="primary" variant="contained" onClick={async () => {
+      const ether = Ether.getInstance()
+      const contr = ether.getPerpetualContract('0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293')
+      const tokenInfo = await ether.getTokenDetailV2('0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65')
+      console.log(tokenInfo)
+      const amount = BigNumber.from(10).pow(tokenInfo.decimals).mul(50).toString()
+      console.log(amount)
+      // ether.approve('0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65', '0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293', amount).then(() => {
+
+      // })
+      contr.deposit(account, '0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65', amount).then(console.log).catch(console.log)
+    }}>调用合约</Button>
   </div>
 }
 

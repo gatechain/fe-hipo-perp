@@ -6,8 +6,9 @@ import { OperationType } from 'src/store/trade/const';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { setOperationType } from 'src/store/trade';
-import { API } from 'src/Api';
-import { useSign } from 'src/web3React/hooks';
+import { Ether, ROUTER_ADDRESS } from 'src/sdk/ether';
+import { BigNumber } from '@ethersproject/bignumber';
+import { useWeb3React } from '@web3-react/core';
 
 const useStyles = makeStyles({
   close: {
@@ -74,7 +75,7 @@ const Input = styled(InputBase)({
 
 export const DepositBox: FC = () => {
   const classes = useStyles()
-  const sign = useSign()
+  const { account } = useWeb3React()
   const [amount, setAmount] = useState('')
   const {
     trade: { operationType },
@@ -89,16 +90,38 @@ export const DepositBox: FC = () => {
   }
 
   const handleSubmit = () => {
-    sign((data) => {
-      API.postDeposit({
-        ethereum_address: data.ethereum_address,
-        signature: data.signature,
-        txn_hash: '0x768dc15ab064e2139e6d150ab830d77e1dadeeb3eda18e4913e43454ffd69688',
-        amount,
-        timestamp: data.timestamp,
-      })
-      API.getUser()
-    })
+    async function applet() {
+      const ether = Ether.getInstance()
+      const contr = ether.getPerpetualContract('0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293')
+      const tokenInfo = await ether.getTokenDetailV2('0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65')
+      const amountBig = BigNumber.from(10).pow(tokenInfo.decimals).mul(amount)
+      const allowance = await ether.getTokenAllowance('0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65', account, ROUTER_ADDRESS)
+      console.log(allowance.toString(), 'allowance.toString()')
+      console.log(amount)
+      console.log(amountBig.toString(), 'amountBig.toString()')
+
+      console.log(amountBig.gt(allowance))
+      if (amountBig.lt(allowance)) {
+        ether.approve('0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65', '0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293', amountBig.toString())
+      } else {
+        contr.deposit(account, '0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65', amountBig.toString()).then(console.log).catch(console.log)
+      }
+    }
+
+    applet()
+
+
+    // sign((data) => {
+    // console.log(data)
+    // API.postDeposit({
+    //   ethereum_address: data.ethereum_address,
+    //   signature: data.signature,
+    //   txn_hash: '0x768dc15ab064e2139e6d150ab830d77e1dadeeb3eda18e4913e43454ffd69688',
+    //   amount,
+    //   timestamp: data.timestamp,
+    // })
+    // API.getUser()
+    // })
 
   }
   return (
