@@ -10,7 +10,7 @@ const useStyles = makeStyles({
     justifyContent: 'end',
     flex: '0 0 32%',
     paddingRight: '4px',
-    zIndex:2,
+    zIndex: 2,
   },
   priceBox: {
     display: 'flex',
@@ -28,17 +28,17 @@ const useStyles = makeStyles({
     flex: '0 0 28%',
     paddingRight: '4px',
   },
-  span:{
+  span: {
     color: '#c3c2d4',
-    fontSize:'12px',
+    fontSize: '12px',
   },
   bottomBtn: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRight:'1px solid #2d2d3d',
-    width:'36px',
-    height:'100%',
+    borderRight: '1px solid #2d2d3d',
+    width: '36px',
+    height: '100%',
   },
   amountPercentage: {
     width: '50px',
@@ -69,8 +69,9 @@ const useStyles = makeStyles({
 export interface ItemProps {
   type: string;
   direction: String;
+  data?: any
 }
-export const Item: FC<ItemProps> = (props) => {
+export const Item: FC<ItemProps> = ({ type, direction, data = [] }) => {
   const classes = useStyles()
   return (
     <Box display="flex" position="relative">
@@ -82,14 +83,15 @@ export const Item: FC<ItemProps> = (props) => {
         flexGrow={1}
         height={20}
         padding='0 16px'
-        sx={{ cursor: 'pointer', '&:hover': {
-          backgroundColor: '#232334',
-        },
+        sx={{
+          cursor: 'pointer', '&:hover': {
+            backgroundColor: '#232334',
+          },
         }}>
-        
-        <div className={classes.amountBox}><span className={`${classes.span} ${props.type == 'trade' ? (props.direction == 'buy' ? classes.tradeBuyColor : classes.tradeSellColor) : ''}`}>123.32</span></div>
-        <div className={classes.priceBox}><span className={classes.span}>123.32</span></div>
-        <div className={classes.orderBox}><span className={classes.span}>123.32</span></div>
+
+        <div className={classes.amountBox}><span className={`${classes.span} ${type == 'trade' ? (direction == 'buy' ? classes.tradeBuyColor : classes.tradeSellColor) : ''}`}>{data[0] || 0}</span></div>
+        <div className={classes.priceBox}><span className={classes.span}>{data[0] || 0}</span></div>
+        <div className={classes.orderBox}><span className={classes.span}>{data[1] || 0}</span></div>
       </Box>
     </Box>
   )

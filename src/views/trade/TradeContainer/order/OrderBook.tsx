@@ -15,6 +15,7 @@ export const OrderBook: FC = () => {
   const classes = useStyles()
   const ws = useRef<WebSocket | null>(null)
   const [isOrderBook, setIsOrderBook] = useState(true)
+  const [orderBook, setOrderBook] = useState<any>({})
   useEffect(() => {
     ws.current = new WebSocket('wss://www.hipo.com/trade/ws/')
     ws.current.onopen = () => {
@@ -28,8 +29,8 @@ export const OrderBook: FC = () => {
       console.log('onerror')
       console.log(err)
     }
-    ws.current.onmessage = () => {
-      // console.log(msg.data)
+    ws.current.onmessage = (msg) => {
+      setOrderBook(JSON.parse(msg.data))
     }
 
   }, [ws])
@@ -53,14 +54,19 @@ export const OrderBook: FC = () => {
           borderRight: '1px solid #2d2d3d',
         },
       }}>
-      <div className={isOrderBook == true ? classes.activeBtn : ''} onClick={() => setIsOrderBook(!isOrderBook)}>盘口</div>
-      <div className={isOrderBook == true ? '' : classes.activeBtn} onClick={() => setIsOrderBook(!isOrderBook)}>交易订单</div>
+      <div className={isOrderBook ? classes.activeBtn : ''} onClick={() => setIsOrderBook(!isOrderBook)}>盘口</div>
+      <div className={isOrderBook ? '' : classes.activeBtn} onClick={() => setIsOrderBook(!isOrderBook)}>交易订单</div>
     </Box>
     <Box display="flex" position="relative" flexDirection='column' flexGrow={1} component="div" borderTop='1px solid #2d2d3d'>
       <OrderBookTitle />
-      {isOrderBook ? <OrderBookBody /> : ''}
-      {isOrderBook ? <OrderBookFoot /> : ''}
-      {isOrderBook ? '' : <Trade />}
+      {
+        isOrderBook
+          ? <>
+            <OrderBookBody data={orderBook} />
+            <OrderBookFoot />
+          </>
+          : <Trade />
+      }
     </Box>
   </Box>
 }
