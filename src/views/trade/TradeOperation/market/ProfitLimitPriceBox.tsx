@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { Box, Button, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { DirectionType } from 'src/store/market/const';
 import { IconFont } from 'src/components/IconFont';
+import moment from 'moment';
+import { API } from 'src/Api';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -159,6 +161,56 @@ export const ProfitLimitPriceBox: FC = () => {
   const directionType = useSelector((state: RootState) => state.market.directionType)
   const [isShowClose, setIsShowClose] = useState(true)
   const [isHighRankingOption, setIsHighRankingOption] = useState(true)
+  const [amount, setAmount] = useState(null)
+  const [price, setPirce] = useState(null)
+  const [triggerPrice, setTriggerPrice] = useState(null)
+  const [timeInForce, setTimeInForce] = useState('GTT')
+  const [expiration, setExpiration] = useState('day')
+  const [inputValue, setInputValue] = useState(28)
+  const marketType = useSelector((state: RootState) => state.market.marketType)
+  const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
+
+  const expirationUTC = useMemo(() => {
+    if (expiration == 'day') { 
+      return moment().add(inputValue, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'week') { 
+      return moment().add( Number(inputValue) * 7, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'hour') { 
+      return moment().add(inputValue, 'hours').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'minute') { 
+      return moment().add(inputValue, 'minutes').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+  }, [expiration, inputValue])
+  
+  const handlerPlaceOrder = async () => { 
+    try {
+      const result = await API.postPlaceOrder({
+        market: marketSymbol.replace('-', '_'),
+        side: directionType.toUpperCase(),
+        type: marketType.toLocaleUpperCase(),
+        size: amount.toString(),
+        post_only: 'false',
+        expiration: expirationUTC + 'Z',
+        time_in_force: timeInForce.toString(),
+        price: price.toString(),
+        limit_fee: '0.05',
+      })
+      if (result.code == 0) {
+        setIsShowClose(false)
+        setIsHighRankingOption(true)
+        setPirce(null)
+        setTimeInForce('GTT')
+        setExpiration('day')
+        setInputValue(28)
+      } else { 
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
   
   return (
     <Box display="flex" flexDirection="column"
@@ -196,7 +248,7 @@ export const ProfitLimitPriceBox: FC = () => {
               bgcolor="#232334"
               marginRight="6px"
             >
-              <Input placeholder="0.0000"></Input>
+              <Input placeholder="0.0000" value={amount} onChange={(e)=>setAmount(e.target.value)}></Input>
               <Box
                 display="grid"
                 alignSelf="center"
@@ -247,7 +299,7 @@ export const ProfitLimitPriceBox: FC = () => {
             bgcolor="#232334"
             marginRight="6px"
           >
-            <Input placeholder="0.0000"></Input>
+            <Input placeholder="0.0000" value={triggerPrice} onChange={(e)=>setTriggerPrice(e.target.value)}></Input>
           </Box>
         </Box>
 
@@ -274,7 +326,7 @@ export const ProfitLimitPriceBox: FC = () => {
             bgcolor="#232334"
             marginRight="6px"
           >
-            <Input placeholder="0.0000"></Input>
+            <Input placeholder="0.0000" value={price} onChange={(e)=>setPirce(e.target.value)}></Input>
           </Box>
         </Box>
       </Box>
@@ -295,21 +347,23 @@ export const ProfitLimitPriceBox: FC = () => {
               <Box marginBottom="8px">有效时间</Box>
               <Box display="flex" justifyContent="space-between">
                 <Box width="calc(50% - 5px)">
-                  <Input value="28" style={{ paddingLeft:'12px' }}></Input>
+                  <Input value={ inputValue} onChange={(e)=>setInputValue(Number(e.target.value))}style={{ paddingLeft:'12px' }}></Input>
                 </Box>
                 <Select
                   sx={{ width: '50%' }}
                   labelId="demo-customized-select-label"
                   id="demo-customized-select"
-                  value="1"
+                  value={expiration}
                   input={<BootstrapInput />}
+                  onChange={(e)=>setExpiration(e.target.value)}
                 >
-                  <MenuItem value={1}>天</MenuItem>
-
+                  <MenuItem value='minute'>分钟</MenuItem>
+                  <MenuItem value='hour'>小时</MenuItem>
+                  <MenuItem value='day'>天</MenuItem>
+                  <MenuItem value='week'>周</MenuItem>
                 </Select>
               </Box>
             </Box>
-
           </Box> 
         }
       </Box>
@@ -406,7 +460,12 @@ export const ProfitLimitPriceBox: FC = () => {
                 <span className={classes.valuation}>$38.28</span>
               </Box>
             </Box>
-            <Btn className={`${classes.placeOrder} ${directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}>下止损单</Btn>
+            <Btn
+              disabled={!amount}
+              className={`${classes.placeOrder} 
+              ${!amount ? '' : directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
+              onClick={() =>handlerPlaceOrder()}
+            >下止损单</Btn>
           </Box>
         </Box>
 

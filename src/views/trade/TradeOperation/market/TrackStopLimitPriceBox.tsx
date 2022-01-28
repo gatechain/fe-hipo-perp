@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { Box, Button, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
@@ -7,6 +7,8 @@ import { DirectionType } from 'src/store/market/const';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { IconFont } from 'src/components/IconFont';
+import { API } from 'src/Api';
+import moment from 'moment';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -41,14 +43,14 @@ const useStyles = makeStyles({
   placeOrder: {
     height: '40px',
     fontSize: '13px',
-    backgroundColor: '#3fb68b',
-    color: '#f7f7f7',
   },
   doPlaceOrderBuy: {
     backgroundColor: '#3fb68b',
+    color: '#f7f7f7',
   },
   doPlaceOrderSell: {
     backgroundColor: '#ff5353',
+    color: '#f7f7f7',
   },
   highRanking: {
     display:'flex',
@@ -167,6 +169,70 @@ export const TrackStopLimitPriceBox: FC = () => {
   const directionType = useSelector((state: RootState) => state.market.directionType)
   const [isShowClose, setIsShowClose] = useState(true)
   const [isHighRankingOption, setIsHighRankingOption] = useState(true)
+  const [amount, setAmount] = useState(null)
+  const [trailingPercent, setTrailingPercent] = useState(null)
+  const [expiration, setExpiration] = useState('day')
+  const [inputValue, setInputValue] = useState(28)
+  const marketType = useSelector((state: RootState) => state.market.marketType)
+  const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
+
+
+  const expirationUTC = useMemo(() => {
+    if (expiration == 'day') { 
+      return moment().add(inputValue, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'week') { 
+      return moment().add( Number(inputValue) * 7, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'hour') { 
+      return moment().add(inputValue, 'hours').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'minute') { 
+      return moment().add(inputValue, 'minutes').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+  }, [expiration, inputValue])
+
+
+
+  const handlerTrailingPercent = (event) => { 
+    console.log('change')
+    if (event.target.value == '%') { 
+      event.target.value = null
+      setTrailingPercent(null)
+    } else {
+      setTrailingPercent(event.target.value.replace('%', '') + '%')
+    }
+  }
+  const handlerKeyUp = (event) => {
+    console.log('keyup')
+    event.target.selectionEnd = event.target.value.length - 1
+  }
+  
+  const handlerPlaceOrder = async () => { 
+    try {
+      const result = await API.postPlaceOrder({
+        market: marketSymbol.replace('-', '_'),
+        side: directionType.toUpperCase(),
+        type: marketType.toLocaleUpperCase(),
+        size: amount.toString(),
+        post_only: 'false',
+        expiration: expirationUTC + 'Z',
+        time_in_force: 'GTT',
+        price: '0',
+        limit_fee: '0.05',
+      })
+      if (result.code == 0) {
+        setIsShowClose(false)
+        setIsHighRankingOption(true)
+        setExpiration('day')
+        setInputValue(28)
+      } else { 
+        Alert.error(result.data)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
   
   return (
     <Box display="flex" flexDirection="column"
@@ -204,7 +270,7 @@ export const TrackStopLimitPriceBox: FC = () => {
               bgcolor="#232334"
               marginRight="6px"
             >
-              <Input placeholder="0.0000"></Input>
+              <Input placeholder="0.0000" value={amount} onChange={(e)=>setAmount(e.target.value)}></Input>
               <Box
                 display="grid"
                 alignSelf="center"
@@ -255,7 +321,10 @@ export const TrackStopLimitPriceBox: FC = () => {
             bgcolor="#232334"
             marginRight="6px"
           >
-            <Input placeholder="0.0000"></Input>
+            <Input placeholder="0.0000" value={trailingPercent}
+              onChange={(e) => handlerTrailingPercent(e)}
+              onKeyDown={(e) => handlerKeyUp(e)}
+            ></Input>
           </Box>
         </Box>
       </Box>
@@ -274,16 +343,20 @@ export const TrackStopLimitPriceBox: FC = () => {
           <Box display="flex" flexDirection="column" marginBottom="12px" sx={{ transition:'all 2s ease' }}>
             <Box display="flex" justifyContent="space-between">
               <Box width="calc(50% - 5px)">
-                <Input value="28" style={{ paddingLeft:'12px' }}></Input>
+                <Input value={ inputValue} onChange={(e)=>setInputValue(Number(e.target.value))} style={{ paddingLeft:'12px' }}></Input>
               </Box>
               <Select
                 sx={{ width:'50%' }}
                 labelId="demo-customized-select-label"
                 id="demo-customized-select"
-                value="1"
+                value={expiration }
                 input={<BootstrapInput />}
-              >
-                <MenuItem value={1}>天</MenuItem>
+                onChange={(e)=>setExpiration(e.target.value)}
+                >
+                  <MenuItem value='minute'>分钟</MenuItem>
+                  <MenuItem value='hour'>小时</MenuItem>
+                  <MenuItem value='day'>天</MenuItem>
+                  <MenuItem value='week'>周</MenuItem>
               </Select>
             </Box>
           </Box> 
@@ -397,7 +470,12 @@ export const TrackStopLimitPriceBox: FC = () => {
                 <span className={classes.valuation}>$38.28</span>
               </Box>
             </Box>
-            <Btn className={`${classes.placeOrder} ${directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}>下止损单</Btn>
+            <Btn
+              disabled={!amount}
+              className={`${classes.placeOrder} 
+              ${!amount ? '' : directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
+              onClick={() => handlerPlaceOrder()}
+            >下止损单</Btn>
           </Box>
         </Box>
 

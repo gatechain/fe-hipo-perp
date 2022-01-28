@@ -41,9 +41,9 @@ export const DrawerDetails: FC<DirectionItemProps> = (props) => {
       borderBottom="1px solid rgb(45, 45, 61)"
     >  
       <Box className={classes.itemK}>{props.k}</Box>
-      { props.k == 'direction' && <Box className={`${classes.direction} ${props.v == 'buy' ? classes.buy : classes.sell}`}>{ props.v }</Box>}
+      { props.k == 'side' && <Box className={`${classes.direction} ${props.v.toLowerCase() == 'buy' ? classes.buy : classes.sell}`}>{ props.v }</Box>}
 
-      {props.k != 'direction' && <Box>{ props.v }</Box>}
+      {props.k != 'side' && <Box>{ props.v }</Box>}
       
     </Box>
   )

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { Box, Button, InputBase, MenuItem, Select, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
@@ -7,6 +7,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { DirectionType } from 'src/store/market/const';
 import { IconFont } from 'src/components/IconFont';
+import { API } from 'src/Api';
+import moment from 'moment';
+import { Alert } from 'src/components/Alert';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -35,14 +38,14 @@ const useStyles = makeStyles({
   placeOrder: {
     height: '40px',
     fontSize: '13px',
-    backgroundColor: '#3fb68b',
-    color: '#f7f7f7',
   },
   doPlaceOrderBuy: {
     backgroundColor: '#3fb68b',
+    color: '#f7f7f7',
   },
   doPlaceOrderSell: {
     backgroundColor: '#ff5353',
+    color: '#f7f7f7',
   },
   highRanking: {
     display:'flex',
@@ -160,6 +163,57 @@ export const StopLimitPriceBox: FC = () => {
   const directionType = useSelector((state: RootState) => state.market.directionType)
   const [isShowClose, setIsShowClose] = useState(true)
   const [isHighRankingOption, setIsHighRankingOption] = useState(true)
+  const [amount, setAmount] = useState(null)
+  const [price, setPirce] = useState(null)
+  const [triggerPrice, setTriggerPrice] = useState(null)
+  const [timeInForce, setTimeInForce] = useState('GTT')
+  const [expiration, setExpiration] = useState('day')
+  const [inputValue, setInputValue] = useState(28)
+  const marketType = useSelector((state: RootState) => state.market.marketType)
+  const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
+
+  const expirationUTC = useMemo(() => {
+    if (expiration == 'day') { 
+      return moment().add(inputValue, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'week') { 
+      return moment().add( Number(inputValue) * 7, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'hour') { 
+      return moment().add(inputValue, 'hours').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+    if (expiration == 'minute') { 
+      return moment().add(inputValue, 'minutes').utc().format('YYYY-MM-DDTHH:mm:SS')
+    }
+  }, [expiration, inputValue])
+  
+  const handlerPlaceOrder = async () => { 
+    try {
+      const result = await API.postPlaceOrder({
+        market: marketSymbol.replace('-', '_'),
+        side: directionType.toUpperCase(),
+        type: marketType.toLocaleUpperCase(),
+        size: amount.toString(),
+        post_only: 'false',
+        expiration: expirationUTC + 'Z',
+        time_in_force: timeInForce.toString(),
+        price: price.toString(),
+        limit_fee: '0.05',
+      })
+      if (result.code == 0) {
+        setIsShowClose(false)
+        setIsHighRankingOption(true)
+        setPirce(null)
+        setTimeInForce('GTT')
+        setExpiration('day')
+        setInputValue(28)
+      } else { 
+        Alert.error(result.data)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
   
   return (
     <Box display="flex" flexDirection="column"
@@ -197,7 +251,7 @@ export const StopLimitPriceBox: FC = () => {
               bgcolor="#232334"
               marginRight="6px"
             >
-              <Input placeholder="0.0000"></Input>
+              <Input placeholder="0.0000" value={amount} onChange={(e)=>setAmount(e.target.value)}></Input>
               <Box
                 display="grid"
                 alignSelf="center"
@@ -248,7 +302,7 @@ export const StopLimitPriceBox: FC = () => {
             bgcolor="#232334"
             marginRight="6px"
           >
-            <Input placeholder="0.0000"></Input>
+            <Input placeholder="0.0000" value={triggerPrice} onChange={(e)=>setTriggerPrice(e.target.value)}></Input>
           </Box>
         </Box>
 
@@ -275,7 +329,7 @@ export const StopLimitPriceBox: FC = () => {
             bgcolor="#232334"
             marginRight="6px"
           >
-            <Input placeholder="0.0000"></Input>
+            <Input placeholder="0.0000" value={price} onChange={(e)=>setPirce(e.target.value)}></Input>
           </Box>
         </Box>
       </Box>
@@ -297,18 +351,22 @@ export const StopLimitPriceBox: FC = () => {
             </Box>
             <Box display="flex" justifyContent="space-between">
               <Box width="calc(50% - 5px)">
-                <Input value="28" style={{ paddingLeft:'12px' }}></Input>
+                <Input value={ inputValue} onChange={(e)=>setInputValue(Number(e.target.value))} style={{ paddingLeft:'12px' }}></Input>
               </Box>
               <Select
                 sx={{ width: '50%' }}
                 labelId="demo-customized-select-label"
                 id="demo-customized-select"
-                value="1"
+                value={expiration }
                 input={<BootstrapInput />}
+                onChange={(e)=>setExpiration(e.target.value)}
               >
-                <MenuItem value={1}>天</MenuItem>
+                <MenuItem value='minute'>分钟</MenuItem>
+                <MenuItem value='hour'>小时</MenuItem>
+                <MenuItem value='day'>天</MenuItem>
+                <MenuItem value='week'>周</MenuItem>
 
-                </Select>
+              </Select>
             </Box>
             <Box display="flex" flexDirection="column" marginTop="16px" className={classes.effectiveTimeBox}>
               <Box marginBottom="8px">执行</Box>
@@ -316,22 +374,25 @@ export const StopLimitPriceBox: FC = () => {
                 <Select
                   labelId="demo-customized-select-label"
                   id="demo-customized-select"
-                  value="1"
+                  value={timeInForce}
                   input={<BootstrapInput />}
+                  onChange={(e)=>setTimeInForce(e.target.value)}
                 >
-                  <MenuItem value={1}>默认</MenuItem>
-                  </Select>
-                  <HtmlTooltip
-                    title={
-                      <React.Fragment>
-                        <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">默认执行</Typography>
-                        <span>您的订单将在开盘时填写任何交叉订单。如果您的订单未完整填写，它将保持未结状态，直至填妥、取消或过期。</span>
-                      </React.Fragment>
-                    }>
-                    <Box display="flex" alignItems="center" fontSize="16px" sx={{ cursor: 'help' }}>
-                      <IconFont name="icon-wenhao-xianxingyuankuang" color="#fff"></IconFont>
-                    </Box>
-                  </HtmlTooltip>
+                  <MenuItem value="GTT">有效时间截止</MenuItem>
+                  <MenuItem value="FOK">全部成交否则取消指令</MenuItem>
+                  <MenuItem value="IOC">立即否则取消</MenuItem>
+                </Select>
+                <HtmlTooltip
+                  title={
+                    <React.Fragment>
+                      <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">默认执行</Typography>
+                      <span>您的订单将在开盘时填写任何交叉订单。如果您的订单未完整填写，它将保持未结状态，直至填妥、取消或过期。</span>
+                    </React.Fragment>
+                  }>
+                  <Box display="flex" alignItems="center" fontSize="16px" sx={{ cursor: 'help' }}>
+                    <IconFont name="icon-wenhao-xianxingyuankuang" color="#fff"></IconFont>
+                  </Box>
+                </HtmlTooltip>
               </Box>
             </Box>
 
@@ -433,7 +494,12 @@ export const StopLimitPriceBox: FC = () => {
                 <span className={classes.valuation}>$38.28</span>
               </Box>
             </Box>
-            <Btn className={`${classes.placeOrder} ${directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}>下止损单</Btn>
+            <Btn
+             disabled={!amount}
+             className={`${classes.placeOrder} 
+             ${!amount ? '' : directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
+             onClick={() =>handlerPlaceOrder()}
+            >下止损单</Btn>
           </Box>
         </Box>
 
