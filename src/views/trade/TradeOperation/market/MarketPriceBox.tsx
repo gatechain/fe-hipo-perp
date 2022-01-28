@@ -145,6 +145,7 @@ export const MarketPriceBox: FC = () => {
   const dispatch = useDispatch()
   const marketType = useSelector((state: RootState) => state.market.marketType)
   const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
+  const asset = useSelector((state: RootState) => state.market.currentAsset)
 
   const handlerPlaceOrder = async () => {
     try {
@@ -212,7 +213,7 @@ export const MarketPriceBox: FC = () => {
                 color="#c3c2d4"
                 borderRadius="2px"
                 letterSpacing=".06em"
-              >ATOM</Box>
+              >{ asset }</Box>
             </Box>
             <Box
               display="flex"

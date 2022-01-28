@@ -3,7 +3,7 @@ import { Box } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import Image from 'next/image'
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsShowSymbolList, setMarketSymbol } from 'src/store/market';
+import { setCurrentAsset, setIsShowSymbolList, setMarketSymbol } from 'src/store/market';
 import { RootState } from 'src/store';
 
 const useStyles = makeStyles({
@@ -52,13 +52,14 @@ export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props)
   const dispatch = useDispatch()
   const currentSymbol = useSelector((state: RootState) => state.market.marketSymbol)
 
-  const handlerChangeSymbol = (symbol: string) => {
+  const handlerChangeSymbol = ({ symbol, base_asset }) => {
     dispatch(setMarketSymbol(symbol))
     dispatch(setIsShowSymbolList(false))
+    dispatch(setCurrentAsset(base_asset))
   }
    
   return (
-    <Box className={`${classes.box} ${currentSymbol == props.market ? '' : classes.boxHover}`} onClick={()=>handlerChangeSymbol(props.market)}>
+    <Box className={`${classes.box} ${currentSymbol == props.market ? '' : classes.boxHover}`} onClick={()=>handlerChangeSymbol(props)}>
       {/* top */}
       <Box display="flex" alignItems="center" justifyContent="space-between" height={54}>
         {/* left */}
