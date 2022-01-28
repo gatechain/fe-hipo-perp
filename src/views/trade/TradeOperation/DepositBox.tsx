@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Box, Button, InputBase, styled } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { AssetSelect } from './AssetSelect'
@@ -6,9 +6,10 @@ import { OperationType } from 'src/store/trade/const';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { setOperationType } from 'src/store/trade';
-import { Ether, ROUTER_ADDRESS } from 'src/sdk/ether';
+import { Ether } from 'src/sdk/ether';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useWeb3React } from '@web3-react/core';
+import { Alert } from 'src/components/Alert';
 
 const useStyles = makeStyles({
   close: {
@@ -73,14 +74,38 @@ const Input = styled(InputBase)({
   borderRadius: '8px',
 })
 
+const contractAddress = '0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293'
+const tokenAddress = '0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65'
+
+enum ButtonStatus {
+  deposit,
+  approve,
+  loading,
+}
+
 export const DepositBox: FC = () => {
   const classes = useStyles()
   const { account } = useWeb3React()
   const [amount, setAmount] = useState('')
+  const ether = useRef<Ether>(null)
+  const [tokenInfo, setTokenInfo] = useState<any>({})
+  const [btnStatus, setBtnStatus] = useState(ButtonStatus.deposit)
   const {
     trade: { operationType },
   } = useSelector((state: RootState) => state)
   const dispatch = useDispatch()
+
+
+  useEffect(() => {
+    ether.current = Ether.getInstance()
+    async function init() {
+      const tokenResult = await ether.current.getTokenDetailV2(tokenAddress)
+      console.log(tokenResult)
+      setTokenInfo(tokenResult)
+    }
+    init()
+  }, [ether])
+
   const handlerOperation = (type: OperationType) => {
     if (operationType == type) {
       dispatch(setOperationType(null))
@@ -89,41 +114,62 @@ export const DepositBox: FC = () => {
     }
   }
 
-  const handleSubmit = () => {
-    async function applet() {
-      const ether = Ether.getInstance()
-      const contr = ether.getPerpetualContract('0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293')
-      const tokenInfo = await ether.getTokenDetailV2('0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65')
-      const amountBig = BigNumber.from(10).pow(tokenInfo.decimals).mul(amount)
-      const allowance = await ether.getTokenAllowance('0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65', account, ROUTER_ADDRESS)
-      console.log(allowance.toString(), 'allowance.toString()')
-      console.log(amount)
-      console.log(amountBig.toString(), 'amountBig.toString()')
-
-      console.log(amountBig.gt(allowance))
-      if (amountBig.lt(allowance)) {
-        ether.approve('0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65', '0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293', amountBig.toString())
-      } else {
-        contr.deposit(account, '0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65', amountBig.toString()).then(console.log).catch(console.log)
-      }
+  async function checkApplet(amountBig: BigNumber) {
+    const allowanceRes = await ether.current.getTokenAllowance(tokenAddress, account, contractAddress)
+    if (amountBig.gt(allowanceRes)) {
+      setBtnStatus(ButtonStatus.approve)
+    } else {
+      setBtnStatus(ButtonStatus.deposit)
     }
-
-    applet()
-
-
-    // sign((data) => {
-    // console.log(data)
-    // API.postDeposit({
-    //   ethereum_address: data.ethereum_address,
-    //   signature: data.signature,
-    //   txn_hash: '0x768dc15ab064e2139e6d150ab830d77e1dadeeb3eda18e4913e43454ffd69688',
-    //   amount,
-    //   timestamp: data.timestamp,
-    // })
-    // API.getUser()
-    // })
-
   }
+
+  const handleSubmit = () => {
+    (async function () {
+      const contr = ether.current.getPerpetualContract(contractAddress)
+      const amountBig = BigNumber.from(10).pow(tokenInfo.decimals).mul(amount || 0)
+      try {
+        await contr.deposit(account, tokenAddress, amountBig.toString())
+        Alert.success('充值成功')
+        dispatch(setOperationType(null))
+      } catch (error) {
+        Alert.error('充值失败')
+      }
+    })()
+  }
+
+  const handleApprove = () => {
+    const amountBig = BigNumber.from(10).pow(tokenInfo.decimals).mul(amount || 0)
+    setBtnStatus(ButtonStatus.loading)
+    ether.current.approve(tokenAddress, '0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293', amountBig.toString()).then(() => {
+      setTimeout(() => {
+        Alert.success('授权成功')
+        setBtnStatus(ButtonStatus.deposit)
+      }, 15000)
+    }).catch(() => {
+      setBtnStatus(ButtonStatus.approve)
+      Alert.error('授权失败')
+    })
+  }
+
+  const changeAmount = (value: string) => {
+    setAmount(value)
+    checkApplet(BigNumber.from(10).pow(tokenInfo.decimals).mul(value || 0))
+  }
+
+  const ButtonMap = (key: ButtonStatus) => {
+    const buttonStyle = {
+      width: '100%',
+      backgroundColor: '#5973fe',
+      borderRadius: '8px',
+    }
+    const buttonObj = {
+      [ButtonStatus.deposit]: <Button sx={buttonStyle} onClick={handleSubmit} variant="contained">确认充值</Button>,
+      [ButtonStatus.approve]: <Button sx={buttonStyle} onClick={handleApprove} variant="contained">授权</Button>,
+      [ButtonStatus.loading]: <Button sx={buttonStyle}>loading...</Button>,
+    }
+    return buttonObj[key]
+  }
+
   return (
     <Box display="flex" flexDirection="column" width="100%" height="100%">
       <Box
@@ -164,7 +210,7 @@ export const DepositBox: FC = () => {
               <Box display="flex" flexDirection="column" width='100%' marginBottom="10px">
                 <div className={classes.itemK}>金额</div>
                 <div className={classes.itemV} style={{ backgroundColor: '#232334' }}>
-                  <Input placeholder="0.0000" onChange={(e) => setAmount(e.target.value)}></Input>
+                  <Input placeholder="0.0000" onChange={(e) => changeAmount(e.target.value)}></Input>
                 </div>
               </Box>
               <Box
@@ -196,18 +242,7 @@ export const DepositBox: FC = () => {
               fontWeight={500}
               color="#c3c2d4"
             >
-              <Box
-                width="100%"
-                color="#6f6e84">
-                <Button
-                  onClick={handleSubmit}
-                  variant="contained"
-                  sx={{
-                    width: '100%',
-                    backgroundColor: '#5973fe',
-                    borderRadius: '8px',
-                  }}>确认充值</Button>
-              </Box>
+              <Box width="100%" color="#6f6e84">{ButtonMap(btnStatus)}</Box>
             </Box>
           </Box>
         </Box>

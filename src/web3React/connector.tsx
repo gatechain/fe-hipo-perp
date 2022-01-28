@@ -17,7 +17,7 @@ export enum ConnectorNames {
   // Torus = 'Torus',
 }
 
-export const injected = new InjectedConnector({ supportedChainIds: [1, 3, 85] })
+export const injected = new InjectedConnector({ supportedChainIds: [85] })
 
 
 export const connectorsByName: { [connectorName in ConnectorNames]: any } = {

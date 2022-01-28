@@ -29,6 +29,10 @@ export class Axios {
 
   interceptors() {
     this.instance.interceptors.response.use((response) => {
+      if (response.status === 401) {
+        localStorage.removeItem('token')
+        window.location.reload()
+      }
       if (response.status === 200 && response.data.code === 0) {
         return response.data.data
       }

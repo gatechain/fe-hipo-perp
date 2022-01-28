@@ -11,7 +11,7 @@ const useStyles = makeStyles({
     justifyContent: 'end',
     flex: '0 0 32%',
     paddingRight: '4px',
-    zIndex:2,
+    zIndex: 2,
   },
   priceBox: {
     display: 'flex',
@@ -45,17 +45,17 @@ export const OrderBookTitle: FC = () => {
   const classes = useStyles()
   return (
     <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        fontSize={12}
-        fontWeight={400}
-        color="#6f6e84"
-        px={2}
-        height={28}>
-        <Box className={classes.amountBox}>数量 <Box className={classes.lableUnit}>Atom</Box></Box>
-        <Box className={classes.priceBox}>价格<Box className={classes.lableUnit}>usd</Box></Box>
-        <Box className={classes.orderBox}>我的订单</Box>
-      </Box>
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      fontSize={12}
+      fontWeight={400}
+      color="#6f6e84"
+      px={2}
+      height={28}>
+      <Box className={classes.amountBox}>数量 <Box className={classes.lableUnit}>BTC</Box></Box>
+      <Box className={classes.priceBox}>价格<Box className={classes.lableUnit}>USD</Box></Box>
+      <Box className={classes.orderBox}>我的订单</Box>
+    </Box>
   )
 }

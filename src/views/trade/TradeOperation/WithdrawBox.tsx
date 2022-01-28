@@ -9,6 +9,7 @@ import { OperationType } from 'src/store/trade/const';
 import { setOperationType } from 'src/store/trade';
 import { API } from 'src/Api';
 import { Alert } from 'src/components/Alert';
+import { fetchUser } from 'src/store/network';
 
 const useStyles = makeStyles({
   close: {
@@ -132,6 +133,8 @@ export const WithDrawBox: FC = () => {
     API.postWithdraw({ amount }).then(() => {
       setIsConfirm(false)
       dispatch(setOperationType(null))
+      Alert.success('提现成功')
+      dispatch(fetchUser())
     }).catch(err => {
       Alert.error(err.msg)
     })

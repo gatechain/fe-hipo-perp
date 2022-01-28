@@ -90,8 +90,8 @@ export const Item: FC<ItemProps> = ({ type, direction, data = [] }) => {
         }}>
 
         <div className={classes.amountBox}><span className={`${classes.span} ${type == 'trade' ? (direction == 'buy' ? classes.tradeBuyColor : classes.tradeSellColor) : ''}`}>{data[0] || 0}</span></div>
-        <div className={classes.priceBox}><span className={classes.span}>{data[0] || 0}</span></div>
-        <div className={classes.orderBox}><span className={classes.span}>{data[1] || 0}</span></div>
+        <div className={classes.priceBox}><span className={classes.span}>{data[1] || 0}</span></div>
+        <div className={classes.orderBox}><span className={classes.span}>0</span></div>
       </Box>
     </Box>
   )

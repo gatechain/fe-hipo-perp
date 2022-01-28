@@ -11,6 +11,7 @@ export interface TradeState {
   account: string
   openSignModal: boolean
   userInfo: UserInfo
+  accountInfo: any
 }
 
 const initialState: TradeState = {
@@ -31,6 +32,7 @@ const initialState: TradeState = {
     created_at: '2022-01-20 10:29:08',
     updated_at: '2022-01-20 10:29:08',
   },
+  accountInfo: {},
 }
 
 export const NetworkSlice = createSlice({
@@ -52,21 +54,40 @@ export const NetworkSlice = createSlice({
     setOpenSignModal(state, action: PayloadAction<boolean>) {
       state.openSignModal = action.payload
     },
+    setUserDetail(state, action: PayloadAction<{ user: any, account: any }>) {
+      state.userInfo = action.payload.user
+      state.accountInfo = action.payload.account
+    },
   },
 })
 
-export const { setConnectStatus, setIsExists, setConnectButtonStatus, setAccount, setOpenSignModal } = NetworkSlice.actions
+export const { setConnectStatus, setIsExists, setConnectButtonStatus, setAccount, setOpenSignModal, setUserDetail } = NetworkSlice.actions
 
 export default NetworkSlice.reducer
-
+export const fetchUser = (): AppThunk => async dispatch => {
+  try {
+    const res = await API.getUser()
+    dispatch(setUserDetail(res))
+    return
+  } catch (error) {
+    console.log(error)
+    // TODO
+    dispatch(setIsExists(false))
+  }
+}
 // 查看地址是否已注册
 export const fetchIsExists = (ethereum_address: string): AppThunk => async dispatch => {
   try {
     const res = await API.getExists({ ethereum_address })
     const token = localStorage.getItem('token')
     const exists = token ? res.exists : false
+    if (exists) {
+      dispatch(fetchUser())
+    }
     dispatch(setIsExists(exists))
   } catch (error) {
     dispatch(setIsExists(false))
   }
 }
+
+
