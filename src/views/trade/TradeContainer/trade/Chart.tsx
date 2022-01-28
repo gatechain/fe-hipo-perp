@@ -116,6 +116,7 @@ const Chart: FC<Props> = ({ seriesType, data }) => {
     }
 
     syncToTheme('Dark')
+    chart.timeScale().fitContent()
     currSeries.setData(data);
   }
 
