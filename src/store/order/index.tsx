@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { API } from 'src/Api'
 import { OrderType } from './const'
 
 export interface TypeState {
@@ -32,3 +33,17 @@ export const OrderSlice = createSlice({
 export const { setOrderType, setOrdersList, setSuccessOrderList } = OrderSlice.actions
 
 export default OrderSlice.reducer
+
+export const loadOrderList = (market: string, side: string) => async dispatch => {
+  try {
+    const list = await API.getOrders({
+      market: market || '', 
+      side: side || '',
+    })
+    dispatch(setOrdersList(list))
+    return
+  } catch (error) {
+    console.log(error)
+    dispatch(setOrdersList(null))
+  }
+}

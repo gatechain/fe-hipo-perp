@@ -190,7 +190,7 @@ export const StopLimitPriceBox: FC = () => {
   
   const handlerPlaceOrder = async () => { 
     try {
-      const result = await API.postPlaceOrder({
+      await API.postPlaceOrder({
         market: marketSymbol.replace('-', '_'),
         side: directionType.toUpperCase(),
         type: marketType.toLocaleUpperCase(),
@@ -201,18 +201,15 @@ export const StopLimitPriceBox: FC = () => {
         price: price.toString(),
         limit_fee: '0.05',
       })
-      if (result.code == 0) {
-        setIsShowClose(false)
-        setIsHighRankingOption(true)
-        setPirce(null)
-        setTimeInForce('GTT')
-        setExpiration('day')
-        setInputValue(28)
-      } else { 
-        Alert.error(result.data)
-      }
+      setIsShowClose(false)
+      setIsHighRankingOption(true)
+      setPirce(null)
+      setTimeInForce('GTT')
+      setExpiration('day')
+      setInputValue(28)
+      Alert.success('下单成功')
     } catch (error) {
-      console.error(error)
+      Alert.error('下单失败')
     }
   }
   

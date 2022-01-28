@@ -211,7 +211,7 @@ export const TrackStopLimitPriceBox: FC = () => {
 
   const handlerPlaceOrder = async () => {
     try {
-      const result = await API.postPlaceOrder({
+      await API.postPlaceOrder({
         market: marketSymbol.replace('-', '_'),
         side: directionType.toUpperCase(),
         type: marketType.toLocaleUpperCase(),
@@ -222,14 +222,11 @@ export const TrackStopLimitPriceBox: FC = () => {
         price: '0',
         limit_fee: '0.05',
       })
-      if (result.code == 0) {
-        setIsShowClose(false)
-        setIsHighRankingOption(true)
-        setExpiration('day')
-        setInputValue(28)
-      } else {
-        Alert.error(result.data)
-      }
+      setIsShowClose(false)
+      setIsHighRankingOption(true)
+      setExpiration('day')
+      setInputValue(28)
+      Alert.success('下单成功')
     } catch (error) {
       console.error(error)
     }

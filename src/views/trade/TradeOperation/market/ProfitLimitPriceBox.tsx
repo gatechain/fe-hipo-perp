@@ -9,6 +9,7 @@ import { DirectionType } from 'src/store/market/const';
 import { IconFont } from 'src/components/IconFont';
 import moment from 'moment';
 import { API } from 'src/Api';
+import { Alert } from 'src/components/Alert';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -188,7 +189,7 @@ export const ProfitLimitPriceBox: FC = () => {
   
   const handlerPlaceOrder = async () => { 
     try {
-      const result = await API.postPlaceOrder({
+      await API.postPlaceOrder({
         market: marketSymbol.replace('-', '_'),
         side: directionType.toUpperCase(),
         type: marketType.toLocaleUpperCase(),
@@ -199,15 +200,13 @@ export const ProfitLimitPriceBox: FC = () => {
         price: price.toString(),
         limit_fee: '0.05',
       })
-      if (result.code == 0) {
-        setIsShowClose(false)
-        setIsHighRankingOption(true)
-        setPirce(null)
-        setTimeInForce('GTT')
-        setExpiration('day')
-        setInputValue(28)
-      } else { 
-      }
+      setIsShowClose(false)
+      setIsHighRankingOption(true)
+      setPirce(null)
+      setTimeInForce('GTT')
+      setExpiration('day')
+      setInputValue(28)
+      Alert.success('下单成功')
     } catch (error) {
       console.error(error)
     }

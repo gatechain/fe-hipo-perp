@@ -1,10 +1,10 @@
 import { Box } from '@material-ui/core'
-import { FC, useEffect, useState } from 'react'
+import { FC, useMemo } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { OrderItem } from './OrderItem'
-import { useDispatch } from 'react-redux'
-import { API } from 'src/Api'
-import { setOrdersList } from 'src/store/order'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from 'src/store'
+import { loadOrderList } from 'src/store/order'
 const useStyles = makeStyles({
   unit: {
     fontSize: '10px',
@@ -35,20 +35,11 @@ const useStyles = makeStyles({
 
 export const Order: FC = () => {
   const classes = useStyles()
-  const [orderList, setOrderList] = useState(null)
+  const orderList = useSelector((state: RootState) => state.order.orderList)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    API.getOrders({
-      market: '', //symbol.replace('-', '_'),
-      side: '', //side.toUpperCase()
-    }).then((resolve) => {
-      setOrderList(resolve || null)
-      dispatch(setOrdersList(resolve))
-    }).catch(err => {
-      console.log(err)
-      setOrderList(null)
-    })
+  useMemo(() => {
+    dispatch(loadOrderList('', ''))
   }, [dispatch]);
 
   return (

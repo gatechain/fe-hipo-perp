@@ -10,6 +10,7 @@ import { IconFont } from 'src/components/IconFont';
 import { API } from 'src/Api';
 import { Alert } from 'src/components/Alert';
 import { fetchUser } from 'src/store/network';
+import { loadOrderList } from 'src/store/order';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -162,6 +163,7 @@ export const MarketPriceBox: FC = () => {
       })
       Alert.success('下单成功')
       dispatch(fetchUser())
+      dispatch(loadOrderList('', ''))
     } catch (error) {
       console.error(error)
     }

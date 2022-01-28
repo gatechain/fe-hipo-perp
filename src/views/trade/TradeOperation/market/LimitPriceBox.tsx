@@ -226,7 +226,7 @@ export const LimitPriceBox: FC = () => {
 
   const handlerPlaceOrder = async () => {
     try {
-      const result = await API.postPlaceOrder({
+      await API.postPlaceOrder({
         market: marketSymbol.replace('-', '_'),
         side: directionType.toUpperCase(),
         type: marketType.toLocaleUpperCase(),
@@ -244,8 +244,7 @@ export const LimitPriceBox: FC = () => {
       setExpiration('day')
       setInputValue(28)
       setPostOnly(false)
-      console.log(result)
-      Alert.error('result')
+      Alert.success('下单成功')
     } catch (error) {
       console.log('error')
       console.error(error)
