@@ -6,6 +6,7 @@ export interface TypeState {
   directionType: DirectionType,
   marketSymbol: string,
   isShowSymbolList: boolean,
+  currentAsset: string,
 }
 
 const initialState: TypeState = {
@@ -13,6 +14,7 @@ const initialState: TypeState = {
   directionType: DirectionType.sell,
   marketSymbol: 'ETH-USD',
   isShowSymbolList: false,
+  currentAsset:'ETH',
 }
 
 export const MarketSlice = createSlice({
@@ -31,9 +33,12 @@ export const MarketSlice = createSlice({
     setIsShowSymbolList: (state, action: PayloadAction<boolean>) => { 
       state.isShowSymbolList = action.payload
     },
+    setCurrentAsset: (state, action: PayloadAction<string>) => { 
+      state.currentAsset = action.payload
+    },
   },
 })
 
-export const { setMarketType, setDirectionType, setMarketSymbol, setIsShowSymbolList } = MarketSlice.actions
+export const { setMarketType, setDirectionType, setMarketSymbol, setIsShowSymbolList, setCurrentAsset } = MarketSlice.actions
 
 export default MarketSlice.reducer

@@ -171,6 +171,7 @@ export const StopLimitPriceBox: FC = () => {
   const [inputValue, setInputValue] = useState(28)
   const marketType = useSelector((state: RootState) => state.market.marketType)
   const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
+  const asset = useSelector((state: RootState) => state.market.currentAsset)
 
   const expirationUTC = useMemo(() => {
     if (expiration == 'day') { 
@@ -262,7 +263,7 @@ export const StopLimitPriceBox: FC = () => {
                 color="#c3c2d4"
                 borderRadius="2px"
                 letterSpacing=".06em"
-              >ATOM</Box>
+              >{ asset }</Box>
             </Box>
             <Box
               display="flex"
