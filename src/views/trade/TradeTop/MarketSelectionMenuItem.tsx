@@ -47,19 +47,19 @@ interface MarketSelectionMenuItemProps {
   next_funding_rate: string,
   open_interest: string,
 }
-export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props) => {
+export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = ({ market, base_asset, base_asset_name, index_price, volume_24h, next_funding_rate, open_interest }) => {
   const classes = useStyles()  
   const dispatch = useDispatch()
   const currentSymbol = useSelector((state: RootState) => state.market.marketSymbol)
 
-  const handlerChangeSymbol = ({ symbol, base_asset }) => {
+  const handlerChangeSymbol = (symbol: string, baseAsset: string) => {
     dispatch(setMarketSymbol(symbol))
     dispatch(setIsShowSymbolList(false))
-    dispatch(setCurrentAsset(base_asset))
+    dispatch(setCurrentAsset(baseAsset))
   }
    
   return (
-    <Box className={`${classes.box} ${currentSymbol == props.market ? '' : classes.boxHover}`} onClick={()=>handlerChangeSymbol(props)}>
+    <Box className={`${classes.box} ${currentSymbol == market ? '' : classes.boxHover}`} onClick={()=>handlerChangeSymbol(market, base_asset)}>
       {/* top */}
       <Box display="flex" alignItems="center" justifyContent="space-between" height={54}>
         {/* left */}
@@ -72,7 +72,7 @@ export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props)
             }}>
             <Image width={24} height={24} src="/images/btc.svg" alt=""></Image>
           </Box>
-          <span className={classes.coinLeft}>{ props.base_asset_name}</span>
+          <span className={classes.coinLeft}>{ base_asset_name}</span>
           <Box
             sx={{
               marginLeft: '4px',
@@ -86,7 +86,7 @@ export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props)
               borderRadius: '2px',
               letterSpacing: '.6px',
             }}>
-            { props.base_asset}
+            { base_asset}
           </Box>
         </Box>
         {/* right */}
@@ -97,7 +97,7 @@ export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props)
           gap: '4px',
           boxSizing: 'border-box',
         }} >
-          <span className={classes.price}>${ props.index_price}</span>
+          <span className={classes.price}>${ index_price}</span>
           <Box display="flex" flexDirection="row" alignItems="center"
             sx={{ 
               fontSize: '13px',
@@ -129,7 +129,7 @@ export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props)
             }}
           >24小时交易量</Box>
           <Box className={classes.spanValue}>
-            <span>${ props.volume_24h}</span>
+            <span>${ volume_24h}</span>
           </Box>
         </Box>
         <Box display="flex" flexDirection="column" justifyContent="center" >
@@ -143,7 +143,7 @@ export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props)
           >未平仓合约</Box>
           <Box display="flex" flexDirection="row" alignItems="center" className={classes.spanValue}
             >
-            <span>{ props.open_interest }</span>
+            <span>{ open_interest }</span>
             <Box
               sx={{
                 padding: '0 3px 0 4px',
@@ -156,7 +156,7 @@ export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props)
                 marginLeft: '4px',
                 fontSize:'10px',
               }}
-            >{ props.base_asset }</Box>
+            >{ base_asset }</Box>
           </Box>
         </Box>
         <Box display="flex" flexDirection="column" alignItems="flex-end" justifyContent="center" flex="0 0 31%">
@@ -169,7 +169,7 @@ export const MarketSelectionMenuItem: FC<MarketSelectionMenuItemProps> = (props)
             }}
           >资金利率</Box>
           <Box className={classes.spanValue}>
-            <span>{ props.next_funding_rate }%</span>
+            <span>{ next_funding_rate }%</span>
           </Box>
         </Box>
       </Box>
