@@ -2,9 +2,8 @@ import { Box, ButtonBase, Drawer, styled, Tooltip  } from '@material-ui/core'
 import  React, { FC } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import Image from 'next/image'
-import { DrawerDetails } from './DrawerDetails'
 import { IconFont } from 'src/components/IconFont'
-import { OrderTypeForC } from 'src/store/order/const'
+import { OrderTimeInForceMapping, OrderTypeMapping } from 'src/store/order/const'
 
 const useStyles = makeStyles({
   itemBox: {
@@ -69,6 +68,27 @@ const useStyles = makeStyles({
       borderRadius: '8px',
     },
   },
+  drawerContent: {
+    display:'flex',
+    flexDirection: 'column',
+    '&>div': {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      fontSize: '13px',
+      height:'32px',
+      borderBottom:'1px solid rgb(45, 45, 61)',
+    },
+    '&>div:last-child': {
+      borderBottom: 'none',
+    },
+  },
+  contentK: {
+    color:'rgb(111, 110, 132)',
+  },
+  contentV: {
+    
+  },
 })
 
 const CancelBtn = styled(ButtonBase)({
@@ -81,6 +101,7 @@ const CancelBtn = styled(ButtonBase)({
   color: '#ff5353',
 })
 interface OrderItemProps { 
+  market: string,
   status: string,
   side: string,
   size: string, //数量
@@ -90,6 +111,7 @@ interface OrderItemProps {
   type: string,
   trigger_price: string,
   expire_at: string,
+  time_in_force: string,
 }
 export const OrderItem: FC<OrderItemProps> = (props) => {
   const classes = useStyles()
@@ -108,7 +130,6 @@ export const OrderItem: FC<OrderItemProps> = (props) => {
         }
         setState({ 'right' : open });
       };
-
   return (
     <Box>  
        <React.Fragment key="right"> 
@@ -122,7 +143,7 @@ export const OrderItem: FC<OrderItemProps> = (props) => {
                 <IconFont name="icon-yuanquankong" color='#ff5353'></IconFont>
               }
             </Box>
-            <Box display="flex" alignItems="center" fontSize="14px" marginLeft="10px">{ OrderTypeForC[props.type] }</Box>
+            <Box display="flex" alignItems="center" fontSize="14px" marginLeft="10px">{ OrderTypeMapping[props.type] }</Box>
           </Box>
           <Box display="flex" alignItems="center" flexBasis="10%" width="10%" >
             <Box className={`${classes.direction} ${props.side.toLowerCase() == 'buy' ? classes.buy : classes.sell}`}>{ props.side }</Box>
@@ -168,7 +189,7 @@ export const OrderItem: FC<OrderItemProps> = (props) => {
                   <Box display="flex" height="24px" width="24px" marginRight="10px">
                     <Image width="24px" height="24px" src="/images/btc.svg" alt=""></Image>
                   </Box>
-                  <Box display="flex">限价订单</Box>
+                  <Box display="flex">{ OrderTypeMapping[props.type]}订单</Box>
                 </Box>
                 <Box className={classes.closeDrawer} fontSize="20px"
                   onClick={toggleDrawer('right', false)} >
@@ -176,19 +197,43 @@ export const OrderItem: FC<OrderItemProps> = (props) => {
                 </Box>
               </Box>
               <Box flexGrow={1} display="flex" flexDirection="column" justifyContent="space-between" padding="0 28px 24px 28px">
-                <Box display="flex" flexDirection="column" >
-                  {
-                    Object.keys(props).map((item, index) => { 
-                      return (
-                        <DrawerDetails
-                          key={index}
-                          k={ item }
-                          v={props[item]}
-                        />
-                      )
-                    })
-                  }
-                  
+                <Box className={classes.drawerContent}  >
+                  <Box>  
+                    <Box className={classes.contentK}>市场</Box>
+                    <Box>{ props.market }</Box>
+                  </Box>
+                  <Box>  
+                    <Box className={classes.contentK}>买/卖</Box>
+                    <Box className={`${classes.direction} ${props.side.toLowerCase() == 'buy' ? classes.buy : classes.sell}`}>{ props.side }</Box>
+                  </Box>
+                  <Box>  
+                    <Box className={classes.contentK}>状态</Box>
+                    <Box>{ OrderTypeMapping[props.type] }</Box>
+                  </Box>
+                  <Box>  
+                    <Box className={classes.contentK}>数量</Box>
+                    <Box>{ props.size }</Box>
+                  </Box>
+                  <Box>  
+                    <Box className={classes.contentK}>已全部成交</Box>
+                    <Box>{ Number(props.size) - Number(props.remaining_size)}</Box>
+                  </Box>
+                  <Box>  
+                    <Box className={classes.contentK}>价格</Box>
+                    <Box>${ props.price }</Box>
+                  </Box>
+                  <Box>  
+                    <Box className={classes.contentK}>有效时间</Box>
+                    <Box>{  OrderTimeInForceMapping[props.time_in_force]}</Box>
+                  </Box>
+                  <Box>  
+                    <Box className={classes.contentK}>有效至</Box>
+                    <Box>{ props.expire_at }</Box>
+                  </Box>
+                  <Box>  
+                    <Box className={classes.contentK}>创建时间</Box>
+                    <Box>{ props.created_at }</Box>
+                  </Box>
                 </Box>
                 <CancelBtn>取消订单</CancelBtn>
               </Box>

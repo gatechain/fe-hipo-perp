@@ -74,16 +74,7 @@ export const Trade: FC = () => {
   }
   const chartType = useSelector((state: RootState) => state.chart.chartType)
   const orderList = useSelector((state: RootState) => state.order.orderList)
-  const getTypeEle = useCallback(() => { 
-    const type = orderType 
-    const actions = {
-      [OrderType.position]:<Position />,
-      [OrderType.order]: <Order />,
-      [OrderType.allSuccess]: <TransactionOrder />,
-      [OrderType.pay]: <PayOrder/>,
-    }
-    return actions[type]
-  }, [orderType])
+  const allSuccessOrderList = useSelector((state: RootState) => state.order.successOrderList)
 
   const getChartTypeEle = useCallback(() => { 
     const type = chartType 
@@ -148,7 +139,7 @@ export const Trade: FC = () => {
             <Box
               className={`${classes.item} ${OrderType.allSuccess == orderType ? classes.active : ''}`}
               onClick={()=>handlerType(OrderType.allSuccess)}
-            >全部成交<Box className={classes.itemCount}>0</Box></Box>
+            >全部成交<Box className={classes.itemCount}>{ allSuccessOrderList.length}</Box></Box>
             <Box
               className={`${classes.item} ${OrderType.pay == orderType ? classes.active : ''}`}
               onClick={()=>handlerType(OrderType.pay)}
@@ -156,7 +147,7 @@ export const Trade: FC = () => {
           </Box>
           <Box >
             <Box
-              className={`${classes.iconBox} ${isShowPositionOrder == true ? '' : classes.iconActive}`}
+              className={`${classes.iconBox} ${isShowPositionOrder ? '' : classes.iconActive}`}
               onClick={() => setIsShowPositionOrder(!isShowPositionOrder)}
             >
               <IconFont name='icon-xiangxia1' color='#6f6e84' />
@@ -168,7 +159,10 @@ export const Trade: FC = () => {
         {
           isShowPositionOrder &&
           <Box flexGrow={1} display="flex" flexDirection="column" borderTop='1px solid #2d2d3d' >
-            { getTypeEle() }
+              <Box flexGrow={1} display={OrderType.position == orderType ? 'flex' : 'none'} flexDirection="column"><Position /></Box>
+              <Box flexGrow={1} display={OrderType.order == orderType ? 'flex' : 'none'} flexDirection="column"><Order /></Box>
+              <Box flexGrow={1} display={OrderType.allSuccess == orderType ? 'flex' : 'none'} flexDirection="column"><TransactionOrder /></Box>
+              <Box flexGrow={1} display={ OrderType.pay == orderType ? 'flex' : 'none'} flexDirection="column"><PayOrder /></Box>
           </Box>
         }
       </Box>

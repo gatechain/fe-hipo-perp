@@ -10,6 +10,7 @@ import ConnectWallet from 'src/components/ConnectWallet';
 import { ConnectButtonStatus } from 'src/store/network/const';
 import { HpButton } from 'src/components/HpButton';
 import { setOpenSignModal } from 'src/store/network';
+import { formatNumber } from 'src/utils';
 
 const useStyles = makeStyles(() => ({
   explain: {
@@ -98,12 +99,12 @@ const accountInfoList: AccountInfoItem[] = [
   {
     title: '购买力',
     explain: '增加您ATOM-USD头寸的总可用购买力。您的购买力将根据您选择的市场而变化。',
-    getValue: (value) => '$' + Number(value.free_collateral) * 20,
+    getValue: (value) => '$' + formatNumber(Number(value.free_collateral) * 10),
   },
   {
     title: '账户净值',
     explain: '您的账户总价值。',
-    getValue: (value) => '$' + value.free_collateral,
+    getValue: (value) => '$' + formatNumber(value.free_collateral),
   },
   // {
   //   title: '杠杆使用',

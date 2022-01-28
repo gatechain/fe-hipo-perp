@@ -10,3 +10,8 @@ export enum DirectionType {
   sell = 'sell',
 }
 
+export enum OrderSideMapping { 
+  BUY = '买单',
+  SELL = '卖单',
+}
+
