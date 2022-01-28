@@ -49,31 +49,31 @@ const useStyles = makeStyles({
     color: '#f7f7f7',
   },
   highRanking: {
-    display:'flex',
-    justifyContent:'space-between',
-    alignItems:'center',
-    fontSize:'13px',
-    color:'#6f6e84',
-    height:'44px',
-    padding:'0 8px 0 4px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: '13px',
+    color: '#6f6e84',
+    height: '44px',
+    padding: '0 8px 0 4px',
     borderTop: '1px solid #2d2d3d',
     cursor: 'pointer',
   },
   effectiveTimeBox: {
-    display:'flex',
+    display: 'flex',
     fontSize: '13px',
     fontWeight: 500,
     color: '#c3c2d4',
     marginLeft: '4px',
-    marginBottom:'8px',
+    marginBottom: '8px',
   },
   closeDetailBox: {
-    display:'flex',
-    alignItems:'center',
-    justifyContent:'center',
-    width:'32px',
-    height:'32px',
-    color:'#c3c2d4',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '32px',
+    height: '32px',
+    color: '#c3c2d4',
     cursor: 'pointer',
     fontWeight: 500,
     fontSize: '22px',
@@ -93,7 +93,7 @@ const useStyles = makeStyles({
   },
 })
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} placement="top"/>
+  <Tooltip {...props} classes={{ popper: className }} placement="top" />
 ))(() => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: '#454258',
@@ -102,7 +102,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
     fontSize: '13px',
     lineHeight: '16px',
     margin: '10px 10px 10px 30px',
-    padding:'12px',
+    padding: '12px',
     filter: 'drop-shadow(0 0 44px #171722)',
     overflow: 'hidden',
   },
@@ -110,7 +110,7 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 const Btn = styled(Button)({
   display: 'flex',
   alignItems: 'center',
-  padding:'0 10px',
+  padding: '0 10px',
   minWidth: '0',
   fontWeight: 500,
   fontSize: '13px',
@@ -145,7 +145,7 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
     borderRadius: 4,
     position: 'relative',
     backgroundColor: '#232334',
-    color:'#f7f7f7',
+    color: '#f7f7f7',
     fontSize: 15,
     fontWeight: 500,
     padding: '0 26px 0 12px',
@@ -208,22 +208,22 @@ export const LimitPriceBox: FC = () => {
   const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
 
   const expirationUTC = useMemo(() => {
-    if (expiration == 'day') { 
+    if (expiration == 'day') {
       return moment().add(inputValue, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
     }
-    if (expiration == 'week') { 
-      return moment().add( Number(inputValue) * 7, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
+    if (expiration == 'week') {
+      return moment().add(Number(inputValue) * 7, 'days').utc().format('YYYY-MM-DDTHH:mm:SS')
     }
-    if (expiration == 'hour') { 
+    if (expiration == 'hour') {
       return moment().add(inputValue, 'hours').utc().format('YYYY-MM-DDTHH:mm:SS')
     }
-    if (expiration == 'minute') { 
+    if (expiration == 'minute') {
       return moment().add(inputValue, 'minutes').utc().format('YYYY-MM-DDTHH:mm:SS')
     }
   }, [expiration, inputValue])
-  
-  
-  const handlerPlaceOrder = async () => { 
+
+
+  const handlerPlaceOrder = async () => {
     try {
       const result = await API.postPlaceOrder({
         market: marketSymbol.replace('-', '_'),
@@ -259,21 +259,21 @@ export const LimitPriceBox: FC = () => {
       }}>
       <Box>
         <Box>
-          <DirectionBox/>
+          <DirectionBox />
         </Box>
         <Box>
           <Box display="flex" fontSize="13px" fontWeight={500} color="#c3c2d4" marginLeft="4px" marginBottom="8px">
             <HtmlTooltip
               title={
                 <React.Fragment>
-                  <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">订单金额</Typography>
+                  <Typography sx={{ fontSize: '13px', fontWeight: 500 }} color="inherit">订单金额</Typography>
                   <span>要买入或卖出的SMBOL金额。这是您在将订单全部成交时头寸将增加或减少的金额，而不是您得到的头寸金额。</span>
                 </React.Fragment>
               }>
               <Box display="flex" alignItems="center" sx={{ cursor: 'help' }}>金额<Box className={classes.amountExplain}>设置订单规模</Box></Box>
             </HtmlTooltip>
           </Box>
-          
+
           <Box display="flex" width='100%' marginBottom="10px">
             <Box
               display="flex"
@@ -287,7 +287,7 @@ export const LimitPriceBox: FC = () => {
               bgcolor="#232334"
               marginRight="6px"
             >
-              <Input placeholder="0.0000" onChange={(e)=>setAmount(e.target.value)}></Input>
+              <Input placeholder="0.0000" onChange={(e) => setAmount(e.target.value)}></Input>
               <Box
                 display="grid"
                 alignSelf="center"
@@ -314,13 +314,13 @@ export const LimitPriceBox: FC = () => {
             >USD</Box>
           </Box>
         </Box>
-        
+
         <Box marginBottom="14px">
           <Box display="flex" fontSize="13px" fontWeight={500} color="#c3c2d4" marginLeft="4px" marginBottom="8px">
             <HtmlTooltip
               title={
                 <React.Fragment>
-                  <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">订单金额</Typography>
+                  <Typography sx={{ fontSize: '13px', fontWeight: 500 }} color="inherit">订单金额</Typography>
                   <span>要买入或卖出的SMBOL金额。这是您在将订单全部成交时头寸将增加或减少的金额，而不是您得到的头寸金额。</span>
                 </React.Fragment>
               }>
@@ -338,11 +338,11 @@ export const LimitPriceBox: FC = () => {
             bgcolor="#232334"
             marginRight="6px"
           >
-            <Input placeholder="0.0000" value={price} onChange={(e)=>setPirce(e.target.value)}></Input>
+            <Input placeholder="0.0000" value={price} onChange={(e) => setPirce(e.target.value)}></Input>
           </Box>
         </Box>
       </Box>
-     
+
       <Box marginBottom="4px">
         <Box className={classes.highRanking}>
           <Box>高级</Box>
@@ -354,8 +354,8 @@ export const LimitPriceBox: FC = () => {
           </Box>
         </Box>
         {
-          isHighRankingOption && 
-          <Box display="flex" flexDirection="column" sx={{ transition:'all 2s ease' }}>
+          isHighRankingOption &&
+          <Box display="flex" flexDirection="column" sx={{ transition: 'all 2s ease' }}>
             <Box display="flex" flexDirection="column" className={classes.effectiveTimeBox}>
               <Box marginBottom="8px">有效时间截止</Box>
               <Select
@@ -363,7 +363,7 @@ export const LimitPriceBox: FC = () => {
                 id="demo-customized-select"
                 value={timeInForce}
                 input={<BootstrapInput />}
-                onChange={(e)=>setTimeInForce(e.target.value)}
+                onChange={(e) => setTimeInForce(e.target.value)}
               >
                 <MenuItem value="GTT">有效时间截止</MenuItem>
                 <MenuItem value="FOK">全部成交否则取消指令</MenuItem>
@@ -372,31 +372,31 @@ export const LimitPriceBox: FC = () => {
             </Box>
             <Box display="flex" justifyContent="space-between">
               <Box width="calc(50% - 5px)">
-                  <Input value={ inputValue } style={{ paddingLeft:'12px' }} onChange={(e)=>setInputValue(e.target.value)}></Input>
+                <Input value={inputValue} style={{ paddingLeft: '12px' }} onChange={(e) => setInputValue(Number(e.target.value) || 28)}></Input>
               </Box>
               <Select
-                sx={{ width:'50%' }}
+                sx={{ width: '50%' }}
                 labelId="demo-customized-select-label"
                 id="demo-customized-select"
-                value={expiration }
+                value={expiration}
                 input={<BootstrapInput />}
-                onChange={(e)=>setExpiration(e.target.value)}
+                onChange={(e) => setExpiration(e.target.value)}
               >
-                  <MenuItem value='minute'>分钟</MenuItem>
-                  <MenuItem value='hour'>小时</MenuItem>
-                  <MenuItem value='day'>天</MenuItem>
-                  <MenuItem value='week'>周</MenuItem>
+                <MenuItem value='minute'>分钟</MenuItem>
+                <MenuItem value='hour'>小时</MenuItem>
+                <MenuItem value='day'>天</MenuItem>
+                <MenuItem value='week'>周</MenuItem>
               </Select>
             </Box>
             <Box display="flex" flexDirection="column" marginTop="16px" className={classes.effectiveTimeBox}>
               <Box marginBottom="8px">执行</Box>
               <Box display="flex">
-                  <BpCheckbox sx={{ padding: '0' }} onChange={ (e)=> setPostOnly(e.target.checked) }/>
+                <BpCheckbox sx={{ padding: '0' }} onChange={(e) => setPostOnly(e.target.checked)} />
                 <Box paddingLeft="10px" display="flex">仅挂单
                   <HtmlTooltip
                     title={
                       <React.Fragment>
-                        <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">仅挂单</Typography>
+                        <Typography sx={{ fontSize: '13px', fontWeight: 500 }} color="inherit">仅挂单</Typography>
                         <span>要买入或卖出的SMBOL金额。这是您在将订单全部成交时头寸将增加或减少的金额，而不是您得到的头寸金额。</span>
                       </React.Fragment>
                     }>
@@ -404,15 +404,15 @@ export const LimitPriceBox: FC = () => {
                       <IconFont name="icon-wenhao-xianxingyuankuang" color="#c3c2d4"></IconFont>
                     </Box>
                   </HtmlTooltip>
-                  
+
                 </Box>
               </Box>
             </Box>
 
-          </Box> 
+          </Box>
         }
       </Box>
-      
+
       <Box display="flex" flexDirection="column" >
         <Box
           bgcolor="rgba(255,83,83,.1)"
@@ -431,16 +431,16 @@ export const LimitPriceBox: FC = () => {
         {
           !isShowClose && <Box display="flex" justifyContent="flex-end" margin="0 8px 12px 8px">
             <Btn>清仓</Btn>
-            <Btn onClick={()=>setIsShowClose(!isShowClose)}>
+            <Btn onClick={() => setIsShowClose(!isShowClose)}>
               <Box display="flex" alignItems="center" justifyContent="center" width="26px" height="28px">
                 <IconFont name='icon-i' color='#fff' />
               </Box>
             </Btn>
           </Box>
         }
-        
+
         {
-          isShowClose && 
+          isShowClose &&
           <Box
             display="flex"
             justifyContent="space-between"
@@ -450,19 +450,19 @@ export const LimitPriceBox: FC = () => {
             padding="10px 8px 0 18px"
             bgcolor="#171722">详情
             <Box
-                className={`${classes.closeDetailBox}`}
-                onClick={()=>setIsShowClose(!isShowClose)}
-              >
-                <IconFont name='icon-guanbi' color='#fff' />
+              className={`${classes.closeDetailBox}`}
+              onClick={() => setIsShowClose(!isShowClose)}
+            >
+              <IconFont name='icon-guanbi' color='#fff' />
             </Box>
           </Box>
         }
-        
+
         <Box>
           <Box display="flex" flexDirection="column">
             <Box display="flex" flexDirection="column" padding="6px 12px 4px 12px" bgcolor="#171722">
               {
-                isShowClose && 
+                isShowClose &&
                 <Box
                   display="flex"
                   justifyContent="space-between"
@@ -474,8 +474,8 @@ export const LimitPriceBox: FC = () => {
                   <span className={classes.valuation}>$38.28</span>
                 </Box>
               }
-              
-              
+
+
               <Box
                 display="flex"
                 justifyContent="space-between"
@@ -512,13 +512,13 @@ export const LimitPriceBox: FC = () => {
               disabled={!amount}
               className={`${classes.placeOrder} 
               ${!amount ? '' : directionType == DirectionType.buy ? classes.doPlaceOrderBuy : classes.doPlaceOrderSell}`}
-              onClick={() =>handlerPlaceOrder()}
+              onClick={() => handlerPlaceOrder()}
             >下限价订单</Btn>
           </Box>
         </Box>
 
       </Box>
-    </Box> 
-    
+    </Box>
+
   )
 };

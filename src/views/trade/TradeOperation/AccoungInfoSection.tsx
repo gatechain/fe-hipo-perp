@@ -99,7 +99,7 @@ const accountInfoList: AccountInfoItem[] = [
   {
     title: '购买力',
     explain: '增加您ATOM-USD头寸的总可用购买力。您的购买力将根据您选择的市场而变化。',
-    getValue: (value) => '$' + formatNumber(Number(value.free_collateral) * 10),
+    getValue: (value) => '$' + formatNumber((Number(value.free_collateral) * 10).toString()),
   },
   {
     title: '账户净值',

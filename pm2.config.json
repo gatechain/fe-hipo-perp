@@ -1,0 +1,8 @@
+{
+  "apps": [
+    {
+      "name": "hipo-perp",
+      "script": "npm run start"
+    }
+  ]
+}
