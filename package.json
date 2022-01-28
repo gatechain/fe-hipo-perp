@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 8177",
     "lint": "next lint",
     "autofix": "eslint --ext .ts,.tsx,.js src pages --fix",
     "export": "next build && next export",
