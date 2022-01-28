@@ -20,7 +20,7 @@ export class Axios {
 
   init() {
     this.instance = axios.create({
-      baseURL: 'http://www.hipo.com/trade/',
+      baseURL: '//www.hipo.com/trade/',
       timeout: 5000,
     })
     this.interceptors()
