@@ -3,12 +3,14 @@ import { OrderType } from './const'
 
 export interface TypeState {
   orderType: OrderType | null,
-  orderList: any[] 
+  orderList: any[],
+  successOrderList: any[],
 }
 
 const initialState: TypeState = {
   orderType: OrderType.position,
-  orderList:[],
+  orderList: [],
+  successOrderList:[],
 }
 
 export const OrderSlice = createSlice({
@@ -21,9 +23,12 @@ export const OrderSlice = createSlice({
     setOrdersList: (state, action: PayloadAction<any[]>) => { 
       state.orderList = action.payload
     },
+    setSuccessOrderList: (state, action: PayloadAction<any[]>) => { 
+      state.orderList = action.payload
+    },
   },
 })
 
-export const { setOrderType, setOrdersList } = OrderSlice.actions
+export const { setOrderType, setOrdersList, setSuccessOrderList } = OrderSlice.actions
 
 export default OrderSlice.reducer

@@ -97,7 +97,8 @@ export const Order: FC = () => {
                 orderList.map((item, index) => { 
                   return (
                     <OrderItem
-                      key = {index}
+                      key={index}
+                      market={item.market}
                       status={ item.status }
                       side= {item.side}
                       size= {item.size}
@@ -107,6 +108,7 @@ export const Order: FC = () => {
                       type={item.type}
                       expire_at={item.expired_at}
                       trigger_price={item.trigger_price}
+                      time_in_force={item.time_in_force}
                     />
                   )
                 })
