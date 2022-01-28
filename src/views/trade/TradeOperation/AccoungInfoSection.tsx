@@ -185,7 +185,7 @@ export const AccoungInfoSection: FC<Props> = () => {
   const SwitchEle = {
     [ConnectButtonStatus.connect]: AccountInfoEle(),
     [ConnectButtonStatus.chainChanged]: TipBox(<span>要完成dYdX入门培训，请将您的钱包网络设置为“Meteora”。</span>),
-    [ConnectButtonStatus.disconnect]: TipBox(<span>连接您的以太坊钱包，以存入资金和开始交易。<br></br> <ConnectWallet /></span>),
+    [ConnectButtonStatus.disconnect]: TipBox(<span>连接您的以太坊钱包，以存入资金和开始交易。<br></br><Box mt={1}> <ConnectWallet /></Box></span>),
     authorize: TipBox(
       <Box display="flex" flexDirection="column" alignItems="center" component="div" >
         <Typography component="p" mb={2}>
