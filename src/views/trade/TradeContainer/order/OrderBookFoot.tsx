@@ -18,8 +18,6 @@ export const OrderBookFoot: FC = () => {
   return <Box
     display="flex"
     alignItems="center"
-    position="absolute"
-    bottom={0} left={0}
     height="36px"
     width="100%"
     pr='24px'
