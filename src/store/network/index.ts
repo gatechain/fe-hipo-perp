@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { API } from 'src/Api'
 import { AppThunk } from '..'
+import { loadOrderList } from '../order'
 import { ConnectButtonStatus, ConnectStatus, UserInfo } from './const'
 
 export interface TradeState {
@@ -68,6 +69,7 @@ export const fetchUser = (): AppThunk => async dispatch => {
   try {
     const res = await API.getUser()
     dispatch(setUserDetail(res))
+    dispatch(loadOrderList(1, 20))
     return
   } catch (error) {
     console.log(error)
