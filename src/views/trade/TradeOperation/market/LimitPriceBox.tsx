@@ -11,6 +11,7 @@ import { API } from 'src/Api';
 import moment from 'moment';
 import { Alert } from 'src/components/Alert';
 import { loadOrderList } from 'src/store/order';
+import { fetchUser } from 'src/store/network';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -246,9 +247,10 @@ export const LimitPriceBox: FC = () => {
       setInputValue(28)
       setPostOnly(false)
       Alert.success('下单成功')
+      dispatch(fetchUser())
       dispatch(loadOrderList(1, 20))
     } catch (error) {
-      Alert.success('error')
+      Alert.error('error')
     }
   }
 

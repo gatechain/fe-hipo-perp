@@ -11,6 +11,7 @@ import { API } from 'src/Api';
 import moment from 'moment';
 import { Alert } from 'src/components/Alert';
 import { loadOrderList } from 'src/store/order';
+import { fetchUser } from 'src/store/network';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -229,9 +230,10 @@ export const TrackStopLimitPriceBox: FC = () => {
       setExpiration('day')
       setInputValue(28)
       Alert.success('下单成功')
+      dispatch(fetchUser())
       dispatch(loadOrderList(1, 20))
     } catch (error) {
-      console.error(error)
+      Alert.error('下单失败')
     }
   }
 

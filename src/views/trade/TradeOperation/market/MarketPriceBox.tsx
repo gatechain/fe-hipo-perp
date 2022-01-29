@@ -165,7 +165,7 @@ export const MarketPriceBox: FC = () => {
       dispatch(fetchUser())
       dispatch(loadOrderList(1, 20))
     } catch (error) {
-      console.error(error)
+      Alert.error('下单失败')
     }
   }
 
