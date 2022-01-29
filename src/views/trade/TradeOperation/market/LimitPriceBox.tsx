@@ -228,6 +228,7 @@ export const LimitPriceBox: FC = () => {
 
   const handlerPlaceOrder = async () => {
     try {
+      console.log('price', price)
       await API.postPlaceOrder({
         market: marketSymbol.replace('-', '_'),
         side: directionType.toUpperCase(),

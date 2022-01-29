@@ -225,10 +225,6 @@ export const TrackStopLimitPriceBox: FC = () => {
         price: '0',
         limit_fee: '0.05',
       })
-      setIsShowClose(false)
-      setIsHighRankingOption(true)
-      setExpiration('day')
-      setInputValue(28)
       Alert.success('下单成功')
       dispatch(fetchUser())
       dispatch(loadOrderList(1, 20))

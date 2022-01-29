@@ -203,11 +203,7 @@ export const ProfitLimitPriceBox: FC = () => {
         price: price.toString(),
         limit_fee: '0.05',
       })
-      setIsShowClose(false)
-      setIsHighRankingOption(true)
-      setPirce(null)
       setTimeInForce('GTT')
-      setExpiration('day')
       setInputValue(28)
       Alert.success('下单成功')
       dispatch(fetchUser())
