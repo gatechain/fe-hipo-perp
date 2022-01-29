@@ -27,6 +27,7 @@ export class Ether {
   public signer
 
   constructor(props: Props) {
+    console.log(props)
     this.provider = props?.provider || null
     this.signer = props?.signer || null
   }

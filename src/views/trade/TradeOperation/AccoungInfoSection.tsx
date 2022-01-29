@@ -135,9 +135,15 @@ export const AccoungInfoSection: FC<Props> = () => {
   }, [])
 
   const getBanance = async () => {
-    const withdrawalBalanceRes: BigNumber = await ether.getWithdrawalBalance(account, tokenAddress)
-    console.log(withdrawalBalanceRes.div(BigNumber.from(10).pow(18)).toString())
-    setWithdrawalBalance(withdrawalBalanceRes.div(BigNumber.from(10).pow(18)).toString())
+    try {
+      const withdrawalBalanceRes: BigNumber = await ether.getWithdrawalBalance(account, tokenAddress)
+      // const tokenInfo = await ether.getTokenDetailV2(tokenAddress)
+      // console.log(tokenInfo)
+      console.log(withdrawalBalanceRes.div(BigNumber.from(10).pow(18)).toString())
+      setWithdrawalBalance(withdrawalBalanceRes.div(BigNumber.from(10).pow(18)).toString())
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handlerWithdraw = () => {
@@ -147,7 +153,9 @@ export const AccoungInfoSection: FC<Props> = () => {
   }
 
   useEffect(() => {
-    getBanance()
+    if (account && ether) {
+      getBanance()
+    }
     const timer = setInterval(getBanance, 10 * 1000)
     return () => {
       if (timer) {
