@@ -205,9 +205,7 @@ export const LimitPriceBox: FC = () => {
   const [inputValue, setInputValue] = useState(28)
   const [postOnly, setPostOnly] = useState(false)
   const [amount, setAmount] = useState(null)
-  const marketType = useSelector((state: RootState) => state.market.marketType)
-  const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
-  const asset = useSelector((state: RootState) => state.market.currentAsset)
+  const market = useSelector((state: RootState) => state.market)
   const dispatch = useDispatch()
 
   const expirationUTC = useMemo(() => {
@@ -226,32 +224,35 @@ export const LimitPriceBox: FC = () => {
   }, [expiration, inputValue])
 
 
-  const handlerPlaceOrder = async () => {
-    try {
-      await API.postPlaceOrder({
-        market: marketSymbol.replace('-', '_'),
-        side: directionType.toUpperCase(),
-        type: marketType.toLocaleUpperCase(),
-        size: amount.toString(),
-        post_only: postOnly.toString(),
-        expiration: expirationUTC + 'Z',
-        time_in_force: timeInForce.toString(),
-        price: price.toString(),
-        limit_fee: '0.05',
-      })
-      setIsShowClose(false)
-      setIsHighRankingOption(true)
-      setPirce(null)
-      setTimeInForce('GTT')
-      setExpiration('day')
-      setInputValue(28)
-      setPostOnly(false)
-      Alert.success('下单成功')
-      dispatch(fetchUser())
-      dispatch(loadOrderList(1, 20))
-    } catch (error) {
-      Alert.error('error')
-    }
+  const handlerPlaceOrder = () => {
+    (async function () {
+      try {
+        await API.postPlaceOrder({
+          market: market.marketSymbol.replace('-', '_'),
+          side: directionType.toUpperCase(),
+          type: market.marketType.toLocaleUpperCase(),
+          size: amount.toString(),
+          post_only: postOnly.toString(),
+          expiration: expirationUTC + 'Z',
+          time_in_force: timeInForce.toString(),
+          price: price.toString(),
+          limit_fee: '0.05',
+        })
+        // setIsShowClose(false)
+        // setIsHighRankingOption(true)
+        // setPirce(null)
+        // setTimeInForce('GTT')
+        // setExpiration('day')
+        // setInputValue(28)
+        // setPostOnly(false)
+        Alert.success('下单成功')
+        dispatch(fetchUser())
+        dispatch(loadOrderList(1, 20))
+      } catch (error) {
+        console.log(error)
+        Alert.error('error')
+      }
+    }())
   }
 
   return (
@@ -301,7 +302,7 @@ export const LimitPriceBox: FC = () => {
                 color="#c3c2d4"
                 borderRadius="2px"
                 letterSpacing=".06em"
-              >{ asset }</Box>
+              >{market.currentAsset}</Box>
             </Box>
             <Box
               display="flex"
