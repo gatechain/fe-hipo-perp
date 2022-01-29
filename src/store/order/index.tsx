@@ -4,14 +4,16 @@ import { OrderType } from './const'
 
 export interface TypeState {
   orderType: OrderType | null,
-  orderList: any[],
   successOrderList: any[],
+  orderData: any,
+  orderList: any[],
 }
 
 const initialState: TypeState = {
   orderType: OrderType.position,
-  orderList: [],
   successOrderList: [],
+  orderData: {},
+  orderList: [],
 }
 
 export const OrderSlice = createSlice({
@@ -21,29 +23,31 @@ export const OrderSlice = createSlice({
     setOrderType: (state, action: PayloadAction<OrderType>) => {
       state.orderType = action.payload
     },
-    setOrdersList: (state, action: PayloadAction<any[]>) => {
-      state.orderList = action.payload
-    },
     setSuccessOrderList: (state, action: PayloadAction<any[]>) => {
       state.orderList = action.payload
+    },
+    setOrderData: (state, action: PayloadAction<any>) => {
+      state.orderData = action.payload
     },
   },
 })
 
-export const { setOrderType, setOrdersList, setSuccessOrderList } = OrderSlice.actions
+export const { setOrderType, setSuccessOrderList, setOrderData } = OrderSlice.actions
 
 export default OrderSlice.reducer
 
-export const loadOrderList = (market: string, side: string) => async dispatch => {
+export const loadOrderList = (pageIndex: number, pageSize: number, market?: string, side?: string) => async dispatch => {
   try {
-    const list = await API.getOrders({
+    const data = await API.getOrders({
       market: market || '',
       side: side || '',
+      page_index: pageIndex,
+      page_size: pageSize,
     })
-    dispatch(setOrdersList(list))
+    dispatch(setOrderData(data))
     return
   } catch (error) {
     console.log(error)
-    dispatch(setOrdersList(null))
+    dispatch(setOrderData({}))
   }
 }

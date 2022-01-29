@@ -4,12 +4,13 @@ import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
 import { DirectionBox } from './DirectionBox';
 import { DirectionType } from 'src/store/market/const';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { IconFont } from 'src/components/IconFont';
 import { API } from 'src/Api';
 import moment from 'moment';
 import { Alert } from 'src/components/Alert';
+import { loadOrderList } from 'src/store/order';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -176,6 +177,7 @@ export const TrackStopLimitPriceBox: FC = () => {
   const [inputValue, setInputValue] = useState(28)
   const marketType = useSelector((state: RootState) => state.market.marketType)
   const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
+  const dispatch = useDispatch()
 
 
   const expirationUTC = useMemo(() => {
@@ -227,6 +229,7 @@ export const TrackStopLimitPriceBox: FC = () => {
       setExpiration('day')
       setInputValue(28)
       Alert.success('下单成功')
+      dispatch(loadOrderList(1, 20))
     } catch (error) {
       console.error(error)
     }

@@ -3,13 +3,14 @@ import { Box, Button, Checkbox, CheckboxProps, InputBase, MenuItem, Select, styl
 import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
 import { DirectionBox } from './DirectionBox';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { DirectionType } from 'src/store/market/const';
 import { IconFont } from 'src/components/IconFont';
 import { API } from 'src/Api';
 import moment from 'moment';
 import { Alert } from 'src/components/Alert';
+import { loadOrderList } from 'src/store/order';
 
 const useStyles = makeStyles({
   amountExplain: {
@@ -202,11 +203,11 @@ export const LimitPriceBox: FC = () => {
   const [expiration, setExpiration] = useState('day')
   const [inputValue, setInputValue] = useState(28)
   const [postOnly, setPostOnly] = useState(false)
-
   const [amount, setAmount] = useState(null)
   const marketType = useSelector((state: RootState) => state.market.marketType)
   const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
   const asset = useSelector((state: RootState) => state.market.currentAsset)
+  const dispatch = useDispatch()
 
   const expirationUTC = useMemo(() => {
     if (expiration == 'day') {
@@ -245,6 +246,7 @@ export const LimitPriceBox: FC = () => {
       setInputValue(28)
       setPostOnly(false)
       Alert.success('下单成功')
+      dispatch(loadOrderList(1, 20))
     } catch (error) {
       console.log('error')
       console.error(error)
