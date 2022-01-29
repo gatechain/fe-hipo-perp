@@ -1,5 +1,5 @@
 import { Box } from '@material-ui/core'
-import { FC } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { Item } from './Item'
 
@@ -39,13 +39,24 @@ interface Prosp {
 }
 export const OrderBookBody: FC<Prosp> = ({ data }) => {
   const classes = useStyles()
+  const contentBox = useRef(null)
+  const box = useRef(null)
+  
+  useEffect(() => { 
+    const boxHeight = box.current.clientHeight / 2
+    const contentHeight = contentBox.current.clientHeight / 2
+    box.current.scrollTop = contentHeight - boxHeight
+  })
 
   return <Box flexGrow={1} position="relative">
-    <Box position="absolute" width="100%" height="100%" sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
-      <Box >
-        {data?.asks?.map((item, ind) => {
-          return <Item key={ind} data={item} type="book" direction="sell" />
-        })}
+    <Box ref={box} position="absolute" width="100%" height="100%" sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
+      <Box ref={contentBox}>
+        <Box>
+          {data?.asks?.map((item, ind) => {
+            return <Item key={ind} data={item} type="book" direction="sell" />
+          })}
+        </Box>
+        
 
         <Box display="flex" justifyContent="space-between" alignItems="center"
           sx={{
@@ -61,10 +72,12 @@ export const OrderBookBody: FC<Prosp> = ({ data }) => {
           <Box className={classes.priceBox}><span className={classes.span}>0.04</span></Box>
           <Box className={classes.orderBox}><span className={classes.span}>0.11%</span></Box>
         </Box>
-        {data?.bids?.map((item, ind) => {
-          return <Item key={ind} data={item} type="trade" direction="buy" />
-        })
-        }
+        <Box>
+          {data?.bids?.map((item, ind) => {
+            return <Item key={ind} data={item} type="trade" direction="buy" />
+          })
+          }
+        </Box>
       </Box>
     </Box>
 
