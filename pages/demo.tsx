@@ -101,7 +101,7 @@ const DemoPage: NextPage = () => {
 
     <Button color="primary" variant="contained" onClick={async () => {
       const ether = Ether.getInstance()
-      const contr = ether.getPerpetualContract('0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293')
+      const contr = ether.getPerpetualContract()
       const tokenInfo = await ether.getTokenDetailV2('0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65')
       console.log(tokenInfo)
       const amount = BigNumber.from(10).pow(tokenInfo.decimals).mul(50).toString()
