@@ -1,5 +1,5 @@
-import { Box } from '@material-ui/core'
-import { FC, useMemo } from 'react'
+import { Box, Pagination } from '@material-ui/core'
+import { FC, useMemo, useState } from 'react'
 import { makeStyles } from '@material-ui/styles'
 import { OrderItem } from './OrderItem'
 import { useDispatch, useSelector } from 'react-redux'
@@ -35,12 +35,27 @@ const useStyles = makeStyles({
 
 export const Order: FC = () => {
   const classes = useStyles()
-  const orderList = useSelector((state: RootState) => state.order.orderList)
+  const { list, total_count : totalCount } = useSelector((state: RootState) => state.order.orderData)
+  const asset = useSelector((state: RootState) => state.market.currentAsset)
   const dispatch = useDispatch()
+  const [totalPage, setTotalPage] = useState(0)
 
   useMemo(() => {
-    dispatch(loadOrderList('', ''))
+    dispatch(loadOrderList(1, 20))
   }, [dispatch]);
+  
+  useMemo(() => { 
+    if (Number(totalCount) % 20 == 0) {
+      setTotalPage(Number(totalCount) / 20)
+    } else { 
+      const total = 1 + Math.floor(Number(totalCount) / 20)
+      setTotalPage(total)
+    }
+  }, [totalCount])
+
+  const handlerChangePage = (e, page) => {
+    dispatch(loadOrderList(page, 20))
+  }
 
   return (
     <Box display="flex" flexDirection="column" bgcolor="#1c1c28" width='100%' height="100%">
@@ -64,7 +79,7 @@ export const Order: FC = () => {
         </Box>
         <Box className={classes.titleBox} style={{ flexBasis: '28%', width: '28%' }}>
           <Box display="flex">金额/已全部成交</Box>
-          <Box className={classes.unit}>Atom</Box>
+          <Box className={classes.unit}>{ asset }</Box>
         </Box>
         <Box className={classes.titleBox} style={{ flexBasis: '18%', width: '18%' }}>
           价格
@@ -76,38 +91,45 @@ export const Order: FC = () => {
       </Box>
       <Box flexGrow={1} position="relative">
         {
-          orderList &&
+          list &&
           <Box
             position="absolute"
             display="flex"
-            flexDirection="column"
+              flexDirection="column"
+              justifyContent="space-between"
             width="100%"
             height="100%"
-            sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
-            {
-              orderList.map((item, index) => {
-                return (
-                  <OrderItem
-                    key={index}
-                    market={item.market}
-                    status={item.status}
-                    side={item.side}
-                    size={item.size}
-                    remaining_size={item.remaining_size}
-                    price={item.price}
-                    created_at={item.created_at}
-                    type={item.type}
-                    expire_at={item.expired_at}
-                    trigger_price={item.trigger_price}
-                    time_in_force={item.time_in_force}
-                  />
-                )
-              })
-            }
+              sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
+              <Box display="flex" flexDirection="column">
+              {
+                list.map((item, index) => {
+                  return (
+                    <OrderItem
+                      key={index}
+                      market={item.market}
+                      status={item.status}
+                      side={item.side}
+                      size={item.size}
+                      remaining_size={item.remaining_size}
+                      price={item.price}
+                      created_at={item.created_at}
+                      type={item.type}
+                      expire_at={item.expired_at}
+                      trigger_price={item.trigger_price}
+                      time_in_force={item.time_in_force}
+                    />
+                  )
+                })
+                }
+              </Box>
+            
+              <Box display="flex" justifyContent="flex-end">
+                <Pagination count={totalPage} onChange={handlerChangePage}/>
+              </Box>
           </Box>
         }
         {
-          !orderList &&
+          !list &&
           <Box
             position="absolute"
             display="flex"
