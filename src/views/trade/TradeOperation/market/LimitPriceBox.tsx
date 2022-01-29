@@ -235,7 +235,7 @@ export const LimitPriceBox: FC = () => {
         post_only: postOnly.toString(),
         expiration: expirationUTC + 'Z',
         time_in_force: timeInForce.toString(),
-        price: '1500',
+        price: price.toString(),
         limit_fee: '0.05',
       })
       setIsShowClose(false)
@@ -248,8 +248,7 @@ export const LimitPriceBox: FC = () => {
       Alert.success('下单成功')
       dispatch(loadOrderList(1, 20))
     } catch (error) {
-      console.log('error')
-      console.error(error)
+      Alert.success('error')
     }
   }
 
