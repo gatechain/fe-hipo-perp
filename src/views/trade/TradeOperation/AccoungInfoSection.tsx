@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useMemo } from 'react';
+import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react';
 import { Button, Tooltip, Typography, TooltipProps, tooltipClasses } from '@material-ui/core'
 import { makeStyles, styled } from '@material-ui/styles'
 import { Box } from '@material-ui/core'
@@ -11,6 +11,9 @@ import { ConnectButtonStatus } from 'src/store/network/const';
 import { HpButton } from 'src/components/HpButton';
 import { setOpenSignModal } from 'src/store/network';
 import { formatNumber } from 'src/utils';
+import { Ether, tokenAddress } from 'src/sdk/ether';
+import { useWeb3React } from '@web3-react/core';
+import { BigNumber } from '@ethersproject/bignumber';
 
 const useStyles = makeStyles(() => ({
   explain: {
@@ -125,6 +128,33 @@ export const AccoungInfoSection: FC<Props> = () => {
     network: { connectButtonStatus, isExists, accountInfo },
   } = useSelector((state: RootState) => state)
   const dispatch = useDispatch()
+  const [withdrawalBalance, setWithdrawalBalance] = useState('0')
+  const { account } = useWeb3React()
+  const ether = useMemo(() => {
+    return Ether.getInstance();
+  }, [])
+
+  const getBanance = async () => {
+    const withdrawalBalanceRes: BigNumber = await ether.getWithdrawalBalance(account, tokenAddress)
+    console.log(withdrawalBalanceRes.div(BigNumber.from(10).pow(18)).toString())
+    setWithdrawalBalance(withdrawalBalanceRes.div(BigNumber.from(10).pow(18)).toString())
+  }
+
+  const handlerWithdraw = () => {
+    if (Number(withdrawalBalance) > 0) {
+      ether.withdraw(account, tokenAddress)
+    }
+  }
+
+  useEffect(() => {
+    getBanance()
+    const timer = setInterval(getBanance, 10 * 1000)
+    return () => {
+      if (timer) {
+        clearInterval(timer)
+      }
+    }
+  }, [account, ether])
 
   const handlerOperation = (type: OperationType) => {
     if (operationType == type) {
@@ -167,6 +197,13 @@ export const AccoungInfoSection: FC<Props> = () => {
         </Box>
       </div>
       {accountInfoList.map(item => accountItem(item))}
+      <Box display="flex" justifyContent="space-between">
+        可提USDT:
+        <Box>$
+          {withdrawalBalance}
+          <Button style={{ marginLeft: 10 }} variant="contained" onClick={handlerWithdraw} sx={buttonStyle}>提现</Button>
+        </Box>
+      </Box>
     </>
   }
 

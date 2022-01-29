@@ -12,6 +12,8 @@ interface Props {
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+export const contractAddress = '0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293'
+export const tokenAddress = '0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65'
 
 function getERC20Contract(address: string, signerOrProvider?: Signer | Provider) {
   return new Contract(address, ERC20ABI.abi, signerOrProvider);
@@ -25,18 +27,18 @@ export class Ether {
   public signer
 
   constructor(props: Props) {
-    this.provider = props.provider
-    this.signer = props.signer
+    this.provider = props?.provider || null
+    this.signer = props?.signer || null
   }
 
   //充值合约
-  public getPerpetualContract(address: string) {
-    return new Contract(address, Perpetual, this.signer)
+  public getPerpetualContract() {
+    return new Contract(contractAddress, Perpetual, this.signer)
   }
 
   // 查授权额度 
-  public async getTokenAllowance(tokenAddress: string, owner: string, spender: string): Promise<BigNumber> {
-    const contract = getERC20Contract(tokenAddress, this.provider);
+  public async getTokenAllowance(tokenAddr: string, owner: string, spender: string): Promise<BigNumber> {
+    const contract = getERC20Contract(tokenAddr, this.provider);
     const allowance = await contract.allowance(owner, spender)
     return allowance
   }
@@ -50,6 +52,18 @@ export class Ether {
       return tx;
     }
     return '';
+  }
+
+  // 获取可提现的余额
+  public getWithdrawalBalance(address: string, tokenAddr: string) {
+    const contract = this.getPerpetualContract()
+    return contract.getWithdrawalBalance(address, tokenAddr)
+  }
+
+  // 获取可提现的余额
+  public withdraw(address: string, tokenAddr: string) {
+    const contract = this.getPerpetualContract()
+    return contract.withdraw(address, tokenAddr)
   }
 
   // 获取token 信息

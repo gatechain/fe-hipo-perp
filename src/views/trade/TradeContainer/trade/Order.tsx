@@ -76,16 +76,15 @@ export const Order: FC = () => {
       </Box>
       <Box flexGrow={1} position="relative">
         {
-          orderList &&
-          <Box
-            position="absolute"
-            display="flex"
-            flexDirection="column"
-            width="100%"
-            height="100%"
-            sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
-            {
-              orderList.map((item, index) => {
+          orderList ?
+            <Box
+              position="absolute"
+              display="flex"
+              flexDirection="column"
+              width="100%"
+              height="100%"
+              sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
+              {orderList.length && orderList.map((item, index) => {
                 return (
                   <OrderItem
                     key={index}
@@ -102,29 +101,24 @@ export const Order: FC = () => {
                     time_in_force={item.time_in_force}
                   />
                 )
-              })
-            }
-          </Box>
-        }
-        {
-          !orderList &&
-          <Box
-            position="absolute"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            flex="1 1 auto"
-            width="100%"
-            height="100%"
-            fontSize="15px"
-            fontWeight="500"
-            color="#c3c2d4"
-            lineHeight="20px">
+              })}
+            </Box>
+            : <Box
+              position="absolute"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              flex="1 1 auto"
+              width="100%"
+              height="100%"
+              fontSize="15px"
+              fontWeight="500"
+              color="#c3c2d4"
+              lineHeight="20px">
 
-            没有订单。
-          </Box>
+              没有订单。
+            </Box>
         }
-
       </Box>
 
 

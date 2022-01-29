@@ -6,7 +6,7 @@ import { OperationType } from 'src/store/trade/const';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store';
 import { setOperationType } from 'src/store/trade';
-import { Ether } from 'src/sdk/ether';
+import { contractAddress, Ether, tokenAddress } from 'src/sdk/ether';
 import { BigNumber } from '@ethersproject/bignumber';
 import { useWeb3React } from '@web3-react/core';
 import { Alert } from 'src/components/Alert';
@@ -74,9 +74,6 @@ const Input = styled(InputBase)({
   borderRadius: '8px',
 })
 
-const contractAddress = '0x4F091e8f52092E7Ce70Fc385ae3B2d1301476293'
-const tokenAddress = '0x475EbfBF2367d5C42f55bd997f9E65D8b35Ded65'
-
 enum ButtonStatus {
   deposit,
   approve,
@@ -125,7 +122,7 @@ export const DepositBox: FC = () => {
 
   const handleSubmit = () => {
     (async function () {
-      const contr = ether.current.getPerpetualContract(contractAddress)
+      const contr = ether.current.getPerpetualContract()
       const amountBig = BigNumber.from(10).pow(tokenInfo.decimals).mul(amount || 0)
       try {
         await contr.deposit(account, tokenAddress, amountBig.toString())

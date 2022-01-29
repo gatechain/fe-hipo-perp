@@ -11,7 +11,7 @@ export interface TypeState {
 const initialState: TypeState = {
   orderType: OrderType.position,
   orderList: [],
-  successOrderList:[],
+  successOrderList: [],
 }
 
 export const OrderSlice = createSlice({
@@ -21,10 +21,10 @@ export const OrderSlice = createSlice({
     setOrderType: (state, action: PayloadAction<OrderType>) => {
       state.orderType = action.payload
     },
-    setOrdersList: (state, action: PayloadAction<any[]>) => { 
+    setOrdersList: (state, action: PayloadAction<any[]>) => {
       state.orderList = action.payload
     },
-    setSuccessOrderList: (state, action: PayloadAction<any[]>) => { 
+    setSuccessOrderList: (state, action: PayloadAction<any[]>) => {
       state.orderList = action.payload
     },
   },
@@ -37,7 +37,7 @@ export default OrderSlice.reducer
 export const loadOrderList = (market: string, side: string) => async dispatch => {
   try {
     const list = await API.getOrders({
-      market: market || '', 
+      market: market || '',
       side: side || '',
     })
     dispatch(setOrdersList(list))

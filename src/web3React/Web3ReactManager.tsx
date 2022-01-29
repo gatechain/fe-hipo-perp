@@ -1,11 +1,12 @@
+import { Backdrop, CircularProgress } from '@material-ui/core'
 import { useWeb3React } from '@web3-react/core'
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Ether } from 'src/sdk/ether'
-// import { injected } from './connector'
-// import { metaMaskManage } from './MetaMask'
+import { MetaMaskManage } from './MetaMaskManager'
 
 const Web3ReactManager: FC<any> = ({ children }) => {
   const { library, account } = useWeb3React()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (library && account) {
@@ -13,25 +14,23 @@ const Web3ReactManager: FC<any> = ({ children }) => {
         provider: library,
         signer: library?.getSigner(account)?.connectUnchecked(),
       })
+      setLoading(false)
     }
   }, [library, account])
 
-  // useEffect(() => {
-  //   metaMaskManage(activate)
-  // }, [])
+  const LoadingEle = () => {
+    return <Backdrop
+      sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={true}
+    >
+      <CircularProgress color="inherit" />
+    </Backdrop>
+  }
 
-
-  // useEffect(() => {
-  //   if (error || active) {
-  //     return
-  //   }
-  //   // MetaMask connect
-  //   if (window?.ethereum?.selectedAddress) {
-  //     activate(injected)
-  //   }
-  // }, [activate, active, error])
-
-  return children
+  return <>
+    <MetaMaskManage />
+    {loading ? <LoadingEle /> : children}
+  </>
 }
 
 export default Web3ReactManager

@@ -59,7 +59,7 @@ class AlertComponent extends React.Component {
   render(): React.ReactNode {
     const { notices } = this.state
 
-    return <Box width="100%" position="fixed" top="0" left="0" display="flex" alignItems="center" flexDirection="column" >
+    return <Box width="100%" position="fixed" top="0" left="0" zIndex={10000} display="flex" alignItems="center" flexDirection="column" >
       {
         notices.map((notice) => {
           return <Stack key={notice.key} sx={{ minWidth: 400, mt: 2 }} spacing={2}>

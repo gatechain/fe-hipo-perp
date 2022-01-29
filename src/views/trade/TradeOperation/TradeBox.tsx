@@ -14,9 +14,9 @@ import { IconFont } from 'src/components/IconFont';
 
 const useStyles = makeStyles({
   marketTypeBox: {
-    display:'flex',
-    alignItems:'center',
-    flexDirection:'row',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
     borderBottom: '1px solid #2d2d3d',
     fontSize: '14px',
     lineHeight: '18px',
@@ -36,7 +36,7 @@ const useStyles = makeStyles({
     cursor: 'pointer',
   },
   marketTypeChoose: {
-    backgroundColor: '#171722 !important', 
+    backgroundColor: '#171722 !important',
     color: '#f7f7f7 !important',
     borderBottom: '1px solid #2d2d3d',
   },
@@ -47,7 +47,7 @@ const useStyles = makeStyles({
     padding: '0 20px',
     height: '44px',
     color: '#6f6e84',
-    backgroundColor:'#1c1c28',
+    backgroundColor: '#1c1c28',
   },
   stopLimitPriceBox: {
     flexDirection: 'column',
@@ -56,11 +56,11 @@ const useStyles = makeStyles({
     top: 'calc(100% + 1px)',
     backgroundColor: '#1c1c28',
     border: '1px solid #2d2d3d',
-    borderTop: 'none', 
+    borderTop: 'none',
     borderRight: 'none',
     zIndex: 2,
     '&>:not(:last-child)': {
-      borderBottom:'1px solid #2d2d3d',
+      borderBottom: '1px solid #2d2d3d',
     },
   },
   line: {
@@ -70,8 +70,8 @@ const useStyles = makeStyles({
   },
   iconBox: {
     display: 'flex',
-    width:'10px',
-    height:'10px',
+    width: '10px',
+    height: '10px',
     marginLeft: '10px',
     transition: 'all .15s ease-in-out!important',
   },
@@ -89,19 +89,19 @@ export const TradeBox: FC = () => {
   const [isLimitPriceActive, setIsLimitPriceActive] = useState(false)
   const dispatch = useDispatch()
 
-  const handlerMarket = (type: MarketType) => { 
+  const handlerMarket = (type: MarketType) => {
     dispatch(setMarketType(type))
     setIsLimitPriceActive(false)
   }
 
   const getMarketEle = useCallback(() => {
-    const type = marketType 
+    const type = marketType
     const actions = {
-      [MarketType.market]:<MarketPriceBox />,
+      [MarketType.market]: <MarketPriceBox />,
       [MarketType.limit]: <LimitPriceBox />,
       [MarketType.stopLimit]: <StopLimitPriceBox />,
       [MarketType.trackStop]: <TrackStopLimitPriceBox />,
-      [MarketType.profitLimit]: <ProfitLimitPriceBox/>,
+      [MarketType.profitLimit]: <ProfitLimitPriceBox />,
     }
     return actions[type]
   }, [marketType])
@@ -119,10 +119,10 @@ export const TradeBox: FC = () => {
             <Box className={classes.marketTypeBox}>
               <Box
                 className={`${classes.marketTypeItem} ${marketType == MarketType.market ? classes.marketTypeChoose : ''}`}
-                onClick={()=>handlerMarket(MarketType.market)}>市场</Box>
-              <Box 
+                onClick={() => handlerMarket(MarketType.market)}>市场</Box>
+              <Box
                 className={`${classes.marketTypeItem} ${marketType == MarketType.limit ? classes.marketTypeChoose : ''}`}
-                onClick={()=>handlerMarket(MarketType.limit)}
+                onClick={() => handlerMarket(MarketType.limit)}
               >限价</Box>
               <Box display="flex" alignItems="center" justifyContent="center"
                 sx={{
@@ -132,40 +132,38 @@ export const TradeBox: FC = () => {
                   position: 'relative',
                 }}
                 className={`${((marketType == MarketType.stopLimit || marketType == MarketType.trackStop || marketType == MarketType.profitLimit) && isLimitPriceActive == false) ? classes.marketTypeChoose : ''}`}
-                onClick={ ()=>setIsLimitPriceActive(!isLimitPriceActive) }
+                onClick={() => setIsLimitPriceActive(!isLimitPriceActive)}
               >
                 止损
                 <Box className={`${classes.iconBox} ${isLimitPriceActive == true ? classes.iconActive : ''}`}>
                   <IconFont name='icon-xiangxia' color='#6f6e84' />
                 </Box>
-                
+
                 <Box component="div"
                   className={`${classes.stopLimitPriceBox}`}
                   display={isLimitPriceActive == true ? 'flex' : 'none'}
                 >
                   <Box
                     className={`${classes.stopLimitPriceItem} ${marketType == MarketType.stopLimit && isLimitPriceActive == true ? classes.marketTypeChoose : ''}`}
-                    onClick={ ()=>handlerMarket(MarketType.stopLimit) }
+                    onClick={() => handlerMarket(MarketType.stopLimit)}
                   >止损限价</Box>
                   <Box
                     className={`${classes.stopLimitPriceItem} ${marketType == MarketType.trackStop && isLimitPriceActive == true ? classes.marketTypeChoose : ''}`}
-                    onClick={ ()=>handlerMarket(MarketType.trackStop) }
+                    onClick={() => handlerMarket(MarketType.trackStop)}
                   >追踪止损</Box>
                   <Box
                     className={`${classes.stopLimitPriceItem} ${marketType == MarketType.profitLimit && isLimitPriceActive == true ? classes.marketTypeChoose : ''}`}
-                    onClick={ ()=>handlerMarket(MarketType.profitLimit) }
+                    onClick={() => handlerMarket(MarketType.profitLimit)}
                   >获利止损</Box>
                 </Box>
               </Box>
             </Box>
             {getMarketEle()}
-            
           </Box>
-          
         </Box>
       </Box>
-      
+
     </Box>
-    
+
   )
 };
