@@ -46,7 +46,7 @@ export const OrderBookBody: FC<Prosp> = ({ data }) => {
     const boxHeight = box.current.clientHeight / 2
     const contentHeight = contentBox.current.clientHeight / 2
     box.current.scrollTop = contentHeight - boxHeight
-  })
+  }, [contentBox, box])
 
   return <Box flexGrow={1} position="relative">
     <Box ref={box} position="absolute" width="100%" height="100%" sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
