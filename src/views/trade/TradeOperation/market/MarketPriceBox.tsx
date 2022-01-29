@@ -158,7 +158,7 @@ export const MarketPriceBox: FC = () => {
         post_only: false,
         expiration: '2022-02-01T08:07:04.805Z',
         time_in_force: 'GTT',
-        price: '0',
+        price: '1',
         limit_fee: '0.05',
       })
       Alert.success('下单成功')
