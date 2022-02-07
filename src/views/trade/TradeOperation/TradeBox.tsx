@@ -115,7 +115,7 @@ export const TradeBox: FC = () => {
         overflow="hidden"
         sx={{ overflowY: 'scroll', '&::-webkit-scrollbar': { display: 'none' } }}>
         <Box width="100%" height="100%">
-          <Box display="flex" flexDirection="column">
+          <Box display="flex" flexDirection="column" height="100%">
             <Box className={classes.marketTypeBox}>
               <Box
                 className={`${classes.marketTypeItem} ${marketType == MarketType.market ? classes.marketTypeChoose : ''}`}

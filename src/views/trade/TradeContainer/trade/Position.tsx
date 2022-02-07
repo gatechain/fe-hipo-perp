@@ -155,7 +155,7 @@ export const Position: FC = () => {
   const classes = useStyles()
   return (
     <Box display="flex" justifyContent="center" width="100%" height='100%' padding="32px 32px 0">      
-      <Box display="flex" width='100%'>
+      <Box display="flex" width='760px'>
         <Box flex="0 1 50%" display="flex" flexDirection="column" paddingRight="18px">
           <Box className={`${classes.positionType} `}>
             <Box display="flex">
@@ -193,7 +193,6 @@ export const Position: FC = () => {
                     <Box>0.28×</Box>
                   </Box>
                 </Box>
-                
               </Box>
             </Box>
             <Box className={classes.positionItem}>

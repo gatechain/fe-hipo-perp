@@ -7,7 +7,7 @@ import { setOrderType } from 'src/store/order'
 import { useDispatch, useSelector } from 'react-redux'
 import { Order } from './Order'
 import { TransactionOrder } from './TransactionOrder'
-import { KlintBox } from './KlintBox'
+import { KlineBox } from './KlineBox'
 import { DepthBox } from './DepthBox'
 import { CapitalBox } from './CapitalBox'
 import { DetailsBox } from './DetailsBox'
@@ -79,7 +79,7 @@ export const Trade: FC = () => {
   const getChartTypeEle = useCallback(() => {
     const type = chartType
     const actions = {
-      [ChartType.kline]: <KlintBox />,
+      [ChartType.kline]: <KlineBox />,
       [ChartType.depth]: <DepthBox />,
       [ChartType.capital]: <CapitalBox />,
       [ChartType.details]: <DetailsBox />,
@@ -114,7 +114,7 @@ export const Trade: FC = () => {
             >详情</Box>
           </Box>
         </Box>
-        {/* klint 等图表 */}
+        {/* kline 等图表 */}
         <Box flexGrow={1} width="100%" borderTop='1px solid #2d2d3d'>
           {getChartTypeEle()}
         </Box>

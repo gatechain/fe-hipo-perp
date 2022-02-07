@@ -41,22 +41,32 @@ const useStyles = makeStyles({
     height: '100%',
   },
   amountPercentage: {
-    width: '50px',
+    // width: '50px',
     height: '18px',
-    backgroundColor: '#ff5353',
     opacity: '.4',
     position: 'absolute',
     top: '1px',
     zIndex: 1,
   },
-  volPercentage: {
-    width: '100px',
-    height: '18px',
+  amountPercentageBuy: {
     backgroundColor: '#ff5353',
+  },
+  amountPercentageSell: {
+    backgroundColor: '#3fb68b',
+  },
+  volPercentage: {
+    // width: '100px',
+    height: '18px',
     opacity: '.2',
     position: 'absolute',
     top: '1px',
     zIndex: 0,
+  },
+  volPercentageSell: {
+    backgroundColor: '#3fb68b',
+  },
+  volPercentageBuy: {
+    backgroundColor: '#ff5353',
   },
   tradeBuyColor: {
     color: '#3fb68b',
@@ -75,8 +85,8 @@ export const Item: FC<ItemProps> = ({ type, direction, data = [] }) => {
   const classes = useStyles()
   return (
     <Box display="flex" position="relative">
-      <div className={classes.amountPercentage}></div>
-      <div className={classes.volPercentage}></div>
+      <Box className={`${classes.amountPercentage} ${direction == 'buy' ? classes.amountPercentageBuy : classes.amountPercentageSell}`} sx={{ width:'10px' }} ></Box>
+      <Box className={`${classes.volPercentage} ${direction == 'buy' ? classes.volPercentageBuy : classes.volPercentageSell}`} sx={{ width:'3px' }}></Box>
       <Box display="flex"
         justifyContent="space-between"
         alignItems="center"
@@ -89,9 +99,9 @@ export const Item: FC<ItemProps> = ({ type, direction, data = [] }) => {
           },
         }}>
 
-        <div className={classes.amountBox}><span className={`${classes.span} ${type == 'trade' ? (direction == 'buy' ? classes.tradeBuyColor : classes.tradeSellColor) : ''}`}>{data[0] || 0}</span></div>
-        <div className={classes.priceBox}><span className={classes.span}>{data[1] || 0}</span></div>
-        <div className={classes.orderBox}><span className={classes.span}>0</span></div>
+        <Box className={classes.amountBox}><span className={`${classes.span} ${type == 'trade' ? (direction == 'buy' ? classes.tradeBuyColor : classes.tradeSellColor) : ''}`}>{data[0] || 0}</span></Box>
+        <Box className={classes.priceBox}><span className={classes.span}>{data[1] || 0}</span></Box>
+        <Box className={classes.orderBox}><span className={classes.span}>0</span></Box>
       </Box>
     </Box>
   )
