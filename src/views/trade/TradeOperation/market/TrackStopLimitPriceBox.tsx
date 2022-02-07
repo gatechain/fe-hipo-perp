@@ -303,7 +303,7 @@ export const TrackStopLimitPriceBox: FC = () => {
               title={
                 <React.Fragment>
                   <Typography sx={{ fontSize: '13px', fontWeight: 500 }} color="inherit">追踪百分比</Typography>
-                  <span>要买入或卖出的SMBOL金额。这是您在将订单全部成交时头寸将增加或减少的金额，而不是您得到的头寸金额。</span>
+                  <span>追踪百分比设置您的停损价将“追踪”指数价格的百分比。只要指数价格变动有利于您的头寸，您订单的停损价就将根据您指定的追踪百分比进行更新。</span>
                 </React.Fragment>
               }>
               <Box display="flex" alignItems="center" sx={{ cursor: 'help' }}>追踪百分比</Box>

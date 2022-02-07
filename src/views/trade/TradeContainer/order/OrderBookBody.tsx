@@ -74,7 +74,7 @@ export const OrderBookBody: FC<Prosp> = ({ data }) => {
         </Box>
         <Box>
           {data?.bids?.map((item, ind) => {
-            return <Item key={ind} data={item} type="trade" direction="buy" />
+            return <Item key={ind} data={item} type="book" direction="buy" />
           })
           }
         </Box>

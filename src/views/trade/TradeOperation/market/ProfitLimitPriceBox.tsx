@@ -282,8 +282,8 @@ export const ProfitLimitPriceBox: FC = () => {
             <HtmlTooltip
               title={
                 <React.Fragment>
-                  <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">订单金额</Typography>
-                  <span>要买入或卖出的SMBOL金额。这是您在将订单全部成交时头寸将增加或减少的金额，而不是您得到的头寸金额。</span>
+                  <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">触发价格</Typography>
+                  <span>当该市场的指数价格超过您的触发价格时，您的止损单将转换为限价单（止损限价单/止盈单）或作为市价单（追踪止损单）执行。</span>
                 </React.Fragment>
               }>
               <Box display="flex" alignItems="center" sx={{ cursor: 'help' }}>触发价格<span className={classes.amountExplain}>USD</span></Box>
@@ -309,8 +309,8 @@ export const ProfitLimitPriceBox: FC = () => {
             <HtmlTooltip
               title={
                 <React.Fragment>
-                  <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">订单金额</Typography>
-                  <span>要买入或卖出的SMBOL金额。这是您在将订单全部成交时头寸将增加或减少的金额，而不是您得到的头寸金额。</span>
+                  <Typography sx={{ fontSize: '13px', fontWeight:500 }} color="inherit">限价</Typography>
+                  <span>此订单只能以指定的限价或更高的价格全部成交。如果您的订单在下单时交叉，则您的订单将以最优惠的价格全部成交任何交叉订单。</span>
                 </React.Fragment>
               }>
               <Box display="flex" alignItems="center" sx={{ cursor: 'help' }}>限价<span className={classes.amountExplain}>USD</span></Box>

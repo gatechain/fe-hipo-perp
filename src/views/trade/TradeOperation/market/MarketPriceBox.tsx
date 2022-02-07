@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { Box, Button, InputBase, styled, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
+import { Box, Button, InputBase, Slider, styled, Switch, Tooltip, tooltipClasses, TooltipProps, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { HTooltip } from './HTooltips';
 import { DirectionBox } from './DirectionBox';
@@ -138,15 +138,97 @@ const Input = styled(InputBase)({
   height: '40px',
   width: '100%',
 })
+const GreenSwitch = styled(Switch)(() => ({
+  '&..MuiSwitch-thumb': {
+    width: '12px',
+    height: '12px',
+  },
+  '& .MuiSwitch-switchBase': {
+    color: '#454258',
+  },
+  '& .MuiSwitch-switchBase.Mui-checked': {
+    color: '#e0e0e0',
+  },
+  '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+    backgroundColor: '#5973fe',
+  },
+}));
+
+const IOSSlider = styled(Slider)(({ theme }) => ({
+  color: theme.palette.mode === 'dark' ? '#3880ff' : '#3880ff',
+  height: 2,
+  padding: '15px 0',
+  '& .MuiSlider-thumb': {
+    height: 12,
+    width: 12,
+    backgroundColor: '#fff',
+  },
+  '& .MuiSlider-valueLabel': {
+    fontSize: 12,
+    fontWeight: 'normal',
+    top: -6,
+    backgroundColor: 'unset',
+    color: theme.palette.text.primary,
+    '&:before': {
+      display: 'none',
+    },
+    '& *': {
+      background: 'transparent',
+      color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+    },
+  },
+  '& .MuiSlider-track': {
+    border: 'none',
+  },
+  '& .MuiSlider-rail': {
+    opacity: 0.5,
+    backgroundColor: '#ff5353',
+  },
+  '& .MuiSlider-mark': {
+    backgroundColor: 'currentcolor',
+    height: '2px',
+    width: '2px',
+    '&.MuiSlider-markActive': {
+      opacity: 1,
+      backgroundColor: 'rgb(18, 18, 18)',
+    },
+  },
+
+}));
 export const MarketPriceBox: FC = () => {
   const classes = useStyles()
   const directionType = useSelector((state: RootState) => state.market.directionType)
   const [isShowClose, setIsShowClose] = useState(false)
+  const [isOn, setIsOn] = useState(false)
   const [amount, setAmount] = useState(null)
   const dispatch = useDispatch()
   const marketType = useSelector((state: RootState) => state.market.marketType)
   const marketSymbol = useSelector((state: RootState) => state.market.marketSymbol)
   const asset = useSelector((state: RootState) => state.market.currentAsset)
+  const label = { inputProps: { 'aria-label': 'Switch demo' } };
+  const [value, setValue] = useState(0)
+  const marks = [
+    {
+      value: 0,
+    },
+    {
+      value: 5,
+    },
+    {
+      value: 10,
+    },
+    {
+      value: 15,
+    },
+    {
+      value: 20,
+    },
+  ];
+  
+  const handlerChange = (event) => {
+    console.log('old', value)
+    setValue(event.target.value)
+  }
 
   const handlerPlaceOrder = async () => {
     try {
@@ -168,9 +250,8 @@ export const MarketPriceBox: FC = () => {
       Alert.error('下单失败')
     }
   }
-
   return (
-    <Box display="flex" flexDirection="column"
+    <Box display="flex" flexGrow={1 } flexDirection="column" justifyContent="space-between"
       sx={{
         flex: '1 1 auto',
         padding: '20px 24px',
@@ -236,7 +317,44 @@ export const MarketPriceBox: FC = () => {
           <span style={{ fontSize: '13px', lineHeight: '16px', color: '#6f6e84', padding: '0 12px' }}>或</span>
           <div className={classes.line}></div>
         </Box>
-        <Box fontSize="13px" fontWeight={500} color="#c3c2d4" marginLeft="4px" marginBottom="8px">杠杆</Box>
+        <Box display="flex" justifyContent="space-between" fontSize="13px" fontWeight={500} color="#c3c2d4" marginLeft="4px" marginBottom="8px">
+          <Box >杠杆</Box>
+          <Box display="flex" alignItems="center" color="#6f6e84">
+            滑动条
+            <GreenSwitch
+              {...label}
+              size="small"
+              onChange={(e) => setIsOn(e.target.checked)}
+            />
+          </Box>
+        </Box>
+
+        
+        <Box padding="0 6px" display={isOn ? 'flex' : 'none'}>
+          <IOSSlider
+            aria-label="Small steps"
+            step={0.1}
+            marks={ marks }
+            min={0}
+            max={20}
+            valueLabelDisplay="auto"
+            sx={{
+              color: `${directionType == DirectionType.buy ? '#3fb68b' : '#ff5353'}`,
+              '.css-gdpt3b-MuiSlider-valueLabel': {
+                background:`${directionType == DirectionType.buy ? '#3fb68b' : '#ff5353'}`,
+              },
+              '.MuiSlider-valueLabel': {
+                background:`${directionType == DirectionType.buy ? '#3fb68b' : '#ff5353'}`,
+              },
+              '.MuiSlider-rail': {
+                background:`${directionType == DirectionType.buy ? '#3fb68b' : '#ff5353'}`,
+              },
+            }}
+            size='small'
+            onChange={(e) => handlerChange(e)}
+          />
+        </Box>
+        
         <Box display="flex" alignItems="center"
           sx={{
             '&:first-of-type': {
