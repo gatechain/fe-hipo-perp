@@ -16,6 +16,7 @@ import ConnectWallet from 'src/components/ConnectWallet'
 import { IconFont } from 'src/components/IconFont'
 import { Ether } from 'src/sdk/ether'
 import { BigNumber } from '@ethersproject/bignumber'
+import React from 'react'
 
 // hooks api
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -52,7 +53,17 @@ const DemoPage: NextPage = () => {
   const { connector, activate, active, error, account } = useWeb3React()
   const [activatingConnector, setActivatingConnector] = useState<any>()
 
+  useEffect(() => {
+    const hiposdk = new window.hipoSdk()
+    hiposdk.connect()
+    console.log(hiposdk)
+  }, [])
+
   const web3 = useMemo(() => {
+    const div = React.createElement('div', { id: '123' }, 'hhhhhh',
+      React.createElement(Button, { key: 123 }),
+    )
+    console.log(div)
     return new Web3(Web3.givenProvider || 'ws://localhost:8545')
   }, [])
 
@@ -61,6 +72,7 @@ const DemoPage: NextPage = () => {
       setActivatingConnector(undefined)
     }
   }, [activatingConnector, connector])
+
   // test metamask --- end
 
   return <div className={classes.root}>

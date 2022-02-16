@@ -11,6 +11,7 @@ class MyDocument extends Document {
       <Html>
         <Head />
         <body>
+          {/* <script src='http://localhost:3333/hipo-sdk.umd.js'></script> */}
           <Main />
           <NextScript />
         </body>
