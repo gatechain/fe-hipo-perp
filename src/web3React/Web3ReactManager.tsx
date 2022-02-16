@@ -16,7 +16,7 @@ const Web3ReactManager: FC<any> = ({ children }) => {
       })
       setLoading(false)
     }
-    setLoading(false)
+    // setLoading(false)
   }, [library, account])
 
   const LoadingEle = () => {
